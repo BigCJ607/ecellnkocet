@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import type { EventData, Speaker, ScheduleDay, Session } from '../../mocks/types'
 
 interface EventEditorModalProps {
@@ -56,9 +56,19 @@ function formatDateRange(startDateStr: string, endDateStr: string): string {
 }
 
 export default function EventEditorModal({ event, isOpen, onClose, onSave }: EventEditorModalProps) {
-  const [activeTab, setActiveTab] = useState<'details' | 'speakers' | 'schedule'>('details')
+  const [activeTab, setActiveTab] = useState<'details' | 'poster' | 'speakers' | 'schedule'>('details')
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
+
+  // Poster image state
+  const [posterUrl, setPosterUrl] = useState('')
+  const [posterFile, setPosterFile] = useState<File | null>(null)
+  const [posterPreviewDataUrl, setPosterPreviewDataUrl] = useState('')
+  const [cropOffset, setCropOffset] = useState({ x: 0, y: 0 })
+  const [cropScale, setCropScale] = useState(1)
+  const [isDragging, setIsDragging] = useState(false)
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 })
+  const posterInputRef = useRef<HTMLInputElement>(null)
 
   // Form states
   const [title, setTitle] = useState('')
@@ -112,6 +122,12 @@ export default function EventEditorModal({ event, isOpen, onClose, onSave }: Eve
       setSpeakers(event.speakers ? JSON.parse(JSON.stringify(event.speakers)) : [])
       setSchedule(event.schedule ? JSON.parse(JSON.stringify(event.schedule)) : [])
       setDateMode('custom') // If editing existing string, default to text or allow calendar
+      // Poster
+      setPosterUrl(event.posterUrl || '')
+      setPosterFile(null)
+      setPosterPreviewDataUrl(event.posterUrl || '')
+      setCropOffset({ x: 0, y: 0 })
+      setCropScale(1)
     } else {
       // Defaults for brand new event
       setTitle('')
@@ -133,6 +149,12 @@ export default function EventEditorModal({ event, isOpen, onClose, onSave }: Eve
       setSubmissionsEnabled(false)
       setSpeakers([])
       setSchedule([])
+      // Poster
+      setPosterUrl('')
+      setPosterFile(null)
+      setPosterPreviewDataUrl('')
+      setCropOffset({ x: 0, y: 0 })
+      setCropScale(1)
     }
     setError('')
     setActiveTab('details')
@@ -259,6 +281,7 @@ export default function EventEditorModal({ event, isOpen, onClose, onSave }: Eve
         maxTeamSize,
         time: time.trim(),
         submissionsEnabled,
+        posterUrl: posterPreviewDataUrl || posterUrl || '',
       }
       await onSave(payload)
       onClose()
@@ -323,8 +346,9 @@ export default function EventEditorModal({ event, isOpen, onClose, onSave }: Eve
         <div className="flex flex-wrap gap-2 px-8 py-3 bg-black/50 border-b" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
           {[
             { id: 'details', label: '1. GENERAL INFO', icon: '📝' },
-            { id: 'speakers', label: `2. SPEAKERS (${speakers.length})`, icon: '🎙' },
-            { id: 'schedule', label: `3. EVENT TIMELINE / SCHEDULE (${schedule.length} DAYS)`, icon: '📅' },
+            { id: 'poster', label: '2. POSTER IMAGE', icon: '🖼' },
+            { id: 'speakers', label: `3. SPEAKERS (${speakers.length})`, icon: '🎙' },
+            { id: 'schedule', label: `4. TIMELINE (${schedule.length} DAYS)`, icon: '📅' },
           ].map((tab) => {
             const isActive = activeTab === tab.id
             return (
@@ -352,6 +376,157 @@ export default function EventEditorModal({ event, isOpen, onClose, onSave }: Eve
           {error && (
             <div className="p-3.5 bg-red-500/10 border border-red-500/40 text-red-300 text-xs font-ui tracking-wide">
               ⚠ {error}
+            </div>
+          )}
+
+          {/* TAB: POSTER IMAGE */}
+          {activeTab === 'poster' && (
+            <div className="space-y-6">
+              <div>
+                <p style={{ ...labelStyle, fontSize: '0.85rem', marginBottom: 4 }}>POSTER / CARD IMAGE</p>
+                <p style={{ color: '#94a3b8', fontSize: '0.75rem', fontFamily: 'var(--font-body)', marginBottom: 16 }}>
+                  Upload a poster image for this event's card. It will be displayed at a <strong style={{ color: '#e2e8f0' }}>3:2 landscape ratio</strong> on the Events page. The preview below shows exactly how the card will look.
+                </p>
+
+                {/* File input */}
+                <input
+                  ref={posterInputRef}
+                  type="file"
+                  accept="image/*"
+                  style={{ display: 'none' }}
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0]
+                    if (!file) return
+                    setPosterFile(file)
+                    setCropOffset({ x: 0, y: 0 })
+                    setCropScale(1)
+                    // Read as data URL for preview
+                    const reader = new FileReader()
+                    reader.onload = (ev) => {
+                      setPosterPreviewDataUrl(ev.target?.result as string)
+                    }
+                    reader.readAsDataURL(file)
+                  }}
+                />
+
+                <div className="flex flex-col lg:flex-row gap-8 items-start">
+                  {/* Upload controls */}
+                  <div className="space-y-4 flex-shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => posterInputRef.current?.click()}
+                      className="flex items-center gap-3 px-6 py-3 cursor-pointer font-ui font-bold text-xs tracking-wider"
+                      style={{ background: 'rgba(34,211,238,0.1)', border: '1px solid rgba(34,211,238,0.3)', color: '#22d3ee' }}
+                    >
+                      🖼 {posterPreviewDataUrl ? 'CHANGE POSTER IMAGE' : 'UPLOAD POSTER IMAGE'}
+                    </button>
+
+                    {posterPreviewDataUrl && (
+                      <button
+                        type="button"
+                        onClick={() => { setPosterPreviewDataUrl(''); setPosterFile(null); setPosterUrl(''); setCropOffset({ x: 0, y: 0 }); setCropScale(1) }}
+                        className="flex items-center gap-2 px-4 py-2 cursor-pointer font-ui text-xs tracking-wider"
+                        style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)', color: '#fca5a5' }}
+                      >
+                        ✕ REMOVE POSTER
+                      </button>
+                    )}
+
+                    {posterPreviewDataUrl && (
+                      <div className="space-y-3" style={{ minWidth: 200 }}>
+                        <div>
+                          <p style={{ ...labelStyle, marginBottom: 6 }}>ZOOM ({Math.round(cropScale * 100)}%)</p>
+                          <input
+                            type="range" min={1} max={2} step={0.01}
+                            value={cropScale}
+                            onChange={e => setCropScale(parseFloat(e.target.value))}
+                            style={{ width: '100%', accentColor: '#22d3ee' }}
+                          />
+                        </div>
+                        <p style={{ color: '#64748b', fontSize: 11, fontFamily: 'var(--font-body)' }}>Drag image in preview to reposition</p>
+                      </div>
+                    )}
+
+                    {!posterPreviewDataUrl && (
+                      <div
+                        onClick={() => posterInputRef.current?.click()}
+                        className="flex flex-col items-center justify-center gap-3 cursor-pointer"
+                        style={{ width: 240, aspectRatio: '3/2', border: '2px dashed rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.03)', color: '#64748b', fontSize: 12, fontFamily: 'var(--font-body)' }}
+                      >
+                        <span style={{ fontSize: 36 }}>📷</span>
+                        <span style={{ textAlign: 'center', lineHeight: 1.4 }}>Click to upload<br />poster image</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Live card preview */}
+                  {posterPreviewDataUrl && (
+                    <div className="flex-1 w-full max-w-[360px]">
+                      <p style={{ ...labelStyle, marginBottom: 10 }}>LIVE CARD PREVIEW</p>
+                      <div
+                        style={{
+                          width: '100%',
+                          aspectRatio: '3/2',
+                          borderRadius: 12,
+                          overflow: 'hidden',
+                          position: 'relative',
+                          boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
+                          cursor: isDragging ? 'grabbing' : 'grab',
+                          userSelect: 'none',
+                        }}
+                        onMouseDown={e => {
+                          setIsDragging(true)
+                          setDragStart({ x: e.clientX - cropOffset.x, y: e.clientY - cropOffset.y })
+                        }}
+                        onMouseMove={e => {
+                          if (!isDragging) return
+                          setCropOffset({ x: e.clientX - dragStart.x, y: e.clientY - dragStart.y })
+                        }}
+                        onMouseUp={() => setIsDragging(false)}
+                        onMouseLeave={() => setIsDragging(false)}
+                      >
+                        {/* image */}
+                        <img
+                          src={posterPreviewDataUrl}
+                          alt="preview"
+                          style={{
+                            position: 'absolute',
+                            width: `${cropScale * 100}%`,
+                            height: `${cropScale * 100}%`,
+                            objectFit: 'cover',
+                            top: `${cropOffset.y}px`,
+                            left: `${cropOffset.x}px`,
+                            pointerEvents: 'none',
+                            transition: isDragging ? 'none' : 'all 0.1s',
+                          }}
+                        />
+                        {/* top scrim */}
+                        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 56, background: 'linear-gradient(to bottom, rgba(0,0,0,0.65) 0%, transparent 100%)', zIndex: 2 }} />
+                        {/* bottom gradient */}
+                        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.5) 40%, transparent 70%)', zIndex: 2 }} />
+                        {/* badge row */}
+                        <div style={{ position: 'absolute', top: 12, left: 12, right: 12, display: 'flex', alignItems: 'center', justifyContent: 'space-between', zIndex: 3 }}>
+                          <span style={{ fontSize: 8, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#fff', padding: '3px 10px', borderRadius: 9999, backgroundColor: 'rgba(0,0,0,0.45)', border: '1px solid rgba(255,255,255,0.2)' }}>
+                            {(isCustomCategory ? customCategoryInput : category) || 'Category'}
+                          </span>
+                          <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.7)', fontWeight: 500 }}>2026</span>
+                        </div>
+                        {/* text */}
+                        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '0 14px 14px', zIndex: 3 }}>
+                          <p style={{ fontFamily: 'var(--font-display)', fontSize: 18, fontWeight: 600, color: '#fff', margin: '0 0 4px', lineHeight: 1.1 }}>
+                            {title || 'Event Title'}
+                          </p>
+                          <p style={{ fontFamily: 'var(--font-body)', fontSize: 10, color: 'rgba(255,255,255,0.55)', margin: '0 0 8px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                            {shortDescription || 'Short event description...'}
+                          </p>
+                          <span style={{ fontFamily: 'var(--font-body)', fontSize: 9, fontWeight: 800, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#fff' }}>ENROLL NOW →</span>
+                        </div>
+                      </div>
+                      <p style={{ color: '#64748b', fontSize: 10, fontFamily: 'var(--font-body)', marginTop: 8 }}>← Drag to reposition · Use zoom slider to scale</p>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
           )}
 

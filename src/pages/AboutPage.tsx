@@ -1,33 +1,164 @@
-import React from 'react'
-
 export default function AboutPage() {
   return (
-    <div className="min-h-screen" style={{ background: 'var(--color-bg)', paddingTop: 'calc(var(--nav-h) + 4rem)' }}>
-      <div className="max-w-4xl mx-auto px-6 md:px-12 xl:px-32 py-16">
-        <h1 className="font-display text-7xl mb-8 text-gradient-primary">WHO WE ARE</h1>
-        
-        <div className="content-backdrop p-10">
-          <p className="text-lg mb-6" style={{ color: 'var(--color-text-muted)', lineHeight: 1.8 }}>
-            EVENT ZERO is the premier student-run organization dedicated to fostering innovation, collaboration, and technical excellence across campus. We organize the largest hackathons, design sprints, and technical workshops in the state.
+    <div style={{ minHeight: '100vh', backgroundColor: 'var(--color-bg)' }}>
+      <style>{`
+        @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+      `}</style>
+
+      {/* ── Large editorial hero ── */}
+      <div
+        style={{
+          paddingTop: 'calc(var(--nav-h) + 6rem)',
+          paddingBottom: '6rem',
+          borderBottom: '1px solid var(--color-cream)',
+          animation: 'fadeUp 0.6s ease both',
+        }}
+      >
+        <div className="page-container">
+          <p style={{
+            fontFamily: 'var(--font-body)', fontSize: 11, letterSpacing: '0.22em',
+            color: 'var(--color-slate-blue)', fontWeight: 600, margin: '0 0 24px', textTransform: 'uppercase',
+          }}>
+            About Event Zero
           </p>
-          <p className="text-lg mb-8" style={{ color: 'var(--color-text-muted)', lineHeight: 1.8 }}>
-            Our mission is simple: provide a space where students can build the future. Whether you're a first-year CS student or a graduate designer, our events are structured to challenge you, connect you with industry mentors, and give you the resources to turn ideas into reality.
+          <h1 style={{
+            fontFamily: 'var(--font-display)',
+            fontSize: 'clamp(3.5rem, 9vw, 8rem)',
+            color: 'var(--color-text-primary)',
+            margin: '0 0 32px',
+            lineHeight: 0.9,
+            letterSpacing: '-0.03em',
+            maxWidth: '14ch',
+          }}>
+            Where students build the future.
+          </h1>
+          <p style={{
+            fontFamily: 'var(--font-body)', fontSize: 17, lineHeight: 1.8,
+            color: 'var(--color-text-secondary)', maxWidth: '55ch', margin: 0,
+          }}>
+            Event Zero is a student-run collective dedicated to building space for innovation and collaboration across campus.
+            We run the hackathons, design sprints, and technical workshops that connect ideas to reality.
           </p>
-          
-          <div className="grid grid-cols-3 gap-6 pt-8 border-t" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
-            <div>
-              <span className="font-display text-5xl text-gradient-accent">0</span>
-              <span className="block font-ui text-xs tracking-widest text-gray-500 mt-2">EVENTS HOSTED</span>
-            </div>
-            <div>
-              <span className="font-display text-5xl text-gradient-accent">0</span>
-              <span className="block font-ui text-xs tracking-widest text-gray-500 mt-2">ATTENDEES</span>
-            </div>
-            <div>
-              <span className="font-display text-5xl text-gradient-accent">0</span>
-              <span className="block font-ui text-xs tracking-widest text-gray-500 mt-2">IN PRIZES</span>
+        </div>
+      </div>
+
+      {/* ── Body sections ── */}
+      <div className="page-container" style={{ paddingTop: 'var(--space-lg)', paddingBottom: 'var(--space-2xl)' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 380px), 1fr))', gap: 'var(--space-md)' }}>
+
+          {/* Mission */}
+          <div style={{
+            padding: '40px 40px 48px',
+            backgroundColor: 'var(--color-white)',
+            border: '1px solid var(--color-cream)',
+            animation: 'fadeUp 0.5s ease 0.1s both',
+          }}>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: 10, letterSpacing: '0.2em', color: 'var(--color-slate-blue)', fontWeight: 700, margin: '0 0 20px', textTransform: 'uppercase' }}>
+              Mission
+            </p>
+            <p style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.2rem, 2vw, 1.6rem)', color: 'var(--color-text-primary)', lineHeight: 1.45, margin: '0 0 20px', fontStyle: 'italic' }}>
+              "Provide a space where students can challenge themselves, connect with mentors, and turn ideas into reality."
+            </p>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: 14, lineHeight: 1.75, color: 'var(--color-text-secondary)', margin: 0 }}>
+              Whether you're a first-year student curious about technology or a final-year developer with a side project in mind — our events are open, inclusive, and built around real outcomes.
+            </p>
+          </div>
+
+          {/* What we do */}
+          <div style={{
+            padding: '40px 40px 48px',
+            backgroundColor: 'var(--color-white)',
+            border: '1px solid var(--color-cream)',
+            animation: 'fadeUp 0.5s ease 0.2s both',
+          }}>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: 10, letterSpacing: '0.2em', color: 'var(--color-slate-blue)', fontWeight: 700, margin: '0 0 20px', textTransform: 'uppercase' }}>
+              What We Do
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+              {[
+                { label: 'Hackathons', desc: 'Multi-day building events with real problems, real judges, and real prizes.' },
+                { label: 'Design Sprints', desc: 'Focused workshops that take you from problem to prototype in 48 hours.' },
+                { label: 'Technical Talks', desc: 'Deep-dive sessions with industry engineers and researchers.' },
+                { label: 'Open Projects', desc: 'Collaborative builds where teams take ownership of long-term ideas.' },
+              ].map(({ label, desc }) => (
+                <div key={label} style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
+                  <div style={{ width: 3, height: '100%', minHeight: 36, backgroundColor: 'var(--color-sand)', flexShrink: 0, marginTop: 3 }} />
+                  <div>
+                    <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, fontWeight: 600, color: 'var(--color-text-primary)', margin: '0 0 4px' }}>{label}</p>
+                    <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--color-text-secondary)', margin: 0, lineHeight: 1.6 }}>{desc}</p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
+        </div>
+
+        {/* ── Stats row ── */}
+        <div style={{
+          marginTop: 'var(--space-md)',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(3, 1fr)',
+          borderTop: '1px solid var(--color-cream)',
+          borderLeft: '1px solid var(--color-cream)',
+          animation: 'fadeUp 0.5s ease 0.3s both',
+        }}>
+          {[
+            { value: '0', label: 'Events Hosted' },
+            { value: '0', label: 'Participants' },
+            { value: '0', label: 'In Prizes' },
+          ].map(({ value, label }, i) => (
+            <div
+              key={label}
+              style={{
+                padding: '40px 32px',
+                borderRight: '1px solid var(--color-cream)',
+                borderBottom: '1px solid var(--color-cream)',
+                backgroundColor: 'var(--color-white)',
+              }}
+            >
+              <span style={{ display: 'block', fontFamily: 'var(--font-display)', fontSize: 'clamp(2.5rem, 5vw, 4rem)', color: 'var(--color-slate-blue)', lineHeight: 1, marginBottom: 10 }}>
+                {value}
+              </span>
+              <span style={{ fontFamily: 'var(--font-body)', fontSize: 11, letterSpacing: '0.16em', color: 'var(--color-text-secondary)', fontWeight: 600, textTransform: 'uppercase' }}>
+                {label}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        {/* ── Join callout ── */}
+        <div style={{
+          marginTop: 'var(--space-md)',
+          padding: '56px 48px',
+          backgroundColor: 'var(--color-slate-blue)',
+          animation: 'fadeUp 0.5s ease 0.4s both',
+        }}>
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: 11, letterSpacing: '0.22em', color: 'rgba(245,241,232,0.6)', fontWeight: 600, margin: '0 0 16px', textTransform: 'uppercase' }}>
+            Join the community
+          </p>
+          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.8rem, 4vw, 3rem)', color: 'var(--color-ivory)', margin: '0 0 24px', lineHeight: 1.15, letterSpacing: '-0.02em' }}>
+            Every event starts with someone who just showed up.
+          </h2>
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: 15, color: 'rgba(245,241,232,0.75)', margin: '0 0 32px', lineHeight: 1.7, maxWidth: '50ch' }}>
+            Register for an upcoming event and see what you can build in 48 hours with the right people around you.
+          </p>
+          <a
+            href="/events"
+            style={{
+              display: 'inline-block',
+              padding: '16px 32px',
+              fontFamily: 'var(--font-body)',
+              fontSize: 13,
+              fontWeight: 600,
+              letterSpacing: '0.12em',
+              textTransform: 'uppercase',
+              textDecoration: 'none',
+              backgroundColor: 'var(--color-ivory)',
+              color: 'var(--color-slate-blue)',
+            }}
+          >
+            Browse Events →
+          </a>
         </div>
       </div>
     </div>

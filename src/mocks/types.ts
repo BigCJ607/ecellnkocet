@@ -71,6 +71,7 @@ export interface EventData {
   time?: string;
   submissionsEnabled?: boolean;
   winners?: EventWinner[];
+  posterUrl?: string; // custom card poster image uploaded via admin
 }
 
 export interface UserTicket {

@@ -68,8 +68,8 @@ function CapacityRing({ current, max }: { current: number; max: number }) {
         <text x={20} y={20} textAnchor="middle" dominantBaseline="central" style={{ fill: 'white', fontSize: 9, fontWeight: 700, transform: 'rotate(90deg)', transformOrigin: '20px 20px' }}>{current}/{max}</text>
       </svg>
       <div>
-        <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.35)', fontFamily: 'var(--font-ui)', letterSpacing: '0.08em', marginBottom: 2 }}>ROSTER</div>
-        <div style={{ fontSize: 12, color, fontWeight: 600, fontFamily: 'var(--font-ui)' }}>{current >= max ? 'Full' : `${max - current} open`}</div>
+        <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.35)', fontFamily: 'var(--font-body)', letterSpacing: '0.08em', marginBottom: 2 }}>ROSTER</div>
+        <div style={{ fontSize: 12, color, fontWeight: 600, fontFamily: 'var(--font-body)' }}>{current >= max ? 'Full' : `${max - current} open`}</div>
       </div>
     </div>
   )
@@ -84,23 +84,23 @@ function RequestsPanel({ requests, onAccept, onReject, loading }: {
 }) {
   if (!requests.length) return null
   return (
-    <div style={{ marginBottom: 24, padding: '18px 22px', borderRadius: 14, background: 'rgba(245,158,11,0.04)', border: '1px solid rgba(245,158,11,0.3)' }}>
+    <div style={{ marginBottom: 24, padding: '18px 22px', borderRadius: 14, backgroundColor: 'var(--color-white)', border: '1px solid rgba(245,158,11,0.3)' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
-        <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#f59e0b', display: 'inline-block', boxShadow: '0 0 10px #f59e0b' }} />
-        <span style={{ fontSize: 11, fontWeight: 800, letterSpacing: '0.14em', color: '#fbbf24', fontFamily: 'var(--font-ui)' }}>
+        <span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: 'var(--color-dusty-blue)', display: 'inline-block', boxShadow: '0 0 10px #f59e0b' }} />
+        <span style={{ fontSize: 11, fontWeight: 800, letterSpacing: '0.14em', color: 'var(--color-dusty-blue)', fontFamily: 'var(--font-body)' }}>
           PENDING JOIN APPLICATIONS ({requests.length})
         </span>
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
         {requests.map((req, i) => (
-          <div key={req.id} style={{ padding: '14px 16px', borderRadius: 10, background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.08)' }}>
+          <div key={req.id} style={{ padding: '14px 16px', borderRadius: 10, backgroundColor: 'var(--color-white)', border: '1px solid var(--color-cream)' }}>
             <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, marginBottom: 8 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                 <MemberAvatar name={req.userName || '?'} size={38} idx={i} />
                 <div>
-                  <div style={{ fontSize: 14, fontWeight: 700, color: '#fff', fontFamily: 'var(--font-ui)' }}>{req.userName}</div>
-                  <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.45)', fontFamily: 'var(--font-ui)' }}>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--color-text-primary)', fontFamily: 'var(--font-body)' }}>{req.userName}</div>
+                  <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.45)', fontFamily: 'var(--font-body)' }}>
                     {[req.userBranch, req.userYear].filter(Boolean).join(' · ')}{req.userPnr && ` · PNR ${req.userPnr}`}
                   </div>
                 </div>
@@ -109,13 +109,13 @@ function RequestsPanel({ requests, onAccept, onReject, loading }: {
               <div style={{ display: 'flex', gap: 8 }}>
                 <button onClick={() => onAccept(req)} disabled={loading === req.id} style={{
                   padding: '7px 16px', fontSize: 12, fontWeight: 700, borderRadius: 7, cursor: 'pointer',
-                  background: 'rgba(34,211,238,0.15)', border: '1px solid rgba(34,211,238,0.4)', color: '#22d3ee', fontFamily: 'var(--font-ui)',
+                  background: 'rgba(34,211,238,0.15)', border: '1px solid rgba(62,88,104,0.4)', color: 'var(--color-slate-blue)', fontFamily: 'var(--font-body)',
                 }}>
                   {loading === req.id ? '...' : 'Accept'}
                 </button>
                 <button onClick={() => onReject(req)} disabled={loading === req.id} style={{
                   padding: '7px 16px', fontSize: 12, fontWeight: 600, borderRadius: 7, cursor: 'pointer',
-                  background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)', color: '#f87171', fontFamily: 'var(--font-ui)',
+                  backgroundColor: 'transparent', border: '1px solid var(--color-sand)', color: 'var(--color-text-secondary)', fontFamily: 'var(--font-body)',
                 }}>
                   {loading === req.id ? '...' : 'Reject'}
                 </button>
@@ -126,17 +126,17 @@ function RequestsPanel({ requests, onAccept, onReject, loading }: {
             {(req.requestedRole || req.userSkills || req.userPitch) && (
               <div style={{ marginTop: 10, paddingTop: 10, borderTop: '1px solid rgba(255,255,255,0.06)', display: 'flex', flexDirection: 'column', gap: 4 }}>
                 {req.requestedRole && (
-                  <div style={{ fontSize: 11, color: '#22d3ee', fontFamily: 'var(--font-ui)' }}>
+                  <div style={{ fontSize: 11, color: 'var(--color-slate-blue)', fontFamily: 'var(--font-body)' }}>
                     <strong>Applying for Role:</strong> {req.requestedRole}
                   </div>
                 )}
                 {req.userSkills && (
-                  <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.7)', fontFamily: 'var(--font-ui)' }}>
+                  <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.7)', fontFamily: 'var(--font-body)' }}>
                     <strong>Applicant Skills:</strong> {req.userSkills}
                   </div>
                 )}
                 {req.userPitch && (
-                  <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', fontFamily: 'var(--font-ui)', fontStyle: 'italic' }}>
+                  <div style={{ fontSize: 11, color: 'var(--color-text-secondary)', fontFamily: 'var(--font-body)', fontStyle: 'italic' }}>
                     "{req.userPitch}"
                   </div>
                 )}
@@ -210,8 +210,8 @@ function TeamCard({
             onClick={() => onOpenChat && onOpenChat(team, members)}
             style={{
               padding: '7px 14px', fontSize: 11, fontWeight: 700, borderRadius: 7, cursor: 'pointer',
-              background: 'rgba(34,211,238,0.12)', border: '1px solid rgba(34,211,238,0.4)',
-              color: '#22d3ee', fontFamily: 'var(--font-ui)', display: 'inline-flex', alignItems: 'center', gap: 5,
+              backgroundColor: 'rgba(62,88,104,0.12)', border: '1px solid rgba(62,88,104,0.4)',
+              color: 'var(--color-slate-blue)', fontFamily: 'var(--font-body)', display: 'inline-flex', alignItems: 'center', gap: 5,
             }}
           >
             💬 Team Chat
@@ -223,7 +223,7 @@ function TeamCard({
             style={{
               padding: '7px 14px', fontSize: 11, fontWeight: 700, borderRadius: 7, cursor: 'pointer',
               background: 'rgba(129,140,248,0.14)', border: '1px solid rgba(129,140,248,0.45)',
-              color: '#a5b4fc', fontFamily: 'var(--font-ui)', display: 'inline-flex', alignItems: 'center', gap: 5,
+              color: '#a5b4fc', fontFamily: 'var(--font-body)', display: 'inline-flex', alignItems: 'center', gap: 5,
             }}
             title="Search and invite platform users"
           >
@@ -236,7 +236,7 @@ function TeamCard({
             style={{
               padding: '7px 14px', fontSize: 11, fontWeight: 700, borderRadius: 7, cursor: 'pointer',
               background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.35)',
-              color: '#4ade80', fontFamily: 'var(--font-ui)', display: 'inline-flex', alignItems: 'center', gap: 5,
+              color: '#4ade80', fontFamily: 'var(--font-body)', display: 'inline-flex', alignItems: 'center', gap: 5,
             }}
             title="Copy shareable invite link"
           >
@@ -250,7 +250,7 @@ function TeamCard({
               style={{
                 padding: '7px 14px', fontSize: 11, fontWeight: 700, borderRadius: 7, cursor: 'pointer',
                 background: 'rgba(99,102,241,0.12)', border: '1px solid rgba(99,102,241,0.4)',
-                color: '#a5b4fc', fontFamily: 'var(--font-ui)',
+                color: '#a5b4fc', fontFamily: 'var(--font-body)',
               }}
               title="Transfer Captaincy to a teammate before leaving"
             >
@@ -262,8 +262,8 @@ function TeamCard({
             disabled={actionLoading}
             style={{
               padding: '7px 14px', fontSize: 11, fontWeight: 600, borderRadius: 7, cursor: 'pointer',
-              background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.3)',
-              color: '#f87171', fontFamily: 'var(--font-ui)',
+              backgroundColor: 'transparent', border: '1px solid var(--color-sand)',
+              color: 'var(--color-text-secondary)', fontFamily: 'var(--font-body)',
             }}
             title="Kill and delete team"
           >
@@ -281,13 +281,13 @@ function TeamCard({
             onClick={() => onOpenChat && onOpenChat(team, members)}
             style={{
               padding: '7px 14px', fontSize: 11, fontWeight: 700, borderRadius: 7, cursor: 'pointer',
-              background: 'rgba(34,211,238,0.12)', border: '1px solid rgba(34,211,238,0.4)',
-              color: '#22d3ee', fontFamily: 'var(--font-ui)', display: 'inline-flex', alignItems: 'center', gap: 5,
+              backgroundColor: 'rgba(62,88,104,0.12)', border: '1px solid rgba(62,88,104,0.4)',
+              color: 'var(--color-slate-blue)', fontFamily: 'var(--font-body)', display: 'inline-flex', alignItems: 'center', gap: 5,
             }}
           >
             💬 Team Chat
           </button>
-          <button onClick={() => onLeave(team.id)} disabled={actionLoading} style={{ padding: '7px 16px', fontSize: 11, fontWeight: 600, borderRadius: 7, cursor: 'pointer', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.3)', color: '#f87171', fontFamily: 'var(--font-ui)' }}>
+          <button onClick={() => onLeave(team.id)} disabled={actionLoading} style={{ padding: '7px 16px', fontSize: 11, fontWeight: 600, borderRadius: 7, cursor: 'pointer', backgroundColor: 'transparent', border: '1px solid var(--color-sand)', color: 'var(--color-text-secondary)', fontFamily: 'var(--font-body)' }}>
             {actionLoading ? '...' : 'Leave Team'}
           </button>
         </div>
@@ -296,7 +296,7 @@ function TeamCard({
 
     if (!isEnrolled) {
       return (
-        <Link to={`/events/${eventId}`} onClick={e => e.stopPropagation()} style={{ padding: '7px 16px', fontSize: 11, fontWeight: 600, borderRadius: 7, background: 'rgba(34,211,238,0.08)', border: '1px solid rgba(34,211,238,0.3)', color: '#22d3ee', fontFamily: 'var(--font-ui)', textDecoration: 'none', display: 'inline-block' }}>
+        <Link to={`/events/${eventId}`} onClick={e => e.stopPropagation()} style={{ padding: '7px 16px', fontSize: 11, fontWeight: 600, borderRadius: 7, backgroundColor: 'rgba(62,88,104,0.08)', border: '1px solid rgba(34,211,238,0.3)', color: 'var(--color-slate-blue)', fontFamily: 'var(--font-body)', textDecoration: 'none', display: 'inline-block' }}>
           Enroll First
         </Link>
       )
@@ -304,7 +304,7 @@ function TeamCard({
 
     if (userAlreadyHasTeam) {
       return (
-        <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)', fontFamily: 'var(--font-ui)', fontWeight: 600 }}>
+        <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)', fontFamily: 'var(--font-body)', fontWeight: 600 }}>
           In Another Team
         </span>
       )
@@ -313,11 +313,11 @@ function TeamCard({
     if (requestStatus === 'pending') {
       return (
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }} onClick={e => e.stopPropagation()}>
-          <span style={{ padding: '5px 10px', fontSize: 10, fontWeight: 700, borderRadius: 6, background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.3)', color: '#fbbf24', fontFamily: 'var(--font-ui)' }}>
+          <span style={{ padding: '5px 10px', fontSize: 10, fontWeight: 700, borderRadius: 6, background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.3)', color: 'var(--color-dusty-blue)', fontFamily: 'var(--font-body)' }}>
             Request Pending
           </span>
           {myRequestId && (
-            <button onClick={e => { e.stopPropagation(); onCancelRequest(myRequestId, team.id) }} style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline', fontFamily: 'var(--font-ui)' }}>
+            <button onClick={e => { e.stopPropagation(); onCancelRequest(myRequestId, team.id) }} style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)', backgroundColor: 'transparent', border: 'none', cursor: 'pointer', textDecoration: 'underline', fontFamily: 'var(--font-body)' }}>
               Cancel
             </button>
           )}
@@ -328,9 +328,9 @@ function TeamCard({
     if (requestStatus === 'rejected') {
       return (
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }} onClick={e => e.stopPropagation()}>
-          <span style={{ fontSize: 10, color: '#f87171', fontFamily: 'var(--font-ui)', fontWeight: 600 }}>Rejected</span>
+          <span style={{ fontSize: 10, color: 'var(--color-text-secondary)', fontFamily: 'var(--font-body)', fontWeight: 600 }}>Rejected</span>
           {!full && (
-            <button onClick={e => { e.stopPropagation(); onRequestJoin(team) }} style={{ fontSize: 10, color: '#22d3ee', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline', fontFamily: 'var(--font-ui)' }}>
+            <button onClick={e => { e.stopPropagation(); onRequestJoin(team) }} style={{ fontSize: 10, color: 'var(--color-slate-blue)', backgroundColor: 'transparent', border: 'none', cursor: 'pointer', textDecoration: 'underline', fontFamily: 'var(--font-body)' }}>
               Retry
             </button>
           )}
@@ -343,7 +343,7 @@ function TeamCard({
         padding: '8px 20px', fontSize: 12, fontWeight: 700, borderRadius: 8, cursor: full ? 'not-allowed' : 'pointer',
         background: full ? 'rgba(255,255,255,0.03)' : 'rgba(34,211,238,0.12)',
         border: `1px solid ${full ? 'rgba(255,255,255,0.08)' : 'rgba(34,211,238,0.4)'}`,
-        color: full ? '#475569' : '#22d3ee', fontFamily: 'var(--font-ui)', letterSpacing: '0.04em',
+        color: full ? '#475569' : '#22d3ee', fontFamily: 'var(--font-body)', letterSpacing: '0.04em',
       }}>
         {actionLoading ? '...' : full ? 'Team Full' : 'Request to Join'}
       </button>
@@ -357,10 +357,10 @@ function TeamCard({
       onMouseLeave={() => setHovered(false)}
       style={{
         borderRadius: 16, cursor: 'pointer', position: 'relative', overflow: 'hidden',
-        background: hovered ? (isMine ? 'rgba(34,211,238,0.06)' : 'rgba(255,255,255,0.04)') : (isMine ? 'rgba(34,211,238,0.03)' : 'rgba(255,255,255,0.02)'),
-        border: `1px solid ${hovered ? (isMine ? 'rgba(34,211,238,0.5)' : 'rgba(255,255,255,0.15)') : (isMine ? 'rgba(34,211,238,0.3)' : 'rgba(255,255,255,0.07)')}`,
+        backgroundColor: hovered ? 'var(--color-bg)' : 'var(--color-white)',
+        border: '1px solid var(--color-sand)',
         transform: hovered ? 'translateY(-2px)' : 'translateY(0)',
-        boxShadow: hovered ? (isMine ? '0 12px 40px rgba(34,211,238,0.12)' : '0 12px 32px rgba(0,0,0,0.3)') : 'none',
+        boxShadow: hovered ? '0 12px 40px rgba(0,0,0,0.05)' : 'none',
         transition: 'all 0.25s cubic-bezier(0.4,0,0.2,1)',
         animation: `cardIn 0.4s ease ${index * 60}ms both`,
       }}
@@ -375,10 +375,10 @@ function TeamCard({
             <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 8, alignItems: 'center' }}>
               {/* NO text pill for captain — small green dot will show on captain avatar */}
               {isMyTeam && !isCaptain && (
-                <span style={{ fontSize: 9, fontWeight: 800, letterSpacing: '0.14em', padding: '3px 8px', borderRadius: 4, background: 'rgba(129,140,248,0.12)', color: '#a5b4fc', border: '1px solid rgba(129,140,248,0.3)', fontFamily: 'var(--font-ui)' }}>MY TEAM</span>
+                <span style={{ fontSize: 9, fontWeight: 800, letterSpacing: '0.14em', padding: '3px 8px', borderRadius: 4, background: 'rgba(129,140,248,0.12)', color: '#a5b4fc', border: '1px solid rgba(129,140,248,0.3)', fontFamily: 'var(--font-body)' }}>MY TEAM</span>
               )}
               {!isMine && (
-                <span style={{ fontSize: 9, fontWeight: 800, letterSpacing: '0.14em', padding: '3px 8px', borderRadius: 4, background: full ? 'rgba(71,85,105,0.15)' : 'rgba(52,211,153,0.1)', color: full ? '#64748b' : '#34d399', border: `1px solid ${full ? 'rgba(71,85,105,0.2)' : 'rgba(52,211,153,0.25)'}`, fontFamily: 'var(--font-ui)', display: 'flex', alignItems: 'center', gap: 4 }}>
+                <span style={{ fontSize: 9, fontWeight: 800, letterSpacing: '0.14em', padding: '3px 8px', borderRadius: 4, background: full ? 'rgba(71,85,105,0.15)' : 'rgba(52,211,153,0.1)', color: full ? '#64748b' : '#34d399', border: `1px solid ${full ? 'rgba(71,85,105,0.2)' : 'rgba(52,211,153,0.25)'}`, fontFamily: 'var(--font-body)', display: 'flex', alignItems: 'center', gap: 4 }}>
                   {!full && <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#34d399', display: 'inline-block', boxShadow: '0 0 5px #34d399' }} />}
                   {full ? 'FULL' : 'OPEN TO JOIN'}
                 </span>
@@ -397,14 +397,14 @@ function TeamCard({
 
         {/* Skills & Achievements Tags (Optional) */}
         {(team.skills || team.achievements) && (
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, marginBottom: 14, fontSize: 11, fontFamily: 'var(--font-ui)' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, marginBottom: 14, fontSize: 11, fontFamily: 'var(--font-body)' }}>
             {team.skills && (
-              <span style={{ color: 'rgba(255,255,255,0.6)' }}>
+              <span style={{ color: 'var(--color-text-secondary)' }}>
                 <strong>Required/Team Skills:</strong> {team.skills}
               </span>
             )}
             {team.achievements && (
-              <span style={{ color: '#fbbf24' }}>
+              <span style={{ color: 'var(--color-dusty-blue)' }}>
                 🏆 <strong>Achievements:</strong> {team.achievements}
               </span>
             )}
@@ -414,7 +414,7 @@ function TeamCard({
         {/* Open Roles Listing */}
         {team.openRoles && team.openRoles.length > 0 && (
           <div style={{ marginBottom: 16 }}>
-            <span style={{ fontSize: 9, fontWeight: 800, letterSpacing: '0.14em', color: '#22d3ee', fontFamily: 'var(--font-ui)', display: 'block', marginBottom: 6 }}>
+            <span style={{ fontSize: 9, fontWeight: 800, letterSpacing: '0.14em', color: 'var(--color-slate-blue)', fontFamily: 'var(--font-body)', display: 'block', marginBottom: 6 }}>
               OPEN ROLES IN TEAM:
             </span>
             <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
@@ -429,8 +429,8 @@ function TeamCard({
                   }}
                   style={{
                     fontSize: 10, fontWeight: 700, padding: '4px 10px', borderRadius: 6,
-                    background: 'rgba(34,211,238,0.08)', border: '1px solid rgba(34,211,238,0.25)',
-                    color: '#22d3ee', fontFamily: 'var(--font-ui)', cursor: (!isMine && isEnrolled && !userAlreadyHasTeam) ? 'pointer' : 'default',
+                    backgroundColor: 'rgba(62,88,104,0.08)', border: '1px solid rgba(62,88,104,0.25)',
+                    color: 'var(--color-slate-blue)', fontFamily: 'var(--font-body)', cursor: (!isMine && isEnrolled && !userAlreadyHasTeam) ? 'pointer' : 'default',
                   }}
                   title={(!isMine && isEnrolled && !userAlreadyHasTeam) ? `Apply for ${role} role` : undefined}
                 >
@@ -455,17 +455,17 @@ function TeamCard({
               })}
             </div>
             {members.length > 5 && (
-              <div style={{ marginLeft: -10, width: 34, height: 34, borderRadius: '50%', background: 'rgba(255,255,255,0.06)', border: '1.5px solid rgba(255,255,255,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.5)', fontFamily: 'var(--font-ui)' }}>
+              <div style={{ marginLeft: -10, width: 34, height: 34, borderRadius: '50%', background: 'rgba(255,255,255,0.06)', border: '1.5px solid rgba(255,255,255,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 700, color: 'var(--color-text-secondary)', fontFamily: 'var(--font-body)' }}>
                 +{members.length - 5}
               </div>
             )}
-            {members.length === 0 && <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.2)', fontFamily: 'var(--font-ui)' }}>No members yet</span>}
+            {members.length === 0 && <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.2)', fontFamily: 'var(--font-body)' }}>No members yet</span>}
           </div>
           <CapacityRing current={team.memberCount} max={maxSize} />
         </div>
 
         {/* Expand footer */}
-        <div style={{ marginTop: 16, paddingTop: 14, borderTop: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontFamily: 'var(--font-ui)', fontSize: 11, color: expanded ? accent : 'rgba(255,255,255,0.3)', transition: 'color 0.2s' }}>
+        <div style={{ marginTop: 16, paddingTop: 14, borderTop: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontFamily: 'var(--font-body)', fontSize: 11, color: expanded ? accent : 'rgba(255,255,255,0.3)', transition: 'color 0.2s' }}>
           <span>{expanded ? 'Hide roster' : `View ${members.length} member${members.length !== 1 ? 's' : ''}`}</span>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s' }}>
             <polyline points="6 9 12 15 18 9" />
@@ -481,9 +481,9 @@ function TeamCard({
                 <div key={m.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 12px', borderRadius: 8, background: 'rgba(255,255,255,0.025)', border: '1px solid rgba(255,255,255,0.05)', animation: `cardIn 0.2s ease ${i * 40}ms both` }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                     <MemberAvatar name={m.userName || '?'} isCaptain={isMemberCaptain} size={28} idx={i} />
-                    <span style={{ fontSize: 13, fontWeight: 600, color: '#fff', fontFamily: 'var(--font-ui)' }}>{m.userName}</span>
+                    <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--color-text-primary)', fontFamily: 'var(--font-body)' }}>{m.userName}</span>
                   </div>
-                  <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', fontFamily: 'var(--font-ui)' }}>
+                  <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', fontFamily: 'var(--font-body)' }}>
                     {[m.userBranch, m.userYear, m.userDivision && `Div ${m.userDivision}`].filter(Boolean).join(' · ')}
                   </span>
                 </div>
@@ -528,64 +528,64 @@ function JoinRequestModal({
   return (
     <div style={{
       position: 'fixed', inset: 0, zIndex: 100,
-      background: 'rgba(5,5,15,0.88)', backdropFilter: 'blur(12px)',
+      backgroundColor: 'rgba(251,249,244,0.88)', backdropFilter: 'blur(12px)',
       display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24,
       animation: 'fadeIn 0.2s ease',
     }}>
       <div style={{
         width: '100%', maxWidth: 500, borderRadius: 20, overflow: 'hidden',
-        background: '#11111d', border: '1px solid rgba(34,211,238,0.35)',
-        boxShadow: '0 25px 80px rgba(0,0,0,0.8)', padding: 28, boxSizing: 'border-box',
+        backgroundColor: 'var(--color-bg)', border: '1px solid var(--color-sand)',
+        boxShadow: '0 20px 40px rgba(0,0,0,0.1)', padding: 28, boxSizing: 'border-box',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
           <div>
-            <p style={{ fontFamily: 'var(--font-ui)', fontSize: 10, letterSpacing: '0.16em', color: '#22d3ee', fontWeight: 700, margin: 0 }}>JOIN REQUEST</p>
-            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 22, color: '#fff', margin: 0 }}>Apply to {team.name}</h3>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: 10, letterSpacing: '0.16em', color: 'var(--color-slate-blue)', fontWeight: 700, margin: 0 }}>JOIN REQUEST</p>
+            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 22, color: 'var(--color-text-primary)', margin: 0 }}>Apply to {team.name}</h3>
           </div>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', color: '#fff', fontSize: 18, cursor: 'pointer' }}>✕</button>
+          <button onClick={onClose} style={{ backgroundColor: 'transparent', border: 'none', color: 'var(--color-text-primary)', fontSize: 18, cursor: 'pointer' }}>✕</button>
         </div>
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-          {error && <div style={{ fontSize: 12, color: '#f87171', background: 'rgba(239,68,68,0.1)', padding: '8px 12px', borderRadius: 6 }}>{error}</div>}
+          {error && <div style={{ fontSize: 12, color: 'var(--color-text-secondary)', background: 'rgba(239,68,68,0.1)', padding: '8px 12px', borderRadius: 6 }}>{error}</div>}
 
           <div>
-            <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.6)', fontFamily: 'var(--font-ui)', marginBottom: 4 }}>
+            <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: 'var(--color-text-secondary)', fontFamily: 'var(--font-body)', marginBottom: 4 }}>
               TARGET ROLE (OPTIONAL)
             </label>
             <input
               type="text" value={role} onChange={e => setRole(e.target.value)}
               placeholder="e.g. Frontend Developer, Designer..."
-              style={{ width: '100%', padding: '10px 14px', fontSize: 13, borderRadius: 8, background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.12)', color: '#fff', fontFamily: 'var(--font-ui)', boxSizing: 'border-box' }}
+              style={{ width: '100%', padding: '10px 14px', fontSize: 13, borderRadius: 8, backgroundColor: 'var(--color-white)', border: '1px solid var(--color-cream)', color: 'var(--color-text-primary)', fontFamily: 'var(--font-body)', boxSizing: 'border-box' }}
             />
           </div>
 
           <div>
-            <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.6)', fontFamily: 'var(--font-ui)', marginBottom: 4 }}>
+            <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: 'var(--color-text-secondary)', fontFamily: 'var(--font-body)', marginBottom: 4 }}>
               YOUR SKILLS & EXPERIENCE (OPTIONAL)
             </label>
             <input
               type="text" value={skills} onChange={e => setSkills(e.target.value)}
               placeholder="e.g. React, Node.js, Python, Figma, Supabase..."
-              style={{ width: '100%', padding: '10px 14px', fontSize: 13, borderRadius: 8, background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.12)', color: '#fff', fontFamily: 'var(--font-ui)', boxSizing: 'border-box' }}
+              style={{ width: '100%', padding: '10px 14px', fontSize: 13, borderRadius: 8, backgroundColor: 'var(--color-white)', border: '1px solid var(--color-cream)', color: 'var(--color-text-primary)', fontFamily: 'var(--font-body)', boxSizing: 'border-box' }}
             />
           </div>
 
           <div>
-            <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.6)', fontFamily: 'var(--font-ui)', marginBottom: 4 }}>
+            <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: 'var(--color-text-secondary)', fontFamily: 'var(--font-body)', marginBottom: 4 }}>
               MESSAGE TO TEAM CAPTAIN (OPTIONAL)
             </label>
             <textarea
               rows={3} value={pitch} onChange={e => setPitch(e.target.value)}
               placeholder="Tell the captain why you'd be a great fit for the team..."
-              style={{ width: '100%', padding: '10px 14px', fontSize: 13, borderRadius: 8, background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.12)', color: '#fff', fontFamily: 'var(--font-ui)', boxSizing: 'border-box', resize: 'vertical' }}
+              style={{ width: '100%', padding: '10px 14px', fontSize: 13, borderRadius: 8, backgroundColor: 'var(--color-white)', border: '1px solid var(--color-cream)', color: 'var(--color-text-primary)', fontFamily: 'var(--font-body)', boxSizing: 'border-box', resize: 'vertical' }}
             />
           </div>
 
           <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end', marginTop: 10 }}>
-            <button type="button" onClick={onClose} style={{ padding: '9px 18px', fontSize: 12, borderRadius: 8, background: 'transparent', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.5)', cursor: 'pointer' }}>
+            <button type="button" onClick={onClose} style={{ padding: '9px 18px', fontSize: 12, borderRadius: 8, backgroundColor: 'transparent', border: '1px solid rgba(255,255,255,0.1)', color: 'var(--color-text-secondary)', cursor: 'pointer' }}>
               Cancel
             </button>
-            <button type="submit" disabled={submitting} style={{ padding: '9px 22px', fontSize: 12, fontWeight: 700, borderRadius: 8, background: 'rgba(34,211,238,0.15)', border: '1px solid rgba(34,211,238,0.4)', color: '#22d3ee', cursor: 'pointer' }}>
+            <button type="submit" disabled={submitting} style={{ padding: '9px 22px', fontSize: 12, fontWeight: 700, borderRadius: 8, background: 'rgba(34,211,238,0.15)', border: '1px solid rgba(62,88,104,0.4)', color: 'var(--color-slate-blue)', cursor: 'pointer' }}>
               {submitting ? 'Sending...' : 'Send Application'}
             </button>
           </div>
@@ -627,16 +627,16 @@ function TransferCaptainModal({
   return (
     <div style={{
       position: 'fixed', inset: 0, zIndex: 100,
-      background: 'rgba(5,5,15,0.88)', backdropFilter: 'blur(12px)',
+      backgroundColor: 'rgba(251,249,244,0.88)', backdropFilter: 'blur(12px)',
       display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24,
     }}>
       <div style={{
         width: '100%', maxWidth: 440, borderRadius: 20, overflow: 'hidden',
-        background: '#11111d', border: '1px solid rgba(99,102,241,0.4)',
+        backgroundColor: 'var(--color-bg)', border: '1px solid rgba(99,102,241,0.4)',
         padding: 24, boxSizing: 'border-box',
       }}>
-        <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 20, color: '#fff', margin: '0 0 8px' }}>Transfer Captaincy</h3>
-        <p style={{ fontFamily: 'var(--font-ui)', fontSize: 12, color: 'rgba(255,255,255,0.4)', margin: '0 0 16px' }}>
+        <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 20, color: 'var(--color-text-primary)', margin: '0 0 8px' }}>Transfer Captaincy</h3>
+        <p style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: 'var(--color-text-secondary)', margin: '0 0 16px' }}>
           Select a teammate to make them Captain of "{team.name}" before leaving.
         </p>
 
@@ -652,14 +652,14 @@ function TransferCaptainModal({
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between',
               }}
             >
-              <span style={{ fontSize: 13, fontWeight: 600, color: '#fff', fontFamily: 'var(--font-ui)' }}>{m.userName}</span>
-              {selectedId === m.userId && <span style={{ fontSize: 11, color: '#22d3ee', fontWeight: 700 }}>Selected Captain</span>}
+              <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--color-text-primary)', fontFamily: 'var(--font-body)' }}>{m.userName}</span>
+              {selectedId === m.userId && <span style={{ fontSize: 11, color: 'var(--color-slate-blue)', fontWeight: 700 }}>Selected Captain</span>}
             </div>
           ))}
         </div>
 
         <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
-          <button onClick={onClose} style={{ padding: '8px 16px', fontSize: 12, borderRadius: 8, background: 'transparent', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.5)', cursor: 'pointer' }}>
+          <button onClick={onClose} style={{ padding: '8px 16px', fontSize: 12, borderRadius: 8, backgroundColor: 'transparent', border: '1px solid rgba(255,255,255,0.1)', color: 'var(--color-text-secondary)', cursor: 'pointer' }}>
             Cancel
           </button>
           <button onClick={handleTransfer} disabled={!selectedId || loading} style={{ padding: '8px 20px', fontSize: 12, fontWeight: 700, borderRadius: 8, background: 'rgba(99,102,241,0.18)', border: '1px solid rgba(99,102,241,0.4)', color: '#a5b4fc', cursor: selectedId ? 'pointer' : 'not-allowed' }}>
@@ -948,7 +948,7 @@ export default function TeamsPage() {
 
   if (!user) return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'var(--color-bg)', gap: 16 }}>
-      <p style={{ fontFamily: 'var(--font-ui)', fontSize: 11, letterSpacing: '0.2em', color: 'rgba(255,255,255,0.25)' }}>ACCESS RESTRICTED</p>
+      <p style={{ fontFamily: 'var(--font-body)', fontSize: 11, letterSpacing: '0.2em', color: 'rgba(255,255,255,0.25)' }}>ACCESS RESTRICTED</p>
       <Link to="/auth" className="btn-primary" style={{ padding: '12px 32px', textDecoration: 'none', borderRadius: 10 }}>Sign In</Link>
     </div>
   )
@@ -976,16 +976,16 @@ export default function TeamsPage() {
         {/* Header */}
         <div style={{ padding: '28px 0 24px', borderBottom: '1px solid rgba(255,255,255,0.07)', marginBottom: 28, display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
           <div>
-            <p style={{ fontFamily: 'var(--font-ui)', fontSize: 10, letterSpacing: '0.2em', color: '#22d3ee', fontWeight: 700, margin: '0 0 4px' }}>COLLABORATION HUB</p>
-            <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 36, color: '#fff', lineHeight: 1, margin: 0 }}>Teams & Rosters</h1>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: 10, letterSpacing: '0.2em', color: 'var(--color-slate-blue)', fontWeight: 700, margin: '0 0 4px' }}>COLLABORATION HUB</p>
+            <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 36, color: 'var(--color-text-primary)', lineHeight: 1, margin: 0 }}>Teams & Rosters</h1>
           </div>
 
           {selectedEvent && !teamsLoading && (
             <div style={{ display: 'flex', gap: 28 }}>
-              {[{ label: 'TEAMS', value: teams.length, color: '#818cf8' }, { label: 'OPEN', value: openCount, color: '#34d399' }, { label: 'MAX/TEAM', value: selectedEvent.maxTeamSize ?? 4, color: '#22d3ee' }].map(s => (
+              {[{ label: 'TEAMS', value: teams.length, color: '#818cf8' }, { label: 'OPEN', value: openCount, color: '#34d399' }, { label: 'MAX/TEAM', value: selectedEvent.maxTeamSize ?? 4, color: 'var(--color-slate-blue)' }].map(s => (
                 <div key={s.label} style={{ textAlign: 'right' }}>
                   <div style={{ fontFamily: 'var(--font-display)', fontSize: 30, lineHeight: 1 }}><AnimatedCount value={s.value} color={s.color} /></div>
-                  <div style={{ fontFamily: 'var(--font-ui)', fontSize: 9, letterSpacing: '0.14em', color: 'rgba(255,255,255,0.25)', marginTop: 3 }}>{s.label}</div>
+                  <div style={{ fontFamily: 'var(--font-body)', fontSize: 9, letterSpacing: '0.14em', color: 'rgba(255,255,255,0.25)', marginTop: 3 }}>{s.label}</div>
                 </div>
               ))}
             </div>
@@ -997,11 +997,11 @@ export default function TeamsPage() {
 
           {/* Sidebar Event Selector */}
           <div style={{ position: 'sticky', top: 'calc(var(--nav-h) + 16px)' }}>
-            <p style={{ fontFamily: 'var(--font-ui)', fontSize: 9, letterSpacing: '0.18em', color: 'rgba(255,255,255,0.25)', fontWeight: 700, marginBottom: 10 }}>SELECT EVENT</p>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: 9, letterSpacing: '0.18em', color: 'rgba(255,255,255,0.25)', fontWeight: 700, marginBottom: 10 }}>SELECT EVENT</p>
             {loading ? (
               <div style={{ display: 'flex', gap: 8, alignItems: 'center', padding: 16 }}>
                 <div style={{ width: 14, height: 14, borderRadius: '50%', border: '2px solid #22d3ee', borderTopColor: 'transparent', animation: 'spin 0.7s linear infinite' }} />
-                <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', fontFamily: 'var(--font-ui)' }}>Loading…</span>
+                <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', fontFamily: 'var(--font-body)' }}>Loading…</span>
               </div>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
@@ -1011,9 +1011,9 @@ export default function TeamsPage() {
                     <button key={ev.id} className="ev-btn" onClick={() => { setSelectedEvent(ev); setSearchQuery(''); setFilterMode('all') }} style={{ width: '100%', textAlign: 'left', padding: '12px 14px', borderRadius: 10, cursor: 'pointer', background: active ? 'rgba(34,211,238,0.07)' : 'rgba(255,255,255,0.02)', border: active ? '1px solid rgba(34,211,238,0.4)' : '1px solid rgba(255,255,255,0.05)', borderLeft: active ? '3px solid #22d3ee' : undefined, transition: 'all 0.2s' }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 6, marginBottom: 4 }}>
                         <span style={{ fontFamily: 'var(--font-display)', fontSize: 14, color: active ? '#22d3ee' : '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{ev.title}</span>
-                        <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 4, flexShrink: 0, background: enrolled ? 'rgba(34,211,238,0.12)' : 'rgba(255,255,255,0.05)', color: enrolled ? '#22d3ee' : 'rgba(255,255,255,0.3)', border: enrolled ? '1px solid rgba(34,211,238,0.25)' : '1px solid rgba(255,255,255,0.08)', fontFamily: 'var(--font-ui)', letterSpacing: '0.08em' }}>{enrolled ? 'IN' : 'GUEST'}</span>
+                        <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 4, flexShrink: 0, background: enrolled ? 'rgba(34,211,238,0.12)' : 'rgba(255,255,255,0.05)', color: enrolled ? '#22d3ee' : 'rgba(255,255,255,0.3)', border: enrolled ? '1px solid rgba(34,211,238,0.25)' : '1px solid rgba(255,255,255,0.08)', fontFamily: 'var(--font-body)', letterSpacing: '0.08em' }}>{enrolled ? 'IN' : 'GUEST'}</span>
                       </div>
-                      <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)', fontFamily: 'var(--font-ui)' }}>{ev.date} · {ev.maxTeamSize ?? 4} max</div>
+                      <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)', fontFamily: 'var(--font-body)' }}>{ev.date} · {ev.maxTeamSize ?? 4} max</div>
                     </button>
                   )
                 })}
@@ -1025,7 +1025,7 @@ export default function TeamsPage() {
           <div>
             {!selectedEvent ? (
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 300 }}>
-                <p style={{ fontFamily: 'var(--font-ui)', fontSize: 13, color: 'rgba(255,255,255,0.2)' }}>Select an event</p>
+                <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'rgba(255,255,255,0.2)' }}>Select an event</p>
               </div>
             ) : (
               <>
@@ -1053,7 +1053,7 @@ export default function TeamsPage() {
                      background: 'rgba(34,197,94,0.18)',
                      border: '1px solid rgba(34,197,94,0.5)',
                      color: '#4ade80',
-                     fontFamily: 'var(--font-ui)',
+                     fontFamily: 'var(--font-body)',
                      fontSize: 13,
                      fontWeight: 700,
                      backdropFilter: 'blur(10px)',
@@ -1070,26 +1070,26 @@ export default function TeamsPage() {
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#22d3ee" strokeWidth="2"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
                       <div>
-                        <p style={{ fontFamily: 'var(--font-ui)', fontSize: 12, fontWeight: 600, color: '#fff', margin: 0 }}>Viewing as guest — {selectedEvent.title}</p>
-                        <p style={{ fontFamily: 'var(--font-ui)', fontSize: 11, color: 'rgba(255,255,255,0.35)', margin: 0 }}>Enroll to create or join a team</p>
+                        <p style={{ fontFamily: 'var(--font-body)', fontSize: 12, fontWeight: 600, color: 'var(--color-text-primary)', margin: 0 }}>Viewing as guest — {selectedEvent.title}</p>
+                        <p style={{ fontFamily: 'var(--font-body)', fontSize: 11, color: 'rgba(255,255,255,0.35)', margin: 0 }}>Enroll to create or join a team</p>
                       </div>
                     </div>
-                    <Link to={`/events/${selectedEvent.id}`} style={{ padding: '7px 16px', fontSize: 11, fontWeight: 600, borderRadius: 7, background: 'rgba(34,211,238,0.1)', border: '1px solid rgba(34,211,238,0.35)', color: '#22d3ee', textDecoration: 'none', fontFamily: 'var(--font-ui)' }}>Enroll →</Link>
+                    <Link to={`/events/${selectedEvent.id}`} style={{ padding: '7px 16px', fontSize: 11, fontWeight: 600, borderRadius: 7, background: 'rgba(34,211,238,0.1)', border: '1px solid var(--color-sand)', color: 'var(--color-slate-blue)', textDecoration: 'none', fontFamily: 'var(--font-body)' }}>Enroll →</Link>
                   </div>
                 )}
 
                 {/* Event Workspace Top Bar */}
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 18, flexWrap: 'wrap' }}>
                   <div>
-                    <p style={{ fontFamily: 'var(--font-ui)', fontSize: 9, letterSpacing: '0.18em', color: 'rgba(255,255,255,0.25)', margin: '0 0 3px' }}>EVENT</p>
-                    <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 22, color: '#fff', margin: 0 }}>{selectedEvent.title}</h2>
+                    <p style={{ fontFamily: 'var(--font-body)', fontSize: 9, letterSpacing: '0.18em', color: 'rgba(255,255,255,0.25)', margin: '0 0 3px' }}>EVENT</p>
+                    <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 22, color: 'var(--color-text-primary)', margin: 0 }}>{selectedEvent.title}</h2>
                   </div>
 
                   {/* 1 Team per User Limit enforcement */}
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                     {myTeam ? (
                       <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-                        <span style={{ padding: '7px 14px', fontSize: 11, fontWeight: 600, borderRadius: 8, background: 'rgba(34,211,238,0.08)', border: '1px solid rgba(34,211,238,0.25)', color: '#22d3ee', fontFamily: 'var(--font-ui)' }}>
+                        <span style={{ padding: '7px 14px', fontSize: 11, fontWeight: 600, borderRadius: 8, backgroundColor: 'rgba(62,88,104,0.08)', border: '1px solid rgba(62,88,104,0.25)', color: 'var(--color-slate-blue)', fontFamily: 'var(--font-body)' }}>
                           {myTeam.createdBy === user.id ? `🟢 Captain of "${myTeam.name}"` : `✓ In Team "${myTeam.name}"`}
                         </span>
                         <button
@@ -1102,13 +1102,13 @@ export default function TeamsPage() {
                             padding: '7px 16px', fontSize: 11, fontWeight: 700, borderRadius: 8, cursor: 'pointer',
                             background: myTeamUnread > 0 ? 'rgba(239,68,68,0.2)' : 'rgba(99,102,241,0.18)',
                             border: myTeamUnread > 0 ? '1px solid rgba(239,68,68,0.5)' : '1px solid rgba(99,102,241,0.45)',
-                            color: myTeamUnread > 0 ? '#f87171' : '#a5b4fc', fontFamily: 'var(--font-ui)', display: 'inline-flex', alignItems: 'center', gap: 6,
+                            color: myTeamUnread > 0 ? '#f87171' : '#a5b4fc', fontFamily: 'var(--font-body)', display: 'inline-flex', alignItems: 'center', gap: 6,
                             transition: 'all 0.2s',
                           }}
                         >
                           💬 Team Chat
                           {myTeamUnread > 0 && (
-                            <span style={{ padding: '1px 6px', borderRadius: 10, background: '#ef4444', color: '#fff', fontSize: 10, fontWeight: 800, boxShadow: '0 0 8px #ef4444', animation: 'pulse 2s infinite' }}>
+                            <span style={{ padding: '1px 6px', borderRadius: 10, background: '#ef4444', color: 'var(--color-text-primary)', fontSize: 10, fontWeight: 800, boxShadow: '0 0 8px #ef4444', animation: 'pulse 2s infinite' }}>
                               {myTeamUnread}
                             </span>
                           )}
@@ -1116,7 +1116,7 @@ export default function TeamsPage() {
                       </div>
                     ) : (
                       isEnrolled(selectedEvent.id) && (
-                        <button onClick={() => setShowCreate(v => !v)} style={{ padding: '9px 20px', fontSize: 12, fontWeight: 700, borderRadius: 8, cursor: 'pointer', background: showCreate ? 'rgba(255,255,255,0.05)' : 'rgba(34,211,238,0.12)', border: `1px solid ${showCreate ? 'rgba(255,255,255,0.12)' : 'rgba(34,211,238,0.4)'}`, color: showCreate ? 'rgba(255,255,255,0.5)' : '#22d3ee', fontFamily: 'var(--font-ui)', letterSpacing: '0.06em', transition: 'all 0.2s' }}>
+                        <button onClick={() => setShowCreate(v => !v)} style={{ padding: '9px 20px', fontSize: 12, fontWeight: 700, borderRadius: 8, cursor: 'pointer', background: showCreate ? 'rgba(255,255,255,0.05)' : 'rgba(34,211,238,0.12)', border: `1px solid ${showCreate ? 'rgba(255,255,255,0.12)' : 'rgba(34,211,238,0.4)'}`, color: showCreate ? 'rgba(255,255,255,0.5)' : '#22d3ee', fontFamily: 'var(--font-body)', letterSpacing: '0.06em', transition: 'all 0.2s' }}>
                           {showCreate ? '✕ Cancel' : '+ Create Team'}
                         </button>
                       )
@@ -1129,47 +1129,47 @@ export default function TeamsPage() {
 
                 {/* Create Team Form (with Optional Skills, Achievements, Open Roles) */}
                 {showCreate && !myTeam && (
-                  <form onSubmit={handleCreate} onKeyDown={e => { if (e.key === 'Enter') e.preventDefault() }} style={{ marginBottom: 20, padding: '20px 24px', borderRadius: 14, background: 'rgba(34,211,238,0.03)', border: '1px solid rgba(34,211,238,0.25)', animation: 'cardIn 0.25s ease' }}>
-                    <p style={{ fontFamily: 'var(--font-ui)', fontSize: 10, letterSpacing: '0.16em', color: '#22d3ee', fontWeight: 700, marginBottom: 14 }}>
+                  <form onSubmit={handleCreate} onKeyDown={e => { if (e.key === 'Enter') e.preventDefault() }} style={{ marginBottom: 20, padding: '20px 24px', borderRadius: 14, background: 'rgba(34,211,238,0.03)', border: '1px solid rgba(62,88,104,0.25)', animation: 'cardIn 0.25s ease' }}>
+                    <p style={{ fontFamily: 'var(--font-body)', fontSize: 10, letterSpacing: '0.16em', color: 'var(--color-slate-blue)', fontWeight: 700, marginBottom: 14 }}>
                       CREATE NEW TEAM — {selectedEvent.title.toUpperCase()}
                     </p>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                       <div>
-                        <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.7)', fontFamily: 'var(--font-ui)', marginBottom: 4 }}>
+                        <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.7)', fontFamily: 'var(--font-body)', marginBottom: 4 }}>
                           TEAM NAME *
                         </label>
-                        <input className="focus-cyan" type="text" value={newTeamName} onChange={e => setNewTeamName(e.target.value)} placeholder="Enter team name…" maxLength={40} autoFocus style={{ width: '100%', padding: '10px 14px', fontSize: 13, borderRadius: 8, background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.12)', color: '#fff', fontFamily: 'var(--font-ui)', boxSizing: 'border-box' }} />
+                        <input className="focus-cyan" type="text" value={newTeamName} onChange={e => setNewTeamName(e.target.value)} placeholder="Enter team name…" maxLength={40} autoFocus style={{ width: '100%', padding: '10px 14px', fontSize: 13, borderRadius: 8, backgroundColor: 'var(--color-white)', border: '1px solid var(--color-cream)', color: 'var(--color-text-primary)', fontFamily: 'var(--font-body)', boxSizing: 'border-box' }} />
                       </div>
 
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                         <div>
-                          <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.5)', fontFamily: 'var(--font-ui)', marginBottom: 4 }}>
+                          <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: 'var(--color-text-secondary)', fontFamily: 'var(--font-body)', marginBottom: 4 }}>
                             CAPTAIN/TEAM SKILLS (OPTIONAL)
                           </label>
-                          <input className="focus-cyan" type="text" value={newTeamSkills} onChange={e => setNewTeamSkills(e.target.value)} placeholder="e.g. React, Python, Figma..." style={{ width: '100%', padding: '9px 12px', fontSize: 12, borderRadius: 8, background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', fontFamily: 'var(--font-ui)', boxSizing: 'border-box' }} />
+                          <input className="focus-cyan" type="text" value={newTeamSkills} onChange={e => setNewTeamSkills(e.target.value)} placeholder="e.g. React, Python, Figma..." style={{ width: '100%', padding: '9px 12px', fontSize: 12, borderRadius: 8, backgroundColor: 'var(--color-white)', border: '1px solid rgba(255,255,255,0.1)', color: 'var(--color-text-primary)', fontFamily: 'var(--font-body)', boxSizing: 'border-box' }} />
                         </div>
 
                         <div>
-                          <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.5)', fontFamily: 'var(--font-ui)', marginBottom: 4 }}>
+                          <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: 'var(--color-text-secondary)', fontFamily: 'var(--font-body)', marginBottom: 4 }}>
                             ACHIEVEMENTS (OPTIONAL)
                           </label>
-                          <input className="focus-cyan" type="text" value={newTeamAchievements} onChange={e => setNewTeamAchievements(e.target.value)} placeholder="e.g. 1st Place Hackathon 2025..." style={{ width: '100%', padding: '9px 12px', fontSize: 12, borderRadius: 8, background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', fontFamily: 'var(--font-ui)', boxSizing: 'border-box' }} />
+                          <input className="focus-cyan" type="text" value={newTeamAchievements} onChange={e => setNewTeamAchievements(e.target.value)} placeholder="e.g. 1st Place Hackathon 2025..." style={{ width: '100%', padding: '9px 12px', fontSize: 12, borderRadius: 8, backgroundColor: 'var(--color-white)', border: '1px solid rgba(255,255,255,0.1)', color: 'var(--color-text-primary)', fontFamily: 'var(--font-body)', boxSizing: 'border-box' }} />
                         </div>
                       </div>
 
                       <div>
-                        <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.5)', fontFamily: 'var(--font-ui)', marginBottom: 4 }}>
+                        <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: 'var(--color-text-secondary)', fontFamily: 'var(--font-body)', marginBottom: 4 }}>
                           OPEN ROLES IN TEAM (OPTIONAL, COMMA-SEPARATED)
                         </label>
-                        <input className="focus-cyan" type="text" value={newTeamOpenRoles} onChange={e => setNewTeamOpenRoles(e.target.value)} placeholder="e.g. Frontend Developer, UI Designer, Backend Dev" style={{ width: '100%', padding: '9px 12px', fontSize: 12, borderRadius: 8, background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', fontFamily: 'var(--font-ui)', boxSizing: 'border-box' }} />
+                        <input className="focus-cyan" type="text" value={newTeamOpenRoles} onChange={e => setNewTeamOpenRoles(e.target.value)} placeholder="e.g. Frontend Developer, UI Designer, Backend Dev" style={{ width: '100%', padding: '9px 12px', fontSize: 12, borderRadius: 8, backgroundColor: 'var(--color-white)', border: '1px solid rgba(255,255,255,0.1)', color: 'var(--color-text-primary)', fontFamily: 'var(--font-body)', boxSizing: 'border-box' }} />
                       </div>
 
-                      {createError && <p style={{ fontSize: 11, color: '#f87171', margin: 0, fontFamily: 'var(--font-ui)' }}>{createError}</p>}
+                      {createError && <p style={{ fontSize: 11, color: 'var(--color-text-secondary)', margin: 0, fontFamily: 'var(--font-body)' }}>{createError}</p>}
 
                       <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end', marginTop: 6 }}>
-                        <button type="button" onClick={() => setShowCreate(false)} style={{ padding: '9px 18px', fontSize: 12, borderRadius: 8, background: 'transparent', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.5)', cursor: 'pointer' }}>Cancel</button>
-                        <button type="submit" disabled={creating} style={{ padding: '9px 24px', fontSize: 12, fontWeight: 700, borderRadius: 8, background: 'rgba(34,211,238,0.15)', border: '1px solid rgba(34,211,238,0.4)', color: '#22d3ee', cursor: 'pointer' }}>
+                        <button type="button" onClick={() => setShowCreate(false)} style={{ padding: '9px 18px', fontSize: 12, borderRadius: 8, backgroundColor: 'transparent', border: '1px solid rgba(255,255,255,0.1)', color: 'var(--color-text-secondary)', cursor: 'pointer' }}>Cancel</button>
+                        <button type="submit" disabled={creating} style={{ padding: '9px 24px', fontSize: 12, fontWeight: 700, borderRadius: 8, background: 'rgba(34,211,238,0.15)', border: '1px solid rgba(62,88,104,0.4)', color: 'var(--color-slate-blue)', cursor: 'pointer' }}>
                           {creating ? 'Creating…' : 'Create Team'}
                         </button>
                       </div>
@@ -1181,28 +1181,28 @@ export default function TeamsPage() {
                 <div style={{ display: 'flex', gap: 10, alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', padding: '10px 14px', borderRadius: 10, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.07)' }}>
                   <div style={{ position: 'relative', flex: 1, minWidth: 180 }}>
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.25)" strokeWidth="2" style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)' }}><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
-                    <input className="focus-cyan" type="text" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="Search teams, members, or open roles…" style={{ width: '100%', paddingLeft: 30, paddingRight: 10, paddingTop: 7, paddingBottom: 7, fontSize: 12, borderRadius: 7, background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.08)', color: '#fff', fontFamily: 'var(--font-ui)', boxSizing: 'border-box', transition: 'border-color 0.2s' }} />
+                    <input className="focus-cyan" type="text" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="Search teams, members, or open roles…" style={{ width: '100%', paddingLeft: 30, paddingRight: 10, paddingTop: 7, paddingBottom: 7, fontSize: 12, borderRadius: 7, background: 'rgba(0,0,0,0.3)', border: '1px solid var(--color-cream)', color: 'var(--color-text-primary)', fontFamily: 'var(--font-body)', boxSizing: 'border-box', transition: 'border-color 0.2s' }} />
                   </div>
                   <div style={{ display: 'flex', gap: 4 }}>
                     {[{ key: 'all', label: `All (${teams.length})` }, { key: 'recruiting', label: `Open (${openCount})` }, ...(myTeam ? [{ key: 'myteam', label: 'Mine' }] : [])].map(f => (
-                      <button key={f.key} className="filter-btn" onClick={() => setFilterMode(f.key as any)} style={{ padding: '6px 14px', fontSize: 11, fontWeight: 600, borderRadius: 7, cursor: 'pointer', background: filterMode === f.key ? 'rgba(34,211,238,0.12)' : 'transparent', border: filterMode === f.key ? '1px solid rgba(34,211,238,0.35)' : '1px solid transparent', color: filterMode === f.key ? '#22d3ee' : 'rgba(255,255,255,0.3)', fontFamily: 'var(--font-ui)', transition: 'all 0.2s' }}>{f.label}</button>
+                      <button key={f.key} className="filter-btn" onClick={() => setFilterMode(f.key as any)} style={{ padding: '6px 14px', fontSize: 11, fontWeight: 600, borderRadius: 7, cursor: 'pointer', background: filterMode === f.key ? 'rgba(34,211,238,0.12)' : 'transparent', border: filterMode === f.key ? '1px solid rgba(34,211,238,0.35)' : '1px solid transparent', color: filterMode === f.key ? '#22d3ee' : 'rgba(255,255,255,0.3)', fontFamily: 'var(--font-body)', transition: 'all 0.2s' }}>{f.label}</button>
                     ))}
                   </div>
                 </div>
 
-                {error && <div style={{ marginBottom: 16, padding: '10px 14px', borderRadius: 8, background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)', color: '#f87171', fontSize: 12, fontFamily: 'var(--font-ui)' }}>{error}</div>}
+                {error && <div style={{ marginBottom: 16, padding: '10px 14px', borderRadius: 8, backgroundColor: 'transparent', border: '1px solid var(--color-sand)', color: 'var(--color-text-secondary)', fontSize: 12, fontFamily: 'var(--font-body)' }}>{error}</div>}
 
                 {/* Teams List */}
                 {teamsLoading ? (
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, minHeight: 240 }}>
                     <div style={{ width: 20, height: 20, borderRadius: '50%', border: '2px solid #22d3ee', borderTopColor: 'transparent', animation: 'spin 0.7s linear infinite' }} />
-                    <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.3)', fontFamily: 'var(--font-ui)' }}>Loading teams…</span>
+                    <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.3)', fontFamily: 'var(--font-body)' }}>Loading teams…</span>
                   </div>
                 ) : filtered.length === 0 ? (
                   <div style={{ minHeight: 200, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 10, borderRadius: 14, border: '1px dashed rgba(255,255,255,0.07)', padding: 40 }}>
                     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
                     <p style={{ fontFamily: 'var(--font-display)', fontSize: 18, color: 'rgba(255,255,255,0.2)', margin: 0 }}>No teams found</p>
-                    <p style={{ fontFamily: 'var(--font-ui)', fontSize: 12, color: 'rgba(255,255,255,0.12)', margin: 0 }}>{searchQuery ? `No results for "${searchQuery}"` : 'No teams created yet'}</p>
+                    <p style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: 'rgba(255,255,255,0.12)', margin: 0 }}>{searchQuery ? `No results for "${searchQuery}"` : 'No teams created yet'}</p>
                   </div>
                 ) : (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>

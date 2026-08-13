@@ -1,26 +1,25 @@
 import { useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import TransitionLink from './TransitionLink'
-import { gsap } from 'gsap'
 import { useApp } from '../../context/AppContext'
 import { teamService } from '../../services/teamService'
 import { teamChatService } from '../../services/teamChatService'
 import { isOriginalAdminEmail } from '../../services/authService'
 
 const BASE_NAV_ITEMS = [
-  { label: 'Events', href: '/' },
+  { label: 'Home', href: '/' },
+  { label: 'Events', href: '/events' },
   { label: 'Past Events', href: '/past-events' },
   { label: 'Teams', href: '/teams' },
   { label: 'About', href: '/about' },
-  { label: 'My Passes', href: '/my-tickets' },
 ]
 
 export default function NavMenu() {
-  const navRef = useRef<HTMLElement>(null)
   const [scrolled, setScrolled] = useState(false)
+  const [scrollY, setScrollY] = useState(0)
+  const [scrollDirection, setScrollDirection] = useState<'up'|'down'>('up')
   const [menuOpen, setMenuOpen] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
-  const mobileMenuRef = useRef<HTMLDivElement>(null)
   const profileDropdownRef = useRef<HTMLDivElement>(null)
   const location = useLocation()
   const { user, logout } = useApp()
@@ -34,8 +33,20 @@ export default function NavMenu() {
     : BASE_NAV_ITEMS
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 60)
-    window.addEventListener('scroll', onScroll)
+    let lastScrollY = window.scrollY;
+    const onScroll = () => {
+      const currentScrollY = window.scrollY;
+      setScrollY(currentScrollY);
+      setScrolled(currentScrollY > 40);
+      
+      if (currentScrollY > lastScrollY && currentScrollY > 10) {
+        setScrollDirection('down');
+      } else if (currentScrollY < lastScrollY) {
+        setScrollDirection('up');
+      }
+      lastScrollY = currentScrollY;
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
@@ -43,7 +54,6 @@ export default function NavMenu() {
   useEffect(() => {
     if (!user?.id) return
     let isMounted = true
-
     const checkUnread = async () => {
       try {
         const teams = await teamService.getUserTeams(user.id)
@@ -61,13 +71,9 @@ export default function NavMenu() {
         console.warn('Check unread error:', err)
       }
     }
-
     checkUnread()
-    const interval = setInterval(checkUnread, 3000)
-    return () => {
-      isMounted = false
-      clearInterval(interval)
-    }
+    const interval = setInterval(checkUnread, 5000)
+    return () => { isMounted = false; clearInterval(interval) }
   }, [user?.id, location.pathname])
 
   // Poll for pending team invitations
@@ -85,15 +91,6 @@ export default function NavMenu() {
     return () => { isMounted = false; clearInterval(interval) }
   }, [user?.id, location.pathname])
 
-  useEffect(() => {
-    if (!navRef.current) return
-    gsap.fromTo(
-      navRef.current,
-      { y: -80, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.5, ease: 'p5Overshoot', delay: 0.3 }
-    )
-  }, [])
-
   // Close profile dropdown when clicking outside
   useEffect(() => {
     if (!profileOpen) return
@@ -106,302 +103,274 @@ export default function NavMenu() {
     return () => document.removeEventListener('mousedown', handler)
   }, [profileOpen])
 
-  // Close dropdown on route change
-  useEffect(() => { setProfileOpen(false); setMenuOpen(false) }, [location.pathname])
+  useEffect(() => { 
+    setProfileOpen(false)
+    setMenuOpen(false)
+    if (menuOpen) {
+      document.body.style.overflow = 'auto'
+    }
+  }, [location.pathname])
 
   const toggleMenu = () => {
-    if (!mobileMenuRef.current) return
-    if (!menuOpen) {
-      setMenuOpen(true)
-      gsap.fromTo(
-        mobileMenuRef.current,
-        { clipPath: 'polygon(0 0, 100% 0, 95% 0, 0 0)', opacity: 0 },
-        { clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', opacity: 1, duration: 0.35, ease: 'p5Overshoot' }
-      )
-    } else {
-      gsap.to(mobileMenuRef.current, {
-        clipPath: 'polygon(0 0, 100% 0, 95% 0, 0 0)',
-        opacity: 0,
-        duration: 0.25,
-        ease: 'power2.in',
-        onComplete: () => setMenuOpen(false),
-      })
-    }
+    setMenuOpen(!menuOpen)
+    document.body.style.overflow = !menuOpen ? 'hidden' : 'auto'
   }
+
+  const [hovered, setHovered] = useState(false)
 
   const handleLogout = async () => {
     setProfileOpen(false)
     await logout()
   }
 
+  const isActiveBg = scrolled || hovered || menuOpen;
+
+  const [forceToggle, setForceToggle] = useState<'show'|'hide'|null>(null);
+
+  useEffect(() => {
+    if (forceToggle) setForceToggle(null);
+  }, [scrollDirection]);
+
+  let navHidden = false;
+  if (scrollY > 10) {
+    navHidden = scrollDirection === 'down' && !hovered && !menuOpen && !profileOpen;
+  }
+  if (forceToggle === 'show') navHidden = false;
+  if (forceToggle === 'hide') navHidden = true;
+
   return (
     <>
-      <nav
-        ref={navRef}
-        id="main-nav"
-        className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12"
-        style={{
-          height: 'var(--nav-h)',
-          background: scrolled ? 'rgba(10,10,15,0.92)' : 'transparent',
-          backdropFilter: scrolled ? 'blur(16px)' : 'none',
-          borderBottom: scrolled ? '1px solid rgba(99,102,241,0.2)' : 'none',
-          transition: 'background 0.3s ease, border-color 0.3s ease',
-        }}
+      <div 
+        className="fixed top-0 left-0 right-0 z-50 pointer-events-none"
+        style={{ height: 'var(--nav-h)' }}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
       >
-        {/* Logo */}
-        <TransitionLink to="/" className="flex items-center gap-3 no-underline group" aria-label="EventX Home">
-          <span className="font-display text-2xl tracking-widest" style={{ color: 'var(--color-accent)', letterSpacing: '0.15em' }}>EVENT</span>
-          <span className="font-display text-2xl tracking-widest" style={{ color: 'var(--color-primary)', letterSpacing: '0.15em' }}>ZERO</span>
-        </TransitionLink>
+        <div className="absolute top-0 left-0 right-0 h-4 pointer-events-auto" />
+        
+        <nav
+          className="pointer-events-auto flex items-center justify-between px-6 md:px-12 transition-all duration-500 w-full h-full relative"
+          style={{
+            transform: navHidden ? 'translateY(-100%)' : 'translateY(0)',
+            background: isActiveBg ? 'rgba(251, 249, 244, 0.98)' : 'transparent',
+            backdropFilter: isActiveBg ? 'blur(12px)' : 'none',
+            borderBottom: isActiveBg ? '1px solid var(--color-cream)' : '1px solid transparent',
+          }}
+        >
+          {/* Logo */}
+          <TransitionLink to="/" className="flex items-center no-underline text-2xl" aria-label="Event Zero Home">
+            <span className="font-display font-bold" style={{ color: 'var(--color-text-primary)' }}>Event</span>
+            <span className="font-display" style={{ color: 'var(--color-slate-blue)', marginLeft: '4px' }}>Zero</span>
+          </TransitionLink>
+
+          {/* Toggle Arrow */}
+          <button 
+            onClick={() => setForceToggle(navHidden ? 'show' : 'hide')}
+            className="absolute left-1/2 -translate-x-1/2 z-[60] flex items-center justify-center bg-[var(--color-surface)] shadow-sm border border-[var(--color-cream)] cursor-pointer transition-all duration-300"
+            style={{ 
+              bottom: '-20px', 
+              width: '44px', 
+              height: '20px', 
+              borderBottomLeftRadius: '12px', 
+              borderBottomRightRadius: '12px',
+              borderTop: 'none',
+              color: 'var(--color-slate-blue)'
+            }}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ transform: navHidden ? 'rotate(0deg)' : 'rotate(180deg)', transition: 'transform 0.4s' }}>
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
 
         {/* Desktop nav */}
-        <ul className="hidden md:flex items-center gap-8 list-none m-0">
+        <ul className="hidden md:flex items-center gap-10 list-none m-0">
           {navItems.map((item) => {
             const isActive = location.pathname === item.href || (item.href !== '/' && location.pathname.startsWith(item.href))
             return (
               <li key={item.href}>
                 <TransitionLink
                   to={item.href}
-                  className="font-ui font-semibold tracking-wider text-sm no-underline relative group flex items-center"
-                  style={{ color: isActive ? 'var(--color-primary)' : 'var(--color-text-muted)', letterSpacing: '0.12em', transition: 'color 0.2s ease' }}
-                  onMouseEnter={(e) => ((e.currentTarget as HTMLAnchorElement).style.color = 'var(--color-text)')}
-                  onMouseLeave={(e) => ((e.currentTarget as HTMLAnchorElement).style.color = isActive ? 'var(--color-primary)' : 'var(--color-text-muted)')}
+                  className={`nav-link ${isActive ? 'active' : ''}`}
                 >
-                  {item.label.toUpperCase()}
-                  {item.href === '/teams' && unreadChatCount > 0 && (
+                  {item.label}
+                  {item.href === '/teams' && (unreadChatCount > 0 || pendingInviteCount > 0) && (
                     <span
                       style={{
-                        marginLeft: 6,
-                        padding: '1px 6px',
-                        borderRadius: 10,
-                        background: '#ef4444',
-                        color: '#ffffff',
-                        fontSize: 10,
-                        fontWeight: 800,
-                        lineHeight: '1.2',
-                        boxShadow: '0 0 10px rgba(239, 68, 68, 0.8)',
-                        animation: 'pulse 2s infinite',
+                        position: 'absolute',
+                        top: '-5px',
+                        right: '-12px',
+                        width: '8px',
+                        height: '8px',
+                        borderRadius: '50%',
+                        background: 'var(--color-dusty-blue)',
                       }}
-                      title={`${unreadChatCount} unread team message${unreadChatCount > 1 ? 's' : ''}`}
-                    >
-                      {unreadChatCount}
-                    </span>
+                      title="New updates"
+                    />
                   )}
-                  {item.href === '/teams' && pendingInviteCount > 0 && (
-                    <span
-                      style={{
-                        marginLeft: unreadChatCount > 0 ? 4 : 6,
-                        padding: '1px 6px',
-                        borderRadius: 10,
-                        background: '#d97706',
-                        color: '#ffffff',
-                        fontSize: 10,
-                        fontWeight: 800,
-                        lineHeight: '1.2',
-                        boxShadow: '0 0 10px rgba(245,158,11,0.8)',
-                        animation: 'pulse 2s infinite',
-                      }}
-                      title={`${pendingInviteCount} pending team invitation${pendingInviteCount > 1 ? 's' : ''}`}
-                    >
-                      ✉{pendingInviteCount}
-                    </span>
-                  )}
-                  <span className="absolute -bottom-1 left-0 h-px transition-all duration-200" style={{ background: 'var(--color-primary)', width: isActive ? '100%' : '0%' }} />
                 </TransitionLink>
               </li>
             )
           })}
+        </ul>
 
-          {/* Auth section */}
-          <li className="ml-4">
-            {user ? (
-              /* Profile avatar + dropdown */
-              <div className="relative" ref={profileDropdownRef}>
-                <button
-                  id="nav-profile-btn"
-                  onClick={() => setProfileOpen(v => !v)}
-                  className="flex items-center gap-3 cursor-pointer"
-                  style={{ background: 'none', border: 'none', padding: 0 }}
+        {/* Auth section */}
+        <div className="hidden md:flex items-center">
+          {user ? (
+            <div className="relative" ref={profileDropdownRef}>
+              <button
+                onClick={() => setProfileOpen(!profileOpen)}
+                className="flex items-center gap-3 cursor-pointer p-0"
+                style={{ background: 'none', border: 'none' }}
+              >
+                <div className="flex flex-col items-end text-right">
+                  <span className="font-body text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
+                    {user.name.split(' ')[0]}
+                  </span>
+                  {isAdmin && (
+                    <span className="text-[10px] font-body tracking-widest text-editorial uppercase">Admin</span>
+                  )}
+                </div>
+                <div
+                  className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center font-display text-sm font-bold"
+                  style={{
+                    background: user.avatarUrl ? 'transparent' : 'var(--color-cream)',
+                    color: 'var(--color-slate-blue)',
+                    border: '1px solid var(--color-sand)'
+                  }}
                 >
-                  <div
-                    className="w-9 h-9 rounded-full overflow-hidden flex-shrink-0 flex items-center justify-center font-display text-sm font-bold text-white"
-                    style={{
-                      background: user.avatarUrl ? 'transparent' : 'rgba(99,102,241,0.25)',
-                      border: `2px solid ${profileOpen ? 'var(--color-accent)' : 'rgba(99,102,241,0.4)'}`,
-                      transition: 'border-color 0.2s',
-                      boxShadow: profileOpen ? '0 0 12px rgba(34,211,238,0.4)' : 'none',
-                    }}
+                  {user.avatarUrl ? (
+                    <img src={user.avatarUrl} alt={user.name} className="w-full h-full object-cover" />
+                  ) : (
+                    <span>{(user.name.charAt(0) || 'U').toUpperCase()}</span>
+                  )}
+                </div>
+              </button>
+
+              {/* Profile Dropdown */}
+              <div
+                className={`absolute right-0 top-full mt-4 w-56 py-4 bg-white shadow-xl transition-all duration-300 ease-out origin-top-right ${profileOpen ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-95 pointer-events-none'}`}
+                style={{ border: '1px solid var(--color-cream)' }}
+              >
+                <div className="px-5 pb-4 mb-2 border-b border-gray-100">
+                  <p className="font-display font-medium text-lg text-gray-900 truncate">{user.name}</p>
+                  <p className="font-body text-xs text-gray-500 truncate mt-1">{user.email}</p>
+                </div>
+
+                {[
+                  { label: 'My Profile', href: '/profile' },
+                  { label: 'My Passes', href: '/my-tickets' },
+                  { label: 'Admin Console', href: '/admin', show: isAdmin },
+                ].filter(item => item.show !== false).map(({ label, href }) => (
+                  <TransitionLink
+                    key={href}
+                    to={href}
+                    className="block px-5 py-2.5 font-body text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors"
                   >
+                    {label}
+                  </TransitionLink>
+                ))}
+
+                <div className="mt-2 pt-2 border-t border-gray-100">
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left px-5 py-2.5 font-body text-sm text-red-600 hover:bg-red-50 transition-colors"
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <TransitionLink
+              to="/auth"
+              className="btn-primary py-2 px-6"
+            >
+              Sign In
+            </TransitionLink>
+          )}
+        </div>
+
+        {/* Mobile Hamburger */}
+        <button
+          onClick={toggleMenu}
+          className="md:hidden flex flex-col gap-1.5 p-2 z-[60]"
+          aria-label="Toggle menu"
+          style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+        >
+          <span className={`block w-7 h-[1px] bg-black transition-all duration-300 ${menuOpen ? 'rotate-45 translate-y-[7px]' : ''}`} />
+          <span className={`block w-7 h-[1px] bg-black transition-all duration-300 ${menuOpen ? 'opacity-0' : ''}`} />
+          <span className={`block w-7 h-[1px] bg-black transition-all duration-300 ${menuOpen ? '-rotate-45 -translate-y-[7px]' : ''}`} />
+        </button>
+        </nav>
+      </div>
+
+      {/* Mobile Drawer Backdrop */}
+      <div 
+        className={`fixed inset-0 bg-black/20 z-[55] md:hidden transition-opacity duration-300 ${menuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+        onClick={toggleMenu}
+      />
+
+      {/* Mobile Fullscreen Drawer */}
+      <div
+        className={`fixed top-0 right-0 bottom-0 w-[85%] max-w-sm z-[55] bg-[var(--color-white)] border-l border-[var(--color-cream)] shadow-2xl flex flex-col md:hidden transition-transform duration-500 ease-out ${menuOpen ? 'translate-x-0' : 'translate-x-full'}`}
+      >
+        <div className="flex flex-col h-full pt-28 px-8 pb-10 overflow-y-auto">
+          <ul className="flex flex-col gap-8 list-none p-0 m-0 flex-grow">
+            {navItems.map((item) => (
+              <li key={item.href}>
+                <TransitionLink
+                  to={item.href}
+                  onClick={toggleMenu}
+                  className="font-display text-3xl font-medium text-[var(--color-text-primary)]"
+                >
+                  {item.label}
+                  {item.href === '/teams' && (unreadChatCount > 0 || pendingInviteCount > 0) && (
+                    <span className="ml-3 inline-block w-2 h-2 rounded-full bg-[var(--color-dusty-blue)] align-middle" />
+                  )}
+                </TransitionLink>
+              </li>
+            ))}
+          </ul>
+
+          <div className="pt-8 mt-8 border-t border-[var(--color-cream)]">
+            {user ? (
+              <div className="flex flex-col gap-6">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center bg-[var(--color-cream)] text-[var(--color-slate-blue)] font-display text-lg border border-[var(--color-sand)]">
                     {user.avatarUrl ? (
                       <img src={user.avatarUrl} alt={user.name} className="w-full h-full object-cover" />
                     ) : (
                       <span>{(user.name.charAt(0) || 'U').toUpperCase()}</span>
                     )}
                   </div>
-                  <div className="hidden lg:flex flex-col items-start">
-                    <div className="flex items-center gap-1.5">
-                      <span className="font-ui font-semibold text-xs tracking-wider leading-tight" style={{ color: 'var(--color-text)', letterSpacing: '0.05em' }}>
-                        {user.name.split(' ')[0].toUpperCase()}
-                      </span>
-                      {isAdmin && (
-                        <span className="px-1.5 py-0.5 text-[9px] font-ui font-bold tracking-widest bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
-                          ADMIN
-                        </span>
-                      )}
-                    </div>
-                    <span className="font-ui text-xs leading-tight" style={{ color: 'var(--color-text-muted)', fontSize: '0.65rem' }}>
-                      {user.email}
-                    </span>
+                  <div>
+                    <p className="font-display font-medium text-lg text-[var(--color-text-primary)] leading-none">{user.name}</p>
+                    <p className="font-body text-sm text-[var(--color-text-secondary)] mt-1">{user.email}</p>
                   </div>
-                  <svg
-                    width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
-                    style={{ color: 'var(--color-text-muted)', transition: 'transform 0.2s', transform: profileOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
-                  >
-                    <polyline points="6 9 12 15 18 9"/>
-                  </svg>
+                </div>
+                
+                <TransitionLink to="/profile" onClick={toggleMenu} className="font-body text-base text-[var(--color-text-primary)]">
+                  My Profile
+                </TransitionLink>
+                <TransitionLink to="/my-tickets" onClick={toggleMenu} className="font-body text-base text-[var(--color-text-primary)]">
+                  My Passes
+                </TransitionLink>
+                <button onClick={handleLogout} className="text-left font-body text-base text-red-500 mt-2">
+                  Sign Out
                 </button>
-
-                {/* Dropdown */}
-                {profileOpen && (
-                  <div
-                    className="absolute right-0 top-full mt-3 w-56 py-2"
-                    style={{
-                      background: 'rgba(14,14,22,0.98)',
-                      border: '1px solid rgba(99,102,241,0.25)',
-                      backdropFilter: 'blur(20px)',
-                      boxShadow: '0 20px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(99,102,241,0.1)',
-                      animation: 'fadeInUp 0.2s ease',
-                    }}
-                  >
-                    {/* User info header */}
-                    <div className="px-4 py-3 mb-1" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-                      <div className="flex items-center justify-between">
-                        <p className="font-ui font-semibold text-xs tracking-wider truncate" style={{ color: 'var(--color-text)' }}>{user.name}</p>
-                        {isAdmin && (
-                          <span className="px-1.5 py-0.5 text-[9px] font-ui font-bold tracking-widest bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
-                            ADMIN
-                          </span>
-                        )}
-                      </div>
-                      <p className="font-ui text-xs mt-0.5 truncate" style={{ color: 'var(--color-text-muted)', fontSize: '0.7rem' }}>{user.email}</p>
-                    </div>
-
-                    {[
-                      { label: 'MY PROFILE', href: '/profile', icon: 'M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z', show: true },
-                      { label: 'MY PASSES', href: '/my-tickets', icon: 'M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z', show: true },
-                      { label: 'ADMIN CONSOLE', href: '/admin', icon: 'M12 2v20M2 12h20', show: isAdmin },
-                    ].filter(item => item.show).map(({ label, href, icon }) => (
-                      <TransitionLink
-                        key={href}
-                        to={href}
-                        className="flex items-center gap-3 px-4 py-2.5 no-underline w-full font-ui text-xs tracking-wider"
-                        style={{ color: 'var(--color-text-muted)', letterSpacing: '0.1em', transition: 'background 0.15s, color 0.15s', display: 'flex' }}
-                        onMouseEnter={e => Object.assign((e.currentTarget as HTMLAnchorElement).style, { background: 'rgba(99,102,241,0.08)', color: 'var(--color-text)' })}
-                        onMouseLeave={e => Object.assign((e.currentTarget as HTMLAnchorElement).style, { background: 'transparent', color: 'var(--color-text-muted)' })}
-                      >
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d={icon}/></svg>
-                        {label}
-                      </TransitionLink>
-                    ))}
-
-                    <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', marginTop: 4, paddingTop: 4 }}>
-                      <button
-                        onClick={handleLogout}
-                        className="flex items-center gap-3 px-4 py-2.5 w-full font-ui text-xs tracking-wider"
-                        style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#f87171', letterSpacing: '0.1em', transition: 'background 0.15s' }}
-                        onMouseEnter={e => ((e.currentTarget as HTMLButtonElement).style.background = 'rgba(248,113,113,0.08)')}
-                        onMouseLeave={e => ((e.currentTarget as HTMLButtonElement).style.background = 'transparent')}
-                      >
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>
-                        </svg>
-                        SIGN OUT
-                      </button>
-                    </div>
-                  </div>
-                )}
               </div>
             ) : (
               <TransitionLink
                 to="/auth"
-                className="btn-primary px-8 py-3 text-base font-bold no-underline inline-block shadow-lg shadow-indigo-500/20"
-                style={{ textDecoration: 'none', border: '2px solid var(--color-primary)' }}
+                onClick={toggleMenu}
+                className="btn-primary w-full"
               >
-                LOGIN
+                Sign In
               </TransitionLink>
             )}
-          </li>
-        </ul>
-
-        {/* Mobile hamburger */}
-        <button
-          onClick={toggleMenu}
-          className="md:hidden flex flex-col gap-1.5 p-2"
-          aria-label="Toggle menu"
-          style={{ background: 'none', border: 'none', cursor: 'pointer' }}
-        >
-          {[0, 1, 2].map((i) => (
-            <span key={i} className="block w-6 h-px" style={{ background: 'var(--color-primary)', transition: 'all 0.3s ease' }} />
-          ))}
-        </button>
-      </nav>
-
-      {/* Mobile fullscreen menu */}
-      {menuOpen && (
-        <div
-          ref={mobileMenuRef}
-          className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-8 md:hidden"
-          style={{ background: 'rgba(10,10,15,0.97)', backdropFilter: 'blur(20px)' }}
-        >
-          {navItems.map((item) => (
-            <TransitionLink
-              key={item.href}
-              to={item.href}
-              onClick={toggleMenu}
-              className="font-display text-4xl md:text-5xl tracking-widest no-underline flex items-center gap-3"
-              style={{ color: 'var(--color-text)', letterSpacing: '0.15em' }}
-            >
-              {item.label.toUpperCase()}
-              {item.href === '/teams' && pendingInviteCount > 0 && (
-                <span
-                  style={{
-                    padding: '2px 8px',
-                    borderRadius: 12,
-                    background: '#d97706',
-                    color: '#ffffff',
-                    fontSize: 14,
-                    fontWeight: 800,
-                    boxShadow: '0 0 10px rgba(245,158,11,0.8)',
-                    fontFamily: 'var(--font-ui)',
-                  }}
-                >
-                  ✉{pendingInviteCount}
-                </span>
-              )}
-            </TransitionLink>
-          ))}
-
-          {user ? (
-            <div className="flex flex-col items-center gap-4 mt-4">
-              <TransitionLink to="/profile" onClick={toggleMenu} className="btn-primary px-10 py-3 text-xl no-underline inline-block" style={{ textDecoration: 'none' }}>
-                MY PROFILE
-              </TransitionLink>
-              <button onClick={handleLogout} className="font-ui font-semibold tracking-widest text-base" style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#f87171', letterSpacing: '0.12em' }}>
-                SIGN OUT
-              </button>
-            </div>
-          ) : (
-            <TransitionLink
-              to="/auth"
-              onClick={toggleMenu}
-              className="btn-primary px-10 py-3 text-xl no-underline inline-block mt-4"
-              style={{ textDecoration: 'none' }}
-            >
-              LOGIN
-            </TransitionLink>
-          )}
+          </div>
         </div>
-      )}
+      </div>
     </>
   )
 }

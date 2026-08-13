@@ -28,8 +28,8 @@ export default function EventInfoSection({ event, enrollmentCount = 0, teamCount
   const secondStat = hasSpeakers
     ? { value: `${event.speakers.length}+`, label: 'Speakers' }
     : teamCount > 0
-    ? { value: `${teamCount}`, label: 'Teams' }
-    : { value: 'Open', label: 'Registration' };
+      ? { value: `${teamCount}`, label: 'Teams' }
+      : { value: 'Open', label: 'Registration' };
 
   const stats = [
     { value: attendeesDisplay, label: 'Attendees' },
@@ -44,7 +44,7 @@ export default function EventInfoSection({ event, enrollmentCount = 0, teamCount
       numSelector=".event-section-num"
       rowSelector=".event-card"
       style={{
-        background: 'var(--color-surface)',
+        background: 'linear-gradient(rgba(251, 249, 244, 0.8), rgba(251, 249, 244, 0.95)), url(/background/image3.jpg) center/cover no-repeat',
         padding: '6rem 0',
         position: 'relative',
         overflow: 'hidden',
@@ -52,76 +52,47 @@ export default function EventInfoSection({ event, enrollmentCount = 0, teamCount
     >
       <span className="section-num event-section-num" aria-hidden="true">01</span>
 
-      <div className="page-container relative z-10">
-        <div className="mb-16 content-backdrop">
-          <p className="font-ui font-semibold tracking-widest text-xs mb-3" style={{ color: 'var(--color-primary)', letterSpacing: '0.25em' }} data-reveal>
-            ABOUT {event.title}
-          </p>
-          <h2 className="font-display leading-none mb-6" style={{ fontSize: 'clamp(3rem, 8vw, 6rem)', color: 'var(--color-text)' }} data-reveal>
-            WHERE VISION <br /><span className="text-gradient-primary">MEETS REALITY</span>
-          </h2>
-          <div style={{ height: 2, width: 80, background: 'var(--color-primary)', marginBottom: '1.5rem' }} data-reveal />
-          <p className="text-base max-w-2xl" style={{ color: 'var(--color-text-muted)', lineHeight: 1.8 }} data-reveal>
-            {event.fullDescription || event.shortDescription || 'Join hundreds of developers, designers, and innovators.'}
-          </p>
-        </div>
-
-        {/* Stats row */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4" style={{ marginBottom: 'var(--space-2xl)' }} data-reveal>
-          {stats.map((stat) => (
-            <div key={stat.label} className="card-glass p-6 flex flex-col gap-2 group" style={{ transition: 'border-color 0.2s ease' }} onMouseEnter={(e) => ((e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(99,102,241,0.5)')} onMouseLeave={(e) => ((e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(99,102,241,0.15)')}>
-              <span className="font-display" style={{ fontSize: 'clamp(2.5rem, 6vw, 4rem)', color: 'var(--color-primary)', lineHeight: 1 }}>{stat.value}</span>
-              <span className="font-ui font-semibold tracking-widest text-xs" style={{ color: 'var(--color-text-muted)', letterSpacing: '0.15em' }}>{stat.label.toUpperCase()}</span>
-            </div>
-          ))}
-        </div>
-
-        {/* Venue info */}
-        <div className="grid md:grid-cols-2 gap-8" style={{ marginBottom: 'var(--space-2xl)' }}>
-          <div className="event-card card-glass p-8">
-            <p className="font-ui font-semibold tracking-widest text-xs mb-4" style={{ color: 'var(--color-primary)', letterSpacing: '0.2em' }}>VENUE</p>
-            <h3 className="font-display text-3xl mb-2" style={{ color: 'var(--color-text)' }}>{event.location.split(',')[0]}</h3>
-            <p style={{ color: 'var(--color-text-muted)', lineHeight: 1.7 }}>{event.address}</p>
-            <div className="mt-6 h-px" style={{ background: 'linear-gradient(to right, var(--color-primary), transparent)' }} />
-            <p className="mt-4 font-ui font-semibold text-sm tracking-wider" style={{ color: 'var(--color-accent)' }}>
-              {event.date}
-              {event.time && (
-                <span className="ml-3 opacity-80">
-                  ⏰ {new Date(`2000-01-01T${event.time}`).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
-                </span>
-              )}
+      <div className="page-container relative z-10 flex flex-col items-center">
+        <div className="p-10 md:p-16 rounded-[2.5rem] w-[95%] max-w-[1200px] flex flex-col items-center text-center gap-14" style={{ 
+          background: 'linear-gradient(135deg, rgba(62, 88, 104, 0.85) 0%, rgba(32, 40, 43, 0.95) 100%)', 
+          border: '1px solid rgba(255, 255, 255, 0.15)',
+          boxShadow: '0 30px 60px -12px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.2)',
+          backdropFilter: 'blur(24px)'
+        }}>
+          {/* Top: Text */}
+          <div className="flex flex-col items-center max-w-3xl">
+            <p className="font-ui font-bold tracking-[0.3em] text-[11px] mb-6 uppercase" style={{ color: 'var(--color-sand)' }}>
+              ABOUT {event.title}
+            </p>
+            <h2 className="font-display leading-[1.1] mb-8" style={{ fontSize: 'clamp(3rem, 6vw, 4.5rem)', color: 'var(--color-white)' }}>
+              WHERE VISION <br /><span style={{ color: 'var(--color-cream)' }}>MEETS REALITY</span>
+            </h2>
+            <div style={{ height: 2, width: 60, background: 'var(--color-accent)', marginBottom: '2rem' }} />
+            <p className="font-body text-lg md:text-xl font-light" style={{ color: 'rgba(255,255,255,0.8)', lineHeight: 1.8 }}>
+              {event.fullDescription || event.shortDescription || 'Join hundreds of developers, designers, and innovators.'}
             </p>
           </div>
-        </div>
 
-        {/* Speakers grid */}
-        <div style={{ paddingTop: 'var(--space-sm)' }}>
-          <p className="font-ui font-semibold tracking-widest text-xs mb-8 content-backdrop inline-block" style={{ color: 'var(--color-primary)', letterSpacing: '0.25em', padding: '0.5rem 1rem' }} data-reveal>
-            FEATURED SPEAKERS & MENTORS
-          </p>
-          {hasSpeakers ? (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {event.speakers.map((spk: Speaker) => (
-                <div key={spk.id} className="event-card card-glass p-6 flex flex-col gap-4 cursor-default group" style={{ transition: 'border-color 0.3s ease, transform 0.3s ease' }} onMouseEnter={(e) => { const el = e.currentTarget as HTMLDivElement; el.style.borderColor = spk.color + '55'; el.style.transform = 'translateY(-4px)' }} onMouseLeave={(e) => { const el = e.currentTarget as HTMLDivElement; el.style.borderColor = 'rgba(99,102,241,0.15)'; el.style.transform = 'translateY(0)' }}>
-                  <div className="w-14 h-14 rounded-full flex items-center justify-center font-display text-xl" style={{ background: `${spk.color}22`, border: `2px solid ${spk.color}55`, color: spk.color }}>{spk.initials}</div>
-                  <div>
-                    <p className="font-ui font-bold text-sm mb-1" style={{ color: 'var(--color-text)' }}>{spk.name}</p>
-                    <p className="font-body text-xs leading-snug" style={{ color: 'var(--color-text-muted)' }}>{spk.role}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="card-glass p-8 border border-white/10 max-w-xl">
-              <div className="flex items-center gap-3 mb-2">
-                <span className="text-xl">🎙</span>
-                <h4 className="font-display text-lg text-white m-0">Lineup in Preparation</h4>
+          {/* Bottom: Stats Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 w-full">
+            {stats.map((stat) => (
+              <div key={stat.label} className="flex flex-col items-center justify-center p-8 rounded-2xl transition-transform hover:-translate-y-1" style={{ backgroundColor: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', boxShadow: '0 8px 32px rgba(0,0,0,0.1)' }}>
+                <span className="font-display text-5xl mb-2 text-white">{stat.value}</span>
+                <span className="font-body text-[11px] uppercase tracking-widest font-bold" style={{ color: 'var(--color-sand)' }}>{stat.label}</span>
               </div>
-              <p className="font-ui text-xs text-gray-400 m-0 leading-relaxed">
-                Keynote speakers, workshop mentors, and industry judges will be announced prior to the event. Register now to secure your pass!
+            ))}
+            
+            {/* Venue Box */}
+            <div className="col-span-2 md:col-span-1 flex flex-col items-center justify-center p-8 rounded-2xl transition-transform hover:-translate-y-1" style={{ backgroundColor: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', boxShadow: '0 8px 32px rgba(0,0,0,0.1)' }}>
+              <p className="font-body text-[11px] uppercase tracking-widest font-bold flex items-center gap-2 mb-3" style={{ color: 'var(--color-sand)' }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                Venue
               </p>
+              <h3 className="font-display text-2xl m-0 leading-tight text-white text-center">{event.location.split(',')[0]}</h3>
             </div>
-          )}
+          </div>
         </div>
       </div>
     </SectionTransition>

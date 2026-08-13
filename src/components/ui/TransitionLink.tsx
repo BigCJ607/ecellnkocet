@@ -7,7 +7,7 @@ interface TransitionLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorEleme
   variant?: 'standard' | 'eye' | 'slash'
 }
 
-export default function TransitionLink({ to, children, onClick, className, style, variant = 'standard' }: TransitionLinkProps) {
+export default function TransitionLink({ to, children, onClick, className, style, variant = 'standard', ...rest }: TransitionLinkProps) {
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -42,7 +42,7 @@ export default function TransitionLink({ to, children, onClick, className, style
   }
 
   return (
-    <a href={to} onClick={handleClick} className={className} style={style}>
+    <a href={to} onClick={handleClick} className={className} style={style} {...rest}>
       {children}
     </a>
   )
