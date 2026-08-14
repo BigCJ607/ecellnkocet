@@ -64,7 +64,7 @@ function AppShell() {
               className="font-ui text-xs tracking-widest text-center"
               style={{ color: 'var(--color-text-muted)', letterSpacing: '0.1em' }}
             >
-              © 2025 EVENT ZERO. ALL RIGHTS RESERVED.
+              © 2025 Ecell NKOCET. ALL RIGHTS RESERVED.
             </p>
             <div className="flex gap-6">
               {['Privacy', 'Terms', 'Contact'].map((link) => (

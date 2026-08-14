@@ -72,6 +72,7 @@ export interface EventData {
   submissionsEnabled?: boolean;
   winners?: EventWinner[];
   posterUrl?: string; // custom card poster image uploaded via admin
+  teamFormationLive?: boolean;
 }
 
 export interface UserTicket {

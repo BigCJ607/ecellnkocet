@@ -8,6 +8,7 @@ import type { EventData, Team, TeamMember, JoinRequest, TeamInvitation } from '.
 import TeamChatModal from '../components/layout/TeamChatModal'
 import InviteModal from '../components/layout/InviteModal'
 import InvitesInbox from '../components/layout/InvitesInbox'
+import { isOriginalAdminEmail } from '../services/authService'
 
 type RequestStatus = 'none' | 'pending' | 'accepted' | 'rejected'
 
@@ -385,7 +386,7 @@ function TeamCard({
               )}
             </div>
 
-            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 24, fontWeight: 700, color: hovered ? accent : '#fff', margin: 0, lineHeight: 1.1, transition: 'color 0.2s', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 24, fontWeight: 700, color: hovered ? accent : 'var(--color-text-primary)', margin: 0, lineHeight: 1.1, transition: 'color 0.2s', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {team.name}
             </h3>
           </div>
@@ -681,6 +682,8 @@ export default function TeamsPage() {
   const [teams, setTeams] = useState<Team[]>([])
   const [teamMembers, setTeamMembers] = useState<Record<string, TeamMember[]>>({})
   const [myTeam, setMyTeam] = useState<Team | null>(null)
+
+  const isAdmin = user?.role === 'admin' || isOriginalAdminEmail(user?.email)
 
   const [loading, setLoading] = useState(true)
   const [teamsLoading, setTeamsLoading] = useState(false)
@@ -1124,7 +1127,15 @@ export default function TeamsPage() {
                   </div>
                 </div>
 
-                {/* Pending Requests for Captain */}
+                {!selectedEvent.teamFormationLive && !isAdmin ? (
+                  <div style={{ minHeight: 200, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 10, borderRadius: 14, border: '1px dashed rgba(255,255,255,0.07)', padding: 40, marginTop: 20 }}>
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="1.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                    <p style={{ fontFamily: 'var(--font-display)', fontSize: 18, color: 'rgba(255,255,255,0.4)', margin: 0 }}>Team Formation Not Live</p>
+                    <p style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: 'rgba(255,255,255,0.2)', margin: 0, textAlign: 'center' }}>Team formation for this event has not started yet.<br/>Check back closer to the event date.</p>
+                  </div>
+                ) : (
+                  <>
+                    {/* Pending Requests for Captain */}
                 {pendingRequests.length > 0 && <RequestsPanel requests={pendingRequests} onAccept={handleAcceptRequest} onReject={handleRejectRequest} loading={reqActionLoading} />}
 
                 {/* Create Team Form (with Optional Skills, Achievements, Open Roles) */}
@@ -1234,6 +1245,8 @@ export default function TeamsPage() {
                     ))}
                   </div>
                 )}
+                </>
+              )}
               </>
             )}
           </div>

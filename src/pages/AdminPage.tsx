@@ -1162,7 +1162,7 @@ export default function AdminPage() {
                 </div>
               </div>
               <p className="text-gray-400 text-sm mb-6">
-                Event Zero is connected to Supabase for its relational PostgreSQL tables, authentication, and file storage.
+                Ecell NKOCET is connected to Supabase for its relational PostgreSQL tables, authentication, and file storage.
               </p>
 
               <div className="grid md:grid-cols-2 gap-4 mb-6">

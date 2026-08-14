@@ -513,5 +513,28 @@ export const eventService = {
     } catch (e) {
       console.warn('Remove winner error:', e);
     }
+  },
+
+  /** Toggle Team Formation status for an event */
+  async toggleTeamFormation(eventId: string, live: boolean): Promise<void> {
+    try {
+      // Find event and update mock data in localStorage
+      const eventsStr = localStorage.getItem('tiredboss_events_list');
+      if (eventsStr) {
+        let eventsList: EventData[] = JSON.parse(eventsStr);
+        eventsList = eventsList.map(e => e.id === eventId ? { ...e, teamFormationLive: live } : e);
+        localStorage.setItem('tiredboss_events_list', JSON.stringify(eventsList));
+      }
+
+      if (isSupabaseConfigured()) {
+        await supabase
+          .from('events')
+          .update({ team_formation_live: live })
+          .eq('id', eventId);
+      }
+    } catch (e) {
+      console.error('Error toggling team formation:', e);
+      throw e;
+    }
   }
 };

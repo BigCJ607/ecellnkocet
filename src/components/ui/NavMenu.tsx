@@ -158,9 +158,15 @@ export default function NavMenu() {
           }}
         >
           {/* Logo */}
-          <TransitionLink to="/" className="flex items-center no-underline text-2xl" aria-label="Event Zero Home">
-            <span className="font-display font-bold" style={{ color: 'var(--color-text-primary)' }}>Event</span>
-            <span className="font-display" style={{ color: 'var(--color-slate-blue)', marginLeft: '4px' }}>Zero</span>
+          <TransitionLink to="/" className="flex items-center no-underline text-2xl" aria-label="Ecell NKOCET Home">
+            <span 
+              className="font-display font-black tracking-widest text-transparent bg-clip-text"
+              style={{
+                backgroundImage: 'linear-gradient(to right, #8b5cf6, #22d3ee)',
+              }}
+            >
+              ECELL
+            </span>
           </TransitionLink>
 
           {/* Toggle Arrow */}
@@ -248,35 +254,40 @@ export default function NavMenu() {
 
               {/* Profile Dropdown */}
               <div
-                className={`absolute right-0 top-full mt-4 w-56 py-4 bg-white shadow-xl transition-all duration-300 ease-out origin-top-right ${profileOpen ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-95 pointer-events-none'}`}
+                className={`absolute right-0 top-full mt-4 w-64 bg-[var(--color-ivory)] shadow-[0_8px_30px_rgb(0,0,0,0.12)] rounded-2xl transition-all duration-300 ease-out origin-top-right z-50 ${profileOpen ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-95 pointer-events-none'}`}
                 style={{ border: '1px solid var(--color-cream)' }}
               >
-                <div className="px-5 pb-4 mb-2 border-b border-gray-100">
-                  <p className="font-display font-medium text-lg text-gray-900 truncate">{user.name}</p>
-                  <p className="font-body text-xs text-gray-500 truncate mt-1">{user.email}</p>
+                {/* Pointer / Caret */}
+                <div className="absolute -top-[9px] right-4 w-4 h-4 bg-[var(--color-ivory)] rotate-45 border-l border-t border-[var(--color-cream)] pointer-events-none" />
+
+                <div className="px-5 pt-5 pb-4 mb-2 border-b border-[var(--color-cream)] relative z-10 bg-[var(--color-ivory)] rounded-t-2xl">
+                  <p className="font-display font-bold text-lg text-[var(--color-text-primary)] truncate">{user.name}</p>
+                  <p className="font-body text-[11px] font-semibold tracking-wider text-[var(--color-text-secondary)] uppercase truncate mt-1">{user.email}</p>
                 </div>
 
-                {[
-                  { label: 'My Profile', href: '/profile' },
-                  { label: 'My Passes', href: '/my-tickets' },
-                  { label: 'Admin Console', href: '/admin', show: isAdmin },
-                ].filter(item => item.show !== false).map(({ label, href }) => (
-                  <TransitionLink
-                    key={href}
-                    to={href}
-                    className="block px-5 py-2.5 font-body text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors"
-                  >
-                    {label}
-                  </TransitionLink>
-                ))}
+                <div className="px-2 pb-2 relative z-10 bg-[var(--color-ivory)] rounded-b-2xl">
+                  {[
+                    { label: 'My Profile', href: '/profile' },
+                    { label: 'My Passes', href: '/my-tickets' },
+                    { label: 'Admin Console', href: '/admin', show: isAdmin },
+                  ].filter(item => item.show !== false).map(({ label, href }) => (
+                    <TransitionLink
+                      key={href}
+                      to={href}
+                      className="block px-4 py-3 min-h-[44px] font-body text-sm font-medium text-[var(--color-slate-blue)] hover:bg-[var(--color-cream)] hover:text-[var(--color-text-primary)] rounded-xl transition-colors mb-1 flex items-center"
+                    >
+                      {label}
+                    </TransitionLink>
+                  ))}
 
-                <div className="mt-2 pt-2 border-t border-gray-100">
-                  <button
-                    onClick={handleLogout}
-                    className="w-full text-left px-5 py-2.5 font-body text-sm text-red-600 hover:bg-red-50 transition-colors"
-                  >
-                    Sign Out
-                  </button>
+                  <div className="mt-1 pt-2 border-t border-[var(--color-cream)]">
+                    <button
+                      onClick={handleLogout}
+                      className="w-full text-left px-4 py-3 min-h-[44px] font-body text-sm font-medium text-[#ef4444] hover:bg-[#fef2f2] hover:text-[#dc2626] rounded-xl transition-colors flex items-center cursor-pointer"
+                    >
+                      Sign Out
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

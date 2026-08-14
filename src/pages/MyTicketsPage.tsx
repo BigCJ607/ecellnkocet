@@ -80,7 +80,7 @@ async function downloadTicketPass(ticket: UserTicket, profile: UserProfile | nul
   // Title & Header Text
   ctx.fillStyle = '#22d3ee'
   ctx.font = 'bold 16px sans-serif'
-  ctx.fillText('OFFICIAL EVENT ENTRY PASS · EVENT ZERO', 60, 75)
+  ctx.fillText('OFFICIAL EVENT ENTRY PASS · Ecell NKOCET', 60, 75)
 
   ctx.fillStyle = '#ffffff'
   ctx.font = 'bold 44px sans-serif'

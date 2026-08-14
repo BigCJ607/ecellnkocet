@@ -19,7 +19,7 @@ export default function AboutPage() {
             fontFamily: 'var(--font-body)', fontSize: 11, letterSpacing: '0.22em',
             color: 'var(--color-slate-blue)', fontWeight: 600, margin: '0 0 24px', textTransform: 'uppercase',
           }}>
-            About Event Zero
+            About Ecell NKOCET
           </p>
           <h1 style={{
             fontFamily: 'var(--font-display)',
@@ -36,7 +36,7 @@ export default function AboutPage() {
             fontFamily: 'var(--font-body)', fontSize: 17, lineHeight: 1.8,
             color: 'var(--color-text-secondary)', maxWidth: '55ch', margin: 0,
           }}>
-            Event Zero is a student-run collective dedicated to building space for innovation and collaboration across campus.
+            Ecell NKOCET is a student-run collective dedicated to building space for innovation and collaboration across campus.
             We run the hackathons, design sprints, and technical workshops that connect ideas to reality.
           </p>
         </div>

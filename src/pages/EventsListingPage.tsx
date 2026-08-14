@@ -13,7 +13,7 @@ export default function EventsListingPage() {
   const [events, setEvents] = useState<EventData[]>([])
   const [loading, setLoading] = useState(true)
   const [regEvent, setRegEvent] = useState<EventData | null>(null)
-  
+
   const { user, tickets } = useApp()
   const location = useLocation()
   const navigate = useNavigate()
@@ -57,10 +57,10 @@ export default function EventsListingPage() {
       {/* Hero Section */}
       <section className={`relative w-full h-[35vh] md:h-[60vh] min-h-[240px] md:min-h-[400px] flex items-center justify-center ${isLanding ? 'bg-landing' : 'bg-events'}`}>
         <div className="absolute inset-0 bg-black/5" />
-        
+
         <div className="relative z-10 text-center px-6 mt-12 md:mt-16 animate-slide-down-fade">
           <h1 className="font-display text-4xl md:text-7xl lg:text-8xl mb-4 md:mb-6 tracking-tight text-white drop-shadow-md">
-            {isLanding ? 'EVENT ZERO' : 'EXPERIENCES'}
+            {isLanding ? 'Ecell NKOCET' : 'EXPERIENCES'}
           </h1>
           <p className="font-body text-sm md:text-xl font-light tracking-wide max-w-2xl mx-auto text-white drop-shadow">
             {isLanding ? 'Discover events, teams and opportunities.' : 'Browse our curated collection of upcoming summits, workshops, and immersive events.'}
@@ -70,21 +70,16 @@ export default function EventsListingPage() {
 
       {/* Main Content */}
       <section className="page-container py-10 md:py-24">
-        {/* ── Unified Search + Filter Toolbar ── */}
+        {/* ── Search + Filter Toolbar ── */}
         <div
-          className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-10 md:mb-16 animate-slide-up-fade p-3 rounded-2xl"
-          style={{
-            animationDelay: '0.1s',
-            background: 'var(--color-white)',
-            boxShadow: '0 2px 16px rgba(0,0,0,0.06)',
-          }}
+          className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 mb-10 md:mb-16 animate-slide-up-fade w-full"
+          style={{ animationDelay: '0.1s' }}
         >
-          {/* Search input */}
-          <div className="relative flex-1 min-w-0">
-            {/* Icon — absolutely positioned, pointer-events-none */}
+          {/* Search input (Short beige circular bar) */}
+          <div className="relative flex-shrink-0 w-full sm:w-[280px]">
             <span
-              className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none"
-              style={{ color: 'var(--color-text-muted)', display: 'flex', alignItems: 'center' }}
+              className="absolute left-0 top-0 bottom-0 pointer-events-none flex items-center justify-center w-[42px] h-[42px]"
+              style={{ color: 'var(--color-slate-blue)' }}
             >
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
@@ -93,7 +88,7 @@ export default function EventsListingPage() {
             <input
               type="text"
               placeholder="Search experiences..."
-              className="w-full font-body text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-[var(--color-slate-blue)]/20 focus:border-[var(--color-slate-blue)] transition-all duration-200"
+              className="w-full font-body text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-[var(--color-slate-blue)]/20 focus:border-[var(--color-slate-blue)] transition-all duration-300"
               style={{
                 backgroundColor: 'var(--color-ivory)',
                 border: '1px solid var(--color-cream)',
@@ -106,11 +101,8 @@ export default function EventsListingPage() {
             />
           </div>
 
-          {/* Thin divider on md+ */}
-          <div className="hidden sm:block w-px self-stretch" style={{ background: 'var(--color-cream)' }} />
-
-          {/* Filter chips */}
-          <div className="flex gap-2 overflow-x-auto hide-scrollbar sm:flex-wrap sm:overflow-visible">
+          {/* Filter chips (Shifted to the right) */}
+          <div className="flex gap-2 overflow-x-auto hide-scrollbar sm:flex-wrap items-center justify-end flex-1">
             {categories.map((c) => {
               const isSelected = selectedCategory === c
               return (
@@ -121,22 +113,20 @@ export default function EventsListingPage() {
                   style={{
                     height: '42px',
                     padding: '0 1.25rem',
-                    backgroundColor: isSelected ? 'var(--color-slate-blue)' : 'transparent',
+                    backgroundColor: isSelected ? 'var(--color-slate-blue)' : 'var(--color-ivory)',
                     color: isSelected ? '#fff' : 'var(--color-text-secondary)',
                     border: isSelected ? '1px solid var(--color-slate-blue)' : '1px solid var(--color-cream)',
                     whiteSpace: 'nowrap',
                   }}
                   onMouseEnter={e => {
                     if (!isSelected) {
-                      (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'var(--color-ivory)'
-                      ;(e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--color-sand)'
+                      (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'rgba(62,88,104,0.06)'
                       ;(e.currentTarget as HTMLButtonElement).style.color = 'var(--color-text-primary)'
                     }
                   }}
                   onMouseLeave={e => {
                     if (!isSelected) {
-                      (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'transparent'
-                      ;(e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--color-cream)'
+                      (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'var(--color-ivory)'
                       ;(e.currentTarget as HTMLButtonElement).style.color = 'var(--color-text-secondary)'
                     }
                   }}

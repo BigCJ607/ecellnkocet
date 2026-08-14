@@ -136,6 +136,21 @@ export default function AdminEventTeamsPage() {
     }
   };
 
+  const [togglingFormation, setTogglingFormation] = useState(false);
+  const handleToggleFormation = async () => {
+    if (!event) return;
+    setTogglingFormation(true);
+    try {
+      const newStatus = !event.teamFormationLive;
+      await eventService.toggleTeamFormation(event.id, newStatus);
+      setEvent({ ...event, teamFormationLive: newStatus });
+    } catch (err) {
+      console.error('Failed to toggle team formation:', err);
+    } finally {
+      setTogglingFormation(false);
+    }
+  };
+
   if (!isAdmin) {
     return (
       <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--color-bg)', padding: 24, paddingTop: 'calc(var(--nav-h) + 2rem)' }}>
@@ -215,6 +230,29 @@ export default function AdminEventTeamsPage() {
           </Link>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+            <button
+              onClick={handleToggleFormation}
+              disabled={togglingFormation}
+              style={{
+                fontSize: 11,
+                fontWeight: 800,
+                letterSpacing: '0.12em',
+                padding: '6px 14px',
+                borderRadius: 6,
+                background: event.teamFormationLive ? 'rgba(34, 197, 94, 0.15)' : 'rgba(239, 68, 68, 0.15)',
+                border: event.teamFormationLive ? '1px solid #22c55e' : '1px solid #ef4444',
+                color: event.teamFormationLive ? '#4ade80' : '#f87171',
+                cursor: togglingFormation ? 'not-allowed' : 'pointer',
+                fontFamily: 'var(--font-ui)',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 6,
+                opacity: togglingFormation ? 0.6 : 1,
+              }}
+            >
+              {togglingFormation ? 'UPDATING...' : event.teamFormationLive ? '🟢 FORMATION: LIVE' : '🔴 FORMATION: PAUSED'}
+            </button>
+
             <button
               onClick={() => exportTeamsToCSV(event.title, teams, teamMembersMap, submissionsMap, declaredWinners)}
               style={{
