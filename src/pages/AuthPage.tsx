@@ -39,18 +39,36 @@ export default function AuthPage() {
     width: '100%',
     background: 'var(--color-white)',
     border: '1px solid rgba(62, 88, 104, 0.2)', // subtle navy border
-    borderRadius: '12px',
+    borderRadius: '16px', // slightly softer corners
     color: 'var(--color-text-primary)',
     fontFamily: 'var(--font-body)',
     fontSize: '0.95rem',
-    padding: '0.9rem 1.2rem',
+    padding: '1.2rem', // increased padding on all sides
+    textAlign: 'center', // center the text box
     outline: 'none',
     transition: 'all 0.2s ease',
   }
   const inputFocusStyle = { borderColor: 'var(--color-slate-blue)', background: 'var(--color-white)', boxShadow: '0 0 0 4px rgba(62, 88, 104, 0.1)' }
 
   return (
-    <div className="w-full flex items-center justify-center p-6 relative overflow-hidden" style={{ minHeight: 'calc(100vh - 160px)', background: 'var(--color-bg)' }}>
+    <div className="w-full min-h-screen flex items-center justify-center p-4 sm:p-8 relative overflow-hidden bg-[var(--color-bg)]">
+      {/* Background with the poster image, heavily blurred */}
+      <div 
+        className="absolute inset-0 z-0" 
+        style={{ 
+          backgroundImage: 'url(/eureka-poster-dark.jpg)', 
+          backgroundSize: 'cover', 
+          backgroundPosition: 'center', 
+          filter: 'blur(40px) brightness(1.1)', // bright and colorful
+          transform: 'scale(1.1)', // To prevent blur edges from showing
+          opacity: 0.6
+        }} 
+      />
+      
+      {/* Cream overlay to soften the background */}
+      <div className="absolute inset-0 z-0 pointer-events-none mix-blend-overlay" style={{ background: 'var(--color-cream)', opacity: 0.8 }} />
+      <div className="absolute inset-0 z-0 pointer-events-none" style={{ background: 'linear-gradient(135deg, rgba(245, 241, 232, 0.4), rgba(229, 227, 217, 0.8))' }} />
+
       {/* Override browser autofill styling */}
       <style>{`
         input:-webkit-autofill,
@@ -63,39 +81,53 @@ export default function AuthPage() {
         }
       `}</style>
       
-      {/* Dynamic Background Gradients */}
-      <div className="absolute inset-0 opacity-40 pointer-events-none" style={{ background: 'linear-gradient(to bottom right, var(--color-ivory), var(--color-white))' }} />
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-        <div className="absolute -top-[10%] -left-[5%] w-[40%] h-[40%] rounded-full blur-[100px]" style={{ background: 'var(--color-dusty-blue)', opacity: 0.15 }} />
-        <div className="absolute top-[40%] -right-[10%] w-[30%] h-[50%] rounded-full blur-[120px]" style={{ background: 'var(--color-slate-blue)', opacity: 0.1 }} />
-      </div>
-      
-      <div className="w-full max-w-md relative z-10">
-        <Link to="/" className="font-ui font-semibold text-xs tracking-widest text-[var(--color-slate-blue)] mb-8 mt-4 inline-flex items-center gap-2 hover:opacity-70 transition-opacity">
-          <span style={{ fontSize: '16px' }}>←</span> BACK TO HOME
-        </Link>
-        
+      {/* The Main Split Card */}
+      <div 
+        className="w-full max-w-[1100px] min-h-[600px] relative z-10 flex flex-col md:flex-row rounded-[2rem] overflow-hidden bg-white"
+        style={{
+          boxShadow: '0 40px 80px -20px rgba(0, 0, 0, 0.25), 0 15px 35px rgba(0, 0, 0, 0.1)'
+        }}
+      >
+        {/* Left Panel: The Eureka Poster */}
         <div 
-          className="px-8 py-10 sm:px-12 sm:py-12 rounded-3xl"
-          style={{
-            background: 'var(--color-surface)',
-            border: '1px solid var(--color-cream)',
-            boxShadow: '0 25px 50px -12px rgba(62, 88, 104, 0.1), 0 10px 25px rgba(0, 0, 0, 0.05)'
-          }}
+          className="hidden md:flex md:w-1/2 relative bg-contain bg-no-repeat bg-center"
+          style={{ backgroundImage: 'url(/eureka-poster-dark.jpg)', backgroundColor: '#092147' }}
         >
-          <h1 className="font-display text-4xl mb-3 font-black tracking-tight leading-tight" style={{ color: 'var(--color-slate-blue)' }}>
-            {isLogin ? 'WELCOME BACK' : 'JOIN THE NETWORK'}
-          </h1>
-          <p className="text-sm mb-10 font-body leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
-            {isLogin ? 'Enter your university credentials to access your tickets and teams.' : 'Create your student account to register for upcoming hackathons.'}
-          </p>
+          {/* Subtle overlay just to make the back button readable */}
+          <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-black/40 to-transparent" />
+          
+          <div className="relative z-10 p-8">
+            <Link to="/" className="font-ui font-bold text-[10px] tracking-widest text-white inline-flex items-center gap-2 hover:opacity-70 transition-opacity uppercase bg-black/30 backdrop-blur-md px-4 py-2.5 rounded-full border border-white/20">
+              <span style={{ fontSize: '14px' }}>←</span> BACK TO HOME
+            </Link>
+          </div>
+          {/* No extra text overlay since the poster has its own text */}
+        </div>
 
-          {error && <div className="mb-6 p-4 rounded-xl border border-red-500/30 bg-red-50 text-red-600 text-sm font-ui">{error}</div>}
+        {/* Right Panel: The Form */}
+        <div className="w-full md:w-1/2 px-8 py-12 sm:px-16 sm:py-16 flex flex-col justify-center items-center relative">
+          
+          {/* Mobile Back Button */}
+          <Link to="/" className="md:hidden font-ui font-semibold text-xs tracking-widest text-[var(--color-slate-blue)] mb-8 inline-flex items-center gap-2 hover:opacity-70 transition-opacity w-full max-w-sm">
+            <span style={{ fontSize: '16px' }}>←</span> BACK TO HOME
+          </Link>
 
-          <form className="space-y-6" onSubmit={handleSubmit}>
+          <div className="mb-10 text-center w-full max-w-sm">
+            {/* Switched to a sans-serif / body font and centered perfectly with the form */}
+            <h1 className="font-body text-4xl mb-3 font-extrabold tracking-tight leading-tight" style={{ color: 'var(--color-slate-blue)' }}>
+              {isLogin ? 'Welcome Back' : 'Join the Network'}
+            </h1>
+            <p className="text-sm font-body leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+              {isLogin ? 'Enter your university credentials to access your tickets.' : 'Create your student account to register for events.'}
+            </p>
+          </div>
+
+          {error && <div className="mb-6 p-4 rounded-xl border border-red-500/30 bg-red-50 text-red-600 text-sm font-ui text-center w-full max-w-sm">{error}</div>}
+
+          <form className="space-y-6 max-w-sm w-full" onSubmit={handleSubmit}>
             {!isLogin && (
-              <div>
-                <label className="font-ui font-bold text-[10px] tracking-wider block mb-3 uppercase" style={{ color: 'var(--color-slate-blue)' }}>Full Name</label>
+              <div className="text-center">
+                <label className="font-ui font-bold text-[10px] tracking-widest block mb-2 uppercase" style={{ color: 'var(--color-text-secondary)' }}>Full Name</label>
                 <input 
                   type="text" 
                   style={inputStyle} 
@@ -112,8 +144,8 @@ export default function AuthPage() {
                 />
               </div>
             )}
-            <div>
-              <label className="font-ui font-bold text-[10px] tracking-wider block mb-3 uppercase" style={{ color: 'var(--color-slate-blue)' }}>University Email</label>
+            <div className="text-center">
+              <label className="font-ui font-bold text-[10px] tracking-widest block mb-2 uppercase" style={{ color: 'var(--color-text-secondary)' }}>University Email</label>
               <input 
                 type="email" 
                 style={inputStyle} 
@@ -129,8 +161,10 @@ export default function AuthPage() {
                 required
               />
             </div>
-            <div>
-              <label className="font-ui font-bold text-[10px] tracking-wider block mb-3 uppercase" style={{ color: 'var(--color-slate-blue)' }}>Password</label>
+            <div className="text-center relative">
+              <div className="flex justify-center items-center mb-2 relative">
+                <label className="font-ui font-bold text-[10px] tracking-widest uppercase m-0" style={{ color: 'var(--color-text-secondary)' }}>Password</label>
+              </div>
               <input 
                 type="password" 
                 style={inputStyle} 
@@ -145,39 +179,47 @@ export default function AuthPage() {
                 onChange={e => setPassword(e.target.value)}
                 required
               />
+              {isLogin && (
+                <div className="mt-3 text-center">
+                  <a href="#" className="font-ui text-[10px] tracking-wide text-gray-400 hover:text-[var(--color-slate-blue)] transition-colors">Forgot password?</a>
+                </div>
+              )}
             </div>
 
-            <button 
-              type="submit" 
-              disabled={loading} 
-              onMouseEnter={() => setHoveredButton(true)}
-              onMouseLeave={() => setHoveredButton(false)}
-              className="w-full py-4 text-sm font-bold tracking-widest uppercase mt-8 rounded-full transition-all duration-300" 
-              style={{ 
-                background: hoveredButton ? '#2a363b' : 'var(--color-slate-blue)',
-                color: '#ffffff',
-                boxShadow: hoveredButton ? '0 10px 20px -5px rgba(62, 88, 104, 0.4)' : '0 4px 6px -1px rgba(62, 88, 104, 0.1)',
-                opacity: loading ? 0.7 : 1,
-                transform: loading ? 'scale(0.98)' : (hoveredButton ? 'translateY(-1px)' : 'translateY(0)'),
-              }}
-            >
-              {loading ? 'PROCESSING...' : (isLogin ? 'LOG IN' : 'CREATE ACCOUNT')}
-            </button>
+            <div className="flex justify-center w-full mt-8">
+              <button 
+                type="submit" 
+                disabled={loading} 
+                onMouseEnter={() => setHoveredButton(true)}
+                onMouseLeave={() => setHoveredButton(false)}
+                className="w-full max-w-[240px] py-4 text-sm font-bold tracking-widest uppercase rounded-full transition-all duration-300" 
+                style={{ 
+                  background: hoveredButton ? '#2a363b' : 'var(--color-slate-blue)',
+                  color: '#ffffff',
+                  boxShadow: hoveredButton ? '0 10px 20px -5px rgba(62, 88, 104, 0.4)' : '0 4px 6px -1px rgba(62, 88, 104, 0.1)',
+                  opacity: loading ? 0.7 : 1,
+                  transform: loading ? 'scale(0.98)' : (hoveredButton ? 'translateY(-1px)' : 'translateY(0)'),
+                }}
+              >
+                {loading ? 'PROCESSING...' : (isLogin ? 'SIGN IN' : 'CREATE ACCOUNT')}
+              </button>
+            </div>
           </form>
-        </div>
 
-        {/* Secondary Action Link outside the card */}
-        <div className="mt-8 text-center">
-          <button 
-            type="button"
-            onClick={() => { setIsLogin(!isLogin); setError(''); }}
-            className="font-ui font-medium text-xs tracking-wide cursor-pointer transition-colors"
-            style={{ background: 'transparent', border: 'none', color: 'var(--color-text-secondary)', textDecoration: 'underline', textUnderlineOffset: '4px' }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-slate-blue)')}
-            onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-text-secondary)')}
-          >
-            {isLogin ? "Don't have an account? Register" : "Already have an account? Log in"}
-          </button>
+          {/* Secondary Action Link at the bottom */}
+          <div className="mt-12 text-center w-full max-w-sm">
+            <button 
+              type="button"
+              onClick={() => { setIsLogin(!isLogin); setError(''); }}
+              className="font-ui font-medium text-xs tracking-wide cursor-pointer transition-colors"
+              style={{ background: 'transparent', border: 'none', color: 'var(--color-text-secondary)', textDecoration: 'underline', textUnderlineOffset: '4px' }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-slate-blue)')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-text-secondary)')}
+            >
+              {isLogin ? "Don't have an account? Register" : "Already have an account? Sign In"}
+            </button>
+          </div>
+          
         </div>
       </div>
     </div>

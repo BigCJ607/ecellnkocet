@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
 import type { UserProfile, ClassYear } from '../mocks/types'
 import { profileService } from '../services/profileService'
@@ -49,6 +49,7 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 
 export default function ProfilePage() {
   const { user, loading: authLoading } = useApp()
+  const location = useLocation()
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const [profile, setProfile] = useState<UserProfile | null>(null)
@@ -99,6 +100,15 @@ export default function ProfilePage() {
       setLoading(false)
     })
   }, [user])
+
+  // Auto-enter edit mode when navigated from registration panel
+  useEffect(() => {
+    if ((location.state as any)?.autoEdit && !loading && profile) {
+      setIsEditing(true)
+      // Clear the state so refreshing doesn't re-trigger
+      window.history.replaceState({}, '')
+    }
+  }, [location.state, loading, profile])
 
   const handleAvatarFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]; if (!file) return
@@ -203,14 +213,14 @@ export default function ProfilePage() {
 
       {/* ── Page header ── */}
       <div style={{ paddingTop: 'calc(var(--nav-h) + 4rem)', paddingBottom: '3rem', borderBottom: '1px solid var(--color-cream)' }}>
-        <div className="page-container">
-          <p style={{ fontFamily: 'var(--font-body)', fontSize: 11, letterSpacing: '0.22em', color: 'var(--color-slate-blue)', fontWeight: 600, margin: '0 0 12px', textTransform: 'uppercase' }}>My Account</p>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.4rem, 5vw, 4rem)', color: 'var(--color-text-primary)', margin: 0, lineHeight: 1, letterSpacing: '-0.02em' }}>Profile</h1>
+        <div className="page-container" style={{ textAlign: 'center' }}>
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: 11, letterSpacing: '0.22em', color: 'var(--color-slate-blue)', fontWeight: 600, margin: '0 0 12px', textTransform: 'uppercase', textAlign: 'center' }}>My Account</p>
+          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.4rem, 5vw, 4rem)', color: 'var(--color-text-primary)', margin: 0, lineHeight: 1, letterSpacing: '-0.02em', textAlign: 'center' }}>Profile</h1>
         </div>
       </div>
 
-      <div className="page-container" style={{ paddingTop: 'var(--space-md)', paddingBottom: 'var(--space-2xl)' }}>
-        <div style={{ maxWidth: 740, display: 'flex', flexDirection: 'column', gap: 24 }}>
+      <div className="page-container" style={{ paddingTop: 'var(--space-md)', paddingBottom: 'var(--space-2xl)', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <div style={{ maxWidth: 740, width: '100%', display: 'flex', flexDirection: 'column', gap: 24 }}>
 
           {/* Save success */}
           {saveSuccess && (
