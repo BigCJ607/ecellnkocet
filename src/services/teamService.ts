@@ -12,6 +12,7 @@ const mapDbTeam = (row: any, members: any[]): Team => ({
   skills: row.skills || '',
   achievements: row.achievements || '',
   openRoles: Array.isArray(row.open_roles) ? row.open_roles : (typeof row.open_roles === 'string' ? row.open_roles.split(',').map((s: string) => s.trim()).filter(Boolean) : []),
+  bannerUrl: row.banner_url || (typeof window !== 'undefined' ? localStorage.getItem(`team_banner_${row.id}`) : null) || undefined,
 });
 
 const mapDbMember = (row: any, profile: any): TeamMember => ({
@@ -742,6 +743,29 @@ export const teamService = {
       .eq('status', 'pending');
 
     return count ?? 0;
+  },
+
+  /** Update Team Banner (Saves to DB if supported, else fallbacks to localStorage) */
+  async updateTeamBanner(teamId: string, bannerUrl: string): Promise<void> {
+    if (!isSupabaseConfigured()) return;
+
+    // Try updating DB
+    const { error } = await supabase
+      .from('teams')
+      .update({ banner_url: bannerUrl })
+      .eq('id', teamId);
+    
+    // If column doesn't exist or other error, fallback to localStorage cache
+    if (error) {
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(`team_banner_${teamId}`, bannerUrl);
+      }
+    } else {
+      // Clear cache if DB save succeeds
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem(`team_banner_${teamId}`);
+      }
+    }
   },
 };
 

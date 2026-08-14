@@ -173,6 +173,7 @@ function TeamCard({
   onShareLink,
   actionLoading,
   index,
+  onEditBanner,
 }: {
   team: Team
   members: TeamMember[]
@@ -195,6 +196,7 @@ function TeamCard({
   onShareLink?: () => void
   actionLoading: boolean
   index: number
+  onEditBanner?: () => void
 }) {
   const [expanded, setExpanded] = useState(false)
   const [hovered, setHovered] = useState(false)
@@ -351,6 +353,10 @@ function TeamCard({
     )
   }
 
+  const bannerStyle = team.bannerUrl
+    ? { backgroundImage: `url(${team.bannerUrl})`, backgroundSize: 'cover', backgroundPosition: 'center' }
+    : { background: `linear-gradient(135deg, ${accent}88, ${accent}33)` };
+
   return (
     <div
       onClick={() => setExpanded(v => !v)}
@@ -360,21 +366,57 @@ function TeamCard({
         borderRadius: 16, cursor: 'pointer', position: 'relative', overflow: 'hidden',
         backgroundColor: hovered ? 'var(--color-bg)' : 'var(--color-white)',
         border: '1px solid var(--color-sand)',
-        transform: hovered ? 'translateY(-2px)' : 'translateY(0)',
+        transform: hovered ? 'translateY(-4px)' : 'translateY(0)',
         boxShadow: hovered ? '0 12px 40px rgba(0,0,0,0.05)' : 'none',
         transition: 'all 0.25s cubic-bezier(0.4,0,0.2,1)',
         animation: `cardIn 0.4s ease ${index * 60}ms both`,
+        display: 'flex',
+        flexDirection: 'column',
       }}
     >
-      {/* Accent left bar */}
-      <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 4, background: `linear-gradient(180deg, ${accent}, ${accent}44)`, borderRadius: '16px 0 0 16px', opacity: isMine || hovered ? 1 : 0.4 }} />
+      {/* Banner Section */}
+      <div style={{ height: 130, width: '100%', position: 'relative', ...bannerStyle }}>
+        {isCaptain && onEditBanner && (
+          <button
+            onClick={(e) => { e.stopPropagation(); onEditBanner(); }}
+            style={{
+              position: 'absolute', top: 12, right: 12,
+              background: 'rgba(0,0,0,0.5)', color: '#fff', border: 'none',
+              borderRadius: '50%', width: 32, height: 32, display: 'flex',
+              alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
+              backdropFilter: 'blur(4px)',
+            }}
+            title="Edit Banner"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+            </svg>
+          </button>
+        )}
+        
+        {/* Overlapping Avatar */}
+        <div style={{
+          position: 'absolute', bottom: -24, left: 16,
+          borderRadius: '50%', padding: 4, background: hovered ? 'var(--color-bg)' : 'var(--color-white)',
+          transition: 'background 0.25s cubic-bezier(0.4,0,0.2,1)'
+        }}>
+          <div style={{
+            width: 48, height: 48, borderRadius: '50%',
+            background: `linear-gradient(135deg, ${accent}, ${accent}66)`,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 20, fontWeight: 700, color: '#fff',
+          }}>
+            {(team.name.charAt(0) || '?').toUpperCase()}
+          </div>
+        </div>
+      </div>
 
-      <div style={{ padding: '22px 24px 22px 28px' }}>
+      <div style={{ padding: '32px 20px 20px 20px', display: 'flex', flexDirection: 'column', flex: 1 }}>
         {/* Header row */}
-        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, marginBottom: 14 }}>
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, marginBottom: 8 }}>
           <div style={{ minWidth: 0, flex: 1 }}>
-            <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 8, alignItems: 'center' }}>
-              {/* NO text pill for captain — small green dot will show on captain avatar */}
+            <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 4, alignItems: 'center' }}>
               {isMyTeam && !isCaptain && (
                 <span style={{ fontSize: 9, fontWeight: 800, letterSpacing: '0.14em', padding: '3px 8px', borderRadius: 4, background: 'rgba(129,140,248,0.12)', color: '#a5b4fc', border: '1px solid rgba(129,140,248,0.3)', fontFamily: 'var(--font-body)' }}>MY TEAM</span>
               )}
@@ -390,18 +432,14 @@ function TeamCard({
               {team.name}
             </h3>
           </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
-            {renderAction()}
-          </div>
         </div>
 
-        {/* Skills & Achievements Tags (Optional) */}
+        {/* Skills & Achievements Tags */}
         {(team.skills || team.achievements) && (
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, marginBottom: 14, fontSize: 11, fontFamily: 'var(--font-body)' }}>
             {team.skills && (
               <span style={{ color: 'var(--color-text-secondary)' }}>
-                <strong>Required/Team Skills:</strong> {team.skills}
+                <strong>Skills:</strong> {team.skills}
               </span>
             )}
             {team.achievements && (
@@ -416,7 +454,7 @@ function TeamCard({
         {team.openRoles && team.openRoles.length > 0 && (
           <div style={{ marginBottom: 16 }}>
             <span style={{ fontSize: 9, fontWeight: 800, letterSpacing: '0.14em', color: 'var(--color-slate-blue)', fontFamily: 'var(--font-body)', display: 'block', marginBottom: 6 }}>
-              OPEN ROLES IN TEAM:
+              OPEN ROLES:
             </span>
             <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
               {team.openRoles.map((role, rIdx) => (
@@ -442,31 +480,43 @@ function TeamCard({
           </div>
         )}
 
-        {/* Members & Capacity */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <div style={{ display: 'flex', flexDirection: 'row-reverse' }}>
-              {members.slice(0, 5).reverse().map((m, i) => {
-                const isMemberCaptain = m.userId === team.createdBy
-                return (
-                  <div key={m.id} style={{ marginLeft: i === 0 ? 0 : -10, zIndex: i }}>
-                    <MemberAvatar name={m.userName || '?'} isCaptain={isMemberCaptain} size={34} idx={members.indexOf(m)} />
-                  </div>
-                )
-              })}
-            </div>
-            {members.length > 5 && (
-              <div style={{ marginLeft: -10, width: 34, height: 34, borderRadius: '50%', background: 'rgba(255,255,255,0.06)', border: '1.5px solid rgba(255,255,255,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 700, color: 'var(--color-text-secondary)', fontFamily: 'var(--font-body)' }}>
-                +{members.length - 5}
+        {/* Spacer to push bottom section down */}
+        <div style={{ flex: 1 }} />
+
+        {/* Bottom Section: Members & Actions */}
+        <div style={{ marginTop: 16, paddingTop: 16, borderTop: '1px solid var(--color-cream)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 16 }}>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <div style={{ display: 'flex', flexDirection: 'row-reverse' }}>
+                {members.slice(0, 5).reverse().map((m, i) => {
+                  const isMemberCaptain = m.userId === team.createdBy
+                  return (
+                    <div key={m.id} style={{ marginLeft: i === 0 ? 0 : -10, zIndex: i }}>
+                      <MemberAvatar name={m.userName || '?'} isCaptain={isMemberCaptain} size={28} idx={members.indexOf(m)} />
+                    </div>
+                  )
+                })}
               </div>
-            )}
-            {members.length === 0 && <span style={{ fontSize: 11, color: 'var(--color-text-muted)', fontFamily: 'var(--font-body)' }}>No members yet</span>}
+              {members.length > 5 && (
+                <div style={{ marginLeft: -10, width: 28, height: 28, borderRadius: '50%', background: 'rgba(255,255,255,0.06)', border: '1.5px solid rgba(255,255,255,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, fontWeight: 700, color: 'var(--color-text-secondary)', fontFamily: 'var(--font-body)' }}>
+                  +{members.length - 5}
+                </div>
+              )}
+              {members.length === 0 && <span style={{ fontSize: 11, color: 'var(--color-text-muted)', fontFamily: 'var(--font-body)' }}>No members yet</span>}
+            </div>
+            
+            {/* Quick action buttons / Request to Join */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+              {renderAction()}
+            </div>
           </div>
-          <CapacityRing current={team.memberCount} max={maxSize} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <CapacityRing current={team.memberCount} max={maxSize} />
+          </div>
         </div>
 
         {/* Expand footer */}
-        <div style={{ marginTop: 16, paddingTop: 14, borderTop: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontFamily: 'var(--font-body)', fontSize: 11, color: expanded ? accent : 'rgba(255,255,255,0.3)', transition: 'color 0.2s' }}>
+        <div style={{ marginTop: 16, paddingTop: 14, borderTop: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontFamily: 'var(--font-body)', fontSize: 11, color: expanded ? accent : 'var(--color-text-muted)', transition: 'color 0.2s' }}>
           <span>{expanded ? 'Hide roster' : `View ${members.length} member${members.length !== 1 ? 's' : ''}`}</span>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s' }}>
             <polyline points="6 9 12 15 18 9" />
@@ -1207,7 +1257,7 @@ export default function TeamsPage() {
                     <p style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: 'var(--color-text-muted)', margin: 0 }}>{searchQuery ? `No results for "${searchQuery}"` : 'No teams created yet'}</p>
                   </div>
                 ) : (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '20px' }}>
                     {filtered.map((team, i) => (
                       <TeamCard
                         key={team.id}
@@ -1232,6 +1282,19 @@ export default function TeamsPage() {
                         onShareLink={team.createdBy === user.id ? () => handleShareLink(team) : undefined}
                         actionLoading={actionLoading === team.id}
                         index={i}
+                        onEditBanner={
+                          team.createdBy === user.id
+                            ? () => {
+                                const url = prompt('Enter image URL for team banner:');
+                                if (url) {
+                                  teamService.updateTeamBanner(team.id, url).then(() => {
+                                    // Refresh teams list
+                                    loadTeamsForEvent(selectedEvent);
+                                  });
+                                }
+                              }
+                            : undefined
+                        }
                       />
                     ))}
                   </div>

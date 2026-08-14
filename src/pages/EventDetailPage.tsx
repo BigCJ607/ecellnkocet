@@ -125,48 +125,53 @@ export default function EventDetailPage() {
 
           {/* Title */}
           <h1
-            className="font-display leading-none mb-4 md:mb-6 animate-slide-left-fade"
-            style={{ fontSize: 'clamp(2rem, 7vw, 5.5rem)', letterSpacing: '-0.02em', color: 'var(--color-text-primary)', animationFillMode: 'both' }}
+            className="font-display mb-6 md:mb-8 animate-slide-left-fade"
+            style={{ fontSize: 'clamp(2rem, 7vw, 5.5rem)', lineHeight: 1.15, letterSpacing: '-0.02em', color: 'var(--color-text-primary)', animationFillMode: 'both' }}
           >
             {event.title}
           </h1>
 
-          {/* Meta row with icons */}
-          <div className="flex flex-wrap gap-x-6 gap-y-3 items-center mb-10 animate-slide-left-fade delay-100" style={{ animationFillMode: 'both' }}>
+          {/* Meta Information */}
+          <div className="flex flex-col gap-5 mb-12 animate-slide-left-fade delay-100" style={{ animationFillMode: 'both' }}>
             {/* Category badge */}
-            <span className="font-body text-[10px] font-extrabold tracking-[0.25em] uppercase px-4 py-1.5 rounded-full" style={{ backgroundColor: 'var(--color-slate-blue)', color: '#fff' }}>
-              {event.category}
-            </span>
-            {/* Date */}
-            <span className="font-body text-sm font-medium flex items-center gap-2" style={{ color: 'var(--color-text-secondary)' }}>
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ opacity: 0.6 }}>
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
-              </svg>
-              {event.date}
-            </span>
-            {/* Time */}
-            {event.time && (
-              <span className="font-body text-sm font-medium flex items-center gap-2" style={{ color: 'var(--color-text-secondary)' }}>
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ opacity: 0.6 }}>
-                  <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
-                </svg>
-                {new Date(`2000-01-01T${event.time}`).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
+            <div className="flex items-center">
+              <span className="font-body text-[10px] font-extrabold tracking-[0.25em] uppercase px-4 py-1.5 rounded-full" style={{ backgroundColor: 'var(--color-slate-blue)', color: '#fff' }}>
+                {event.category}
               </span>
-            )}
-            {/* Venue */}
-            <span className="font-body text-sm font-medium flex items-center gap-2" style={{ color: 'var(--color-text-secondary)' }}>
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ opacity: 0.6 }}>
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
-              </svg>
-              {event.location}
-            </span>
+            </div>
+            {/* Date, Time, Venue */}
+            <div className="flex flex-col sm:flex-row sm:flex-wrap gap-4 sm:gap-6 items-start sm:items-center">
+              {/* Date */}
+              <span className="font-body text-sm font-medium flex items-center gap-2" style={{ color: 'var(--color-text-secondary)' }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ opacity: 0.6 }}>
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+                {event.date}
+              </span>
+              {/* Time */}
+              {event.time && (
+                <span className="font-body text-sm font-medium flex items-center gap-2" style={{ color: 'var(--color-text-secondary)' }}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ opacity: 0.6 }}>
+                    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                  </svg>
+                  {new Date(`2000-01-01T${event.time}`).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
+                </span>
+              )}
+              {/* Venue */}
+              <span className="font-body text-sm font-medium flex items-center gap-2" style={{ color: 'var(--color-text-secondary)' }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ opacity: 0.6 }}>
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+                </svg>
+                {event.location}
+              </span>
+            </div>
           </div>
 
           {/* Action buttons */}
           <div className="animate-slide-left-fade delay-200" style={{ animationFillMode: 'both' }}>
             {isRegistered ? (
               <div className="flex flex-col gap-6">
-                <div className="flex flex-wrap gap-4 items-center">
+                <div className="flex flex-col sm:flex-row flex-wrap gap-4 items-start sm:items-center">
                   <div className="flex items-center gap-3 px-6 py-3 rounded-full" style={{ border: '1px solid var(--color-sand)', background: 'transparent' }}>
                     <span className="font-body font-bold text-[10px] tracking-widest uppercase" style={{ color: 'var(--color-slate-blue)' }}>✓ REGISTERED</span>
                   </div>
@@ -200,7 +205,7 @@ export default function EventDetailPage() {
                     </button>
                   )}
                   {event.submissionsEnabled && myTeam && !isCaptain && (
-                    <div className="px-6 py-2.5 rounded-full text-[10px] font-body" style={{ color: 'var(--color-text-muted)', border: '1px solid var(--color-cream)' }}>
+                    <div className="px-6 py-3 rounded-full text-[10px] font-body" style={{ color: 'var(--color-text-muted)', border: '1px solid var(--color-cream)' }}>
                       Only team captain can submit
                     </div>
                   )}

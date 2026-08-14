@@ -27,7 +27,7 @@ export default function EventCard({ evt, isRegistered, onRegisterClick, isPrevie
       className="group relative overflow-hidden isolate"
       onClick={handleCardClick}
       style={{
-        aspectRatio: '3 / 4',
+        aspectRatio: '3 / 2',
         borderRadius: 12,
         boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
         transition: 'transform 200ms ease, box-shadow 200ms ease',

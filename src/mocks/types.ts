@@ -98,6 +98,8 @@ export interface Team {
   skills?: string;
   achievements?: string;
   openRoles?: string[];
+  bannerUrl?: string;
+  logoUrl?: string;
 }
 
 export interface JoinRequest {

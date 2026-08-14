@@ -64,18 +64,15 @@ function AppShell() {
         >
           <div className="max-w-7xl mx-auto px-6 md:px-12 xl:px-32 flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-3">
-              <span className="font-display text-xl tracking-widest" style={{ color: 'var(--color-accent)' }}>
-                EVENT
-              </span>
-              <span className="font-display text-xl tracking-widest" style={{ color: 'var(--color-primary)' }}>
-                ZERO
+              <span className="font-display font-black text-xl tracking-widest" style={{ color: 'var(--color-slate-blue)' }}>
+                ECELL
               </span>
             </div>
             <p
               className="font-ui text-xs tracking-widest text-center"
               style={{ color: 'var(--color-text-muted)', letterSpacing: '0.1em' }}
             >
-              © 2025 Ecell. ALL RIGHTS RESERVED.
+              © 2026 Ecell. ALL RIGHTS RESERVED.
             </p>
             <div className="flex gap-6">
               {['Privacy', 'Terms', 'Contact'].map((link) => (
