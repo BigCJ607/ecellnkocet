@@ -143,11 +143,15 @@ export default function NavMenu() {
 
   const [forceToggle, setForceToggle] = useState<'show'|'hide'|null>(null);
 
+  useEffect(() => {
+    if (forceToggle) setForceToggle(null);
+  }, [scrollY]);
+
   let navHidden = true;
   if (scrollY > 10) {
-    navHidden = scrollDirection === 'down' && !menuOpen && !profileOpen;
+    navHidden = scrollDirection === 'down' && !menuOpen && !profileOpen && !hovered;
   } else {
-    navHidden = !menuOpen && !profileOpen;
+    navHidden = !menuOpen && !profileOpen && !hovered;
   }
   if (forceToggle === 'show') navHidden = false;
   if (forceToggle === 'hide') navHidden = true;
@@ -162,7 +166,10 @@ export default function NavMenu() {
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
       >
-        <div className="absolute top-0 left-0 right-0 h-4 pointer-events-auto" />
+        <div 
+          className="absolute top-0 left-0 right-0 h-6 pointer-events-auto cursor-pointer"
+          onClick={() => setForceToggle('show')}
+        />
         
         <nav
           className="pointer-events-auto flex items-center justify-between px-6 md:px-12 transition-all duration-500 w-full h-full relative"
