@@ -128,19 +128,20 @@ export default function NavMenu() {
   }
 
   const [hovered, setHovered] = useState(false)
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768)
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   const handleLogout = async () => {
     setProfileOpen(false)
     await logout()
   }
 
-  const isActiveBg = scrolled || hovered || menuOpen;
-
   const [forceToggle, setForceToggle] = useState<'show'|'hide'|null>(null);
-
-  useEffect(() => {
-    if (forceToggle) setForceToggle(null);
-  }, [scrollDirection]);
 
   let navHidden = true;
   if (scrollY > 10) {
@@ -150,6 +151,8 @@ export default function NavMenu() {
   }
   if (forceToggle === 'show') navHidden = false;
   if (forceToggle === 'hide') navHidden = true;
+
+  const isActiveBg = scrolled || hovered || menuOpen || (isMobile && !navHidden);
 
   return (
     <>
@@ -183,15 +186,15 @@ export default function NavMenu() {
           {/* Toggle Arrow */}
           <button 
             onClick={() => setForceToggle(navHidden ? 'show' : 'hide')}
-            className="absolute left-1/2 -translate-x-1/2 z-[60] flex items-center justify-center bg-[var(--color-surface)] shadow-sm border border-[var(--color-cream)] cursor-pointer transition-all duration-300"
+            className="absolute left-1/2 -translate-x-1/2 z-[60] flex items-center justify-center cursor-pointer transition-all duration-300 hover:scale-125"
             style={{  
-              bottom: '-20px', 
+              bottom: '-28px', 
               width: '44px', 
-              height: '20px', 
-              borderBottomLeftRadius: '12px', 
-              borderBottomRightRadius: '12px',
-              borderTop: 'none',
-              color: 'var(--color-slate-blue)'
+              height: '28px',
+              background: 'transparent',
+              border: 'none',
+              color: (isActiveBg || !(location.pathname === '/' || /^\/events\/[^/]+$/.test(location.pathname))) ? '#6B705C' : '#FFFFFF',
+              filter: 'drop-shadow(0px 2px 4px rgba(0,0,0,0.4))'
             }}
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ transform: navHidden ? 'rotate(0deg)' : 'rotate(180deg)', transition: 'transform 0.4s' }}>
@@ -352,19 +355,19 @@ export default function NavMenu() {
 
       {/* Mobile Drawer Backdrop */}
       <div 
-        className={`fixed inset-0 bg-black/20 z-[55] md:hidden transition-opacity duration-300 ${menuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+        className={`fixed inset-0 bg-black/30 backdrop-blur-md z-[55] md:hidden transition-opacity duration-300 ${menuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
         onClick={toggleMenu}
       />
 
       {/* Mobile Fullscreen Drawer */}
       <div
         className={`fixed top-0 right-0 bottom-0 w-[85%] max-w-sm z-[55] shadow-2xl flex flex-col md:hidden transition-transform duration-500 ease-out ${menuOpen ? 'translate-x-0' : 'translate-x-full'}`}
-        style={{ background: '#0b1120', borderLeft: '1px solid rgba(255,255,255,0.1)' }}
+        style={{ background: 'var(--color-ivory)', borderLeft: '1px solid var(--color-cream)' }}
       >
         <div className="flex flex-col h-full pt-20 px-6 pb-10 overflow-y-auto">
           {/* Top Logo / Title in Drawer */}
           <div className="mb-10 pl-2">
-            <span className="font-display font-black tracking-widest text-2xl" style={{ color: '#fff' }}>
+            <span className="font-display font-black tracking-widest text-2xl" style={{ color: 'var(--color-slate-blue)' }}>
               ECELL
             </span>
           </div>
@@ -377,8 +380,8 @@ export default function NavMenu() {
                   <TransitionLink
                     to={item.href}
                     onClick={toggleMenu}
-                    className={`flex items-center gap-4 p-4 rounded-xl transition-all duration-300 ${isActive ? 'bg-blue-600' : 'hover:bg-white/5'}`}
-                    style={{ color: isActive ? '#fff' : '#94a3b8' }}
+                    className={`flex items-center gap-4 p-4 rounded-xl transition-all duration-300 ${isActive ? 'bg-[var(--color-slate-blue)]' : 'hover:bg-[var(--color-cream)]'}`}
+                    style={{ color: isActive ? '#fff' : 'var(--color-slate-blue)' }}
                   >
                     <span className="opacity-80">
                       {item.icon}
@@ -387,7 +390,7 @@ export default function NavMenu() {
                       {item.label}
                     </span>
                     {item.href === '/teams' && (unreadChatCount > 0 || pendingInviteCount > 0) && (
-                      <span className="ml-auto inline-block w-2 h-2 rounded-full bg-blue-400 align-middle shadow-[0_0_8px_rgba(96,165,250,0.8)]" />
+                      <span className="ml-auto inline-block w-2 h-2 rounded-full bg-[var(--color-dusty-blue)] align-middle shadow-sm" />
                     )}
                   </TransitionLink>
                 </li>
@@ -395,11 +398,11 @@ export default function NavMenu() {
             })}
           </ul>
 
-          <div className="pt-6 mt-6 border-t border-white/10">
+          <div className="pt-6 mt-6 border-t border-[var(--color-cream)]">
             {user ? (
               <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-4 p-2 mb-4">
-                  <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center bg-white/10 text-white font-display text-base">
+                  <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center bg-[var(--color-cream)] text-[var(--color-slate-blue)] font-display text-base">
                     {user.avatarUrl ? (
                       <img src={user.avatarUrl} alt={user.name} className="w-full h-full object-cover" />
                     ) : (
@@ -407,21 +410,21 @@ export default function NavMenu() {
                     )}
                   </div>
                   <div>
-                    <p className="font-display font-medium text-base text-white leading-none truncate">{user.name.split(' ')[0]}</p>
-                    <p className="font-body text-xs text-slate-400 mt-1 truncate">{user.email}</p>
+                    <p className="font-display font-medium text-base text-[var(--color-text-primary)] leading-none truncate">{user.name.split(' ')[0]}</p>
+                    <p className="font-body text-xs text-[var(--color-text-secondary)] mt-1 truncate">{user.email}</p>
                   </div>
                 </div>
                 
                 <div className="flex flex-col gap-1">
-                  <TransitionLink to="/profile" onClick={toggleMenu} className="flex items-center gap-4 p-4 rounded-xl hover:bg-white/5 transition-all duration-300 font-body text-sm text-slate-300">
+                  <TransitionLink to="/profile" onClick={toggleMenu} className="flex items-center gap-4 p-4 rounded-xl hover:bg-[var(--color-cream)] transition-all duration-300 font-body text-sm text-[var(--color-text-secondary)]">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-70"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                     My Profile
                   </TransitionLink>
-                  <TransitionLink to="/my-tickets" onClick={toggleMenu} className="flex items-center gap-4 p-4 rounded-xl hover:bg-white/5 transition-all duration-300 font-body text-sm text-slate-300">
+                  <TransitionLink to="/my-tickets" onClick={toggleMenu} className="flex items-center gap-4 p-4 rounded-xl hover:bg-[var(--color-cream)] transition-all duration-300 font-body text-sm text-[var(--color-text-secondary)]">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-70"><rect width="20" height="14" x="2" y="5" rx="2"/><path d="M2 10h20"/></svg>
                     My Passes
                   </TransitionLink>
-                  <button onClick={handleLogout} className="flex items-center gap-4 p-4 rounded-xl hover:bg-red-500/10 transition-all duration-300 font-body text-sm text-red-400 cursor-pointer text-left w-full" style={{ border: 'none', background: 'transparent' }}>
+                  <button onClick={handleLogout} className="flex items-center gap-4 p-4 rounded-xl hover:bg-red-50 transition-all duration-300 font-body text-sm text-red-500 cursor-pointer text-left w-full" style={{ border: 'none', background: 'transparent' }}>
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-70"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
                     Sign Out
                   </button>

@@ -107,13 +107,12 @@ export default function EventDetailPage() {
       >
         {/* Subtle bottom fade so the banner blends into the page */}
         <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.05) 40%, rgba(10,10,10,0.55) 100%)' }} />
-        {/* Back link — top-left of banner */}
+        {/* Back link — bottom-right on mobile, top-left on desktop */}
         <TransitionLink
           to="/events"
-          className="absolute left-6 font-body text-xs tracking-[0.2em] text-white/70 hover:text-white inline-flex items-center gap-2 no-underline group z-10 animate-slide-left-fade"
-          style={{ top: 'calc(var(--nav-h) + 1.5rem)', textShadow: '0 1px 4px rgba(0,0,0,0.6)' }}
+          className="absolute bottom-4 right-4 md:bottom-auto md:right-auto md:left-6 md:top-[104px] font-body text-[10px] md:text-xs font-bold tracking-[0.2em] text-white bg-black/40 backdrop-blur-md border border-white/20 px-4 py-2.5 md:px-4 md:py-2 rounded-full hover:bg-black/60 hover:text-white inline-flex items-center gap-2 no-underline group z-10 shadow-[0_4px_12px_rgba(0,0,0,0.3)] animate-slide-left-fade"
         >
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="transition-transform duration-300 group-hover:-translate-x-1">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="transition-transform duration-300 group-hover:-translate-x-1">
             <path d="M19 12H5M12 5l-7 7 7 7"/>
           </svg>
           BACK TO EVENTS
