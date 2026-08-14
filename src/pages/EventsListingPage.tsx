@@ -55,62 +55,101 @@ export default function EventsListingPage() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className={`relative w-full h-[85vh] min-h-[600px] flex items-center justify-center ${isLanding ? 'bg-landing' : 'bg-events'}`}>
+      <section className={`relative w-full h-[35vh] md:h-[60vh] min-h-[240px] md:min-h-[400px] flex items-center justify-center ${isLanding ? 'bg-landing' : 'bg-events'}`}>
         <div className="absolute inset-0 bg-black/5" />
         
-        <div className="relative z-10 text-center px-6 mt-16 animate-fade-in">
-          <h1 className="font-display text-5xl md:text-7xl lg:text-8xl mb-6 tracking-tight text-white drop-shadow-md">
+        <div className="relative z-10 text-center px-6 mt-12 md:mt-16 animate-slide-down-fade">
+          <h1 className="font-display text-4xl md:text-7xl lg:text-8xl mb-4 md:mb-6 tracking-tight text-white drop-shadow-md">
             {isLanding ? 'EVENT ZERO' : 'EXPERIENCES'}
           </h1>
-          <p className="font-body text-lg md:text-xl font-light tracking-wide max-w-2xl mx-auto text-white drop-shadow">
+          <p className="font-body text-sm md:text-xl font-light tracking-wide max-w-2xl mx-auto text-white drop-shadow">
             {isLanding ? 'Discover events, teams and opportunities.' : 'Browse our curated collection of upcoming summits, workshops, and immersive events.'}
           </p>
         </div>
       </section>
 
       {/* Main Content */}
-      <section className="page-container py-24 animate-slide-up" style={{ animationDelay: '0.2s' }}>
-        {/* Search & Filters */}
-        <div className="flex flex-col gap-6 mb-16">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-            <div className="w-full md:w-96 relative group">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors duration-300 group-focus-within:text-[var(--color-slate-blue)] text-[var(--color-text-secondary)] opacity-60">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-                </svg>
-              </div>
-              <input
-                type="text"
-                placeholder="Search experiences..."
-                className="w-full bg-white border border-[var(--color-cream)] rounded-full py-3.5 pl-12 pr-6 text-sm font-body text-[var(--color-text-primary)] shadow-sm transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[var(--color-slate-blue)]/20 focus:border-[var(--color-slate-blue)] hover:shadow-md"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
+      <section className="page-container py-10 md:py-24">
+        {/* ── Unified Search + Filter Toolbar ── */}
+        <div
+          className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-10 md:mb-16 animate-slide-up-fade p-3 rounded-2xl"
+          style={{
+            animationDelay: '0.1s',
+            background: 'var(--color-white)',
+            boxShadow: '0 2px 16px rgba(0,0,0,0.06)',
+          }}
+        >
+          {/* Search input */}
+          <div className="relative flex-1 min-w-0">
+            {/* Icon — absolutely positioned, pointer-events-none */}
+            <span
+              className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none"
+              style={{ color: 'var(--color-text-muted)', display: 'flex', alignItems: 'center' }}
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+              </svg>
+            </span>
+            <input
+              type="text"
+              placeholder="Search experiences..."
+              className="w-full font-body text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-[var(--color-slate-blue)]/20 focus:border-[var(--color-slate-blue)] transition-all duration-200"
+              style={{
+                backgroundColor: 'var(--color-ivory)',
+                border: '1px solid var(--color-cream)',
+                color: 'var(--color-text-primary)',
+                padding: '0.625rem 1.25rem 0.625rem 2.75rem',
+                height: '42px',
+              }}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
 
-            <div className="flex flex-wrap gap-2.5 w-full md:w-auto">
-              {categories.map((c) => {
-                const isSelected = selectedCategory === c
-                return (
-                  <button
-                    key={c}
-                    onClick={() => setSelectedCategory(c)}
-                    className={`px-5 py-2.5 text-xs font-bold tracking-widest uppercase rounded-full transition-all duration-300 transform hover:-translate-y-0.5 ${
-                      isSelected
-                        ? 'bg-[var(--color-slate-blue)] text-white shadow-md shadow-[var(--color-slate-blue)]/20 border border-[var(--color-slate-blue)]'
-                        : 'bg-white text-[var(--color-text-secondary)] border border-[var(--color-cream)] hover:border-[var(--color-sand)] hover:bg-[var(--color-ivory)] hover:text-[var(--color-text-primary)]'
-                    }`}
-                  >
-                    {c}
-                  </button>
-                )
-              })}
-            </div>
+          {/* Thin divider on md+ */}
+          <div className="hidden sm:block w-px self-stretch" style={{ background: 'var(--color-cream)' }} />
+
+          {/* Filter chips */}
+          <div className="flex gap-2 overflow-x-auto hide-scrollbar sm:flex-wrap sm:overflow-visible">
+            {categories.map((c) => {
+              const isSelected = selectedCategory === c
+              return (
+                <button
+                  key={c}
+                  onClick={() => setSelectedCategory(c)}
+                  className="font-body text-[11px] font-extrabold tracking-[0.2em] uppercase rounded-full transition-all duration-200 cursor-pointer flex-shrink-0"
+                  style={{
+                    height: '42px',
+                    padding: '0 1.25rem',
+                    backgroundColor: isSelected ? 'var(--color-slate-blue)' : 'transparent',
+                    color: isSelected ? '#fff' : 'var(--color-text-secondary)',
+                    border: isSelected ? '1px solid var(--color-slate-blue)' : '1px solid var(--color-cream)',
+                    whiteSpace: 'nowrap',
+                  }}
+                  onMouseEnter={e => {
+                    if (!isSelected) {
+                      (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'var(--color-ivory)'
+                      ;(e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--color-sand)'
+                      ;(e.currentTarget as HTMLButtonElement).style.color = 'var(--color-text-primary)'
+                    }
+                  }}
+                  onMouseLeave={e => {
+                    if (!isSelected) {
+                      (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'transparent'
+                      ;(e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--color-cream)'
+                      ;(e.currentTarget as HTMLButtonElement).style.color = 'var(--color-text-secondary)'
+                    }
+                  }}
+                >
+                  {c}
+                </button>
+              )
+            })}
           </div>
         </div>
 
         {/* Events Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
           {loading ? (
             <div className="col-span-full text-center py-24 font-body text-editorial opacity-60">Loading curated experiences...</div>
           ) : filteredEvents.length === 0 ? (
@@ -122,14 +161,18 @@ export default function EventsListingPage() {
               </TransitionLink>
             </div>
           ) : (
-            filteredEvents.map((evt) => (
-              <EventCard
-                key={evt.id}
-                evt={evt}
-                isRegistered={registeredIds.has(evt.id)}
-                onRegisterClick={handleRegisterClick}
-              />
-            ))
+            filteredEvents.map((evt, idx) => {
+              const delayClass = `delay-${Math.min((idx + 2) * 100, 500)}`
+              return (
+                <div key={evt.id} className={`animate-slide-up-fade ${delayClass}`}>
+                  <EventCard
+                    evt={evt}
+                    isRegistered={registeredIds.has(evt.id)}
+                    onRegisterClick={handleRegisterClick}
+                  />
+                </div>
+              )
+            })
           )}
         </div>
       </section>

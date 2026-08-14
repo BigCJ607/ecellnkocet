@@ -43,7 +43,7 @@ export default function PastEventsPage() {
           position: 'absolute', inset: 0,
           background: 'linear-gradient(to bottom, rgba(245,241,232,0.15) 0%, rgba(245,241,232,0.55) 60%, var(--color-bg) 100%)',
         }} />
-        <div className="page-container relative" style={{ zIndex: 2 }}>
+        <div className="page-container relative" style={{ zIndex: 2, animation: 'fadeUp 0.6s ease both' }}>
           <p style={{ fontFamily: 'var(--font-body)', fontSize: 11, letterSpacing: '0.22em', color: 'var(--color-slate-blue)', fontWeight: 600, margin: '0 0 16px', textTransform: 'uppercase' }}>
             Archive
           </p>

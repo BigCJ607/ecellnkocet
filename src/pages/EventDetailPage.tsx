@@ -96,148 +96,169 @@ export default function EventDetailPage() {
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--color-bg)' }}>
-      {/* Hero — Fullscreen elegant hero */}
+
+      {/* ── Banner image — shorter on mobile so content is above the fold ── */}
       <div
-        className="relative bg-cover bg-center flex flex-col justify-end"
-        style={{ minHeight: '85vh', backgroundImage: `url(${event.posterUrl || '/background/eureka.jpg'})` }}
+        className="relative bg-cover bg-center w-full"
+        style={{
+          height: 'clamp(180px, 28vh, 520px)',
+          backgroundImage: `url(${event.posterUrl || '/background/eureka.jpg'})`,
+          marginTop: 'var(--nav-h)',
+        }}
       >
-        {/* Subtle dark gradient overlay: fully transparent at top, dark at bottom so text is readable */}
-        <div className="absolute inset-0 z-0" style={{ background: 'linear-gradient(to top, rgba(10,16,20,0.95) 0%, rgba(10,16,20,0.5) 40%, rgba(10,16,20,0.1) 100%)' }} />
-        
-        <div className="page-container relative z-10 w-full" style={{ paddingBottom: '4rem', paddingTop: '8rem' }}>
-          
-          {/* Back link */}
-          <TransitionLink to="/events" className="font-body text-sm tracking-widest text-white/60 hover:text-white mb-12 inline-flex items-center gap-2 transition-colors no-underline group">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="transition-transform duration-300 group-hover:-translate-x-1">
-              <path d="M19 12H5M12 5l-7 7 7 7"/>
-            </svg>
-            BACK TO EVENTS
-          </TransitionLink>
+        {/* Subtle bottom fade so the banner blends into the page */}
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.05) 40%, rgba(10,10,10,0.55) 100%)' }} />
+        {/* Back link — top-left of banner */}
+        <TransitionLink
+          to="/events"
+          className="absolute top-6 left-6 font-body text-xs tracking-[0.2em] text-white/70 hover:text-white inline-flex items-center gap-2 no-underline group z-10 animate-slide-left-fade"
+          style={{ textShadow: '0 1px 4px rgba(0,0,0,0.6)' }}
+        >
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="transition-transform duration-300 group-hover:-translate-x-1">
+            <path d="M19 12H5M12 5l-7 7 7 7"/>
+          </svg>
+          BACK TO EVENTS
+        </TransitionLink>
+      </div>
 
-          <div className="max-w-4xl">
-            {/* Title */}
-            <h1 className="font-display leading-none mb-5" style={{ fontSize: 'clamp(4rem, 8vw, 6rem)', letterSpacing: '-0.02em', color: 'white' }}>
-              {event.title}
-            </h1>
+      {/* ── Page content below the banner ── */}
+      <div className="page-container" style={{ paddingTop: '1.5rem', paddingBottom: '2rem' }}>
+        <div className="max-w-4xl">
 
-            {/* Metadata row */}
-            <div className="flex flex-wrap gap-4 items-center mb-12">
-              <span className="font-body text-[10px] font-extrabold tracking-[0.2em] uppercase px-4 py-1.5 rounded-full" style={{ backgroundColor: 'rgba(255,255,255,0.1)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', backdropFilter: 'blur(4px)' }}>
-                {event.category}
+          {/* Title */}
+          <h1
+            className="font-display leading-none mb-4 md:mb-6 animate-slide-left-fade"
+            style={{ fontSize: 'clamp(2rem, 7vw, 5.5rem)', letterSpacing: '-0.02em', color: 'var(--color-text-primary)', animationFillMode: 'both' }}
+          >
+            {event.title}
+          </h1>
+
+          {/* Meta row with icons */}
+          <div className="flex flex-wrap gap-x-6 gap-y-3 items-center mb-10 animate-slide-left-fade delay-100" style={{ animationFillMode: 'both' }}>
+            {/* Category badge */}
+            <span className="font-body text-[10px] font-extrabold tracking-[0.25em] uppercase px-4 py-1.5 rounded-full" style={{ backgroundColor: 'var(--color-slate-blue)', color: '#fff' }}>
+              {event.category}
+            </span>
+            {/* Date */}
+            <span className="font-body text-sm font-medium flex items-center gap-2" style={{ color: 'var(--color-text-secondary)' }}>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ opacity: 0.6 }}>
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+              {event.date}
+            </span>
+            {/* Time */}
+            {event.time && (
+              <span className="font-body text-sm font-medium flex items-center gap-2" style={{ color: 'var(--color-text-secondary)' }}>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ opacity: 0.6 }}>
+                  <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                </svg>
+                {new Date(`2000-01-01T${event.time}`).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
               </span>
-              <span className="font-body text-sm font-medium text-white/80">{event.date}</span>
-              {event.time && (
-                <>
-                  <span className="text-white/30">·</span>
-                  <span className="font-body text-sm font-medium text-white/80">
-                    {new Date(`2000-01-01T${event.time}`).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
-                  </span>
-                </>
-              )}
-              <span className="text-white/30">·</span>
-              <span className="font-body text-sm font-medium text-white/80">{event.location}</span>
-            </div>
+            )}
+            {/* Venue */}
+            <span className="font-body text-sm font-medium flex items-center gap-2" style={{ color: 'var(--color-text-secondary)' }}>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ opacity: 0.6 }}>
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+              </svg>
+              {event.location}
+            </span>
+          </div>
 
-            {/* Action buttons */}
+          {/* Action buttons */}
+          <div className="animate-slide-left-fade delay-200" style={{ animationFillMode: 'both' }}>
             {isRegistered ? (
               <div className="flex flex-col gap-6">
                 <div className="flex flex-wrap gap-4 items-center">
-                  <div className="flex items-center gap-3 px-6 py-4 rounded-full" style={{ border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(255,255,255,0.05)' }}>
-                    <span className="font-body font-bold text-[10px] tracking-widest uppercase text-white">REGISTERED</span>
+                  <div className="flex items-center gap-3 px-6 py-3 rounded-full" style={{ border: '1px solid var(--color-sand)', background: 'transparent' }}>
+                    <span className="font-body font-bold text-[10px] tracking-widest uppercase" style={{ color: 'var(--color-slate-blue)' }}>✓ REGISTERED</span>
                   </div>
 
-              {/* Create / Join Team */}
-              {!myTeam && (
-                <TransitionLink
-                  to="/teams"
-                  className="px-8 py-3 rounded-full text-[11px] flex items-center gap-2 font-body font-extrabold tracking-[0.18em] uppercase no-underline transition-all duration-300 backdrop-blur-md hover:bg-white/10"
-                  style={{ backgroundColor: 'rgba(255,255,255,0.05)', color: '#fff', border: '1px solid rgba(255,255,255,0.3)' }}
-                >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                  </svg>
-                  Create / Join Team
-                </TransitionLink>
-              )}
+                  {/* Create / Join Team */}
+                  {!myTeam && (
+                    <TransitionLink
+                      to="/teams"
+                      className="px-8 py-3 rounded-full text-[11px] flex items-center gap-2 font-body font-extrabold tracking-[0.18em] uppercase no-underline transition-all duration-300 hover:opacity-80"
+                      style={{ backgroundColor: 'var(--color-text-primary)', color: 'var(--color-bg)', border: 'none' }}
+                    >
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                      </svg>
+                      Create / Join Team
+                    </TransitionLink>
+                  )}
 
-              {/* Submit Project */}
-              {event.submissionsEnabled && isCaptain && (
-                <button
-                  onClick={() => setIsSubOpen(true)}
-                  className="px-8 py-3 rounded-full text-[11px] flex items-center gap-2 font-body font-extrabold tracking-[0.18em] uppercase transition-all duration-300 backdrop-blur-md cursor-pointer hover:bg-white/10"
-                  style={{ backgroundColor: 'rgba(255,255,255,0.05)', color: '#fff', border: '1px solid rgba(255,255,255,0.3)' }}
-                >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
-                  </svg>
-                  Submit Project
-                </button>
-              )}
-              {event.submissionsEnabled && myTeam && !isCaptain && (
-                <div className="px-6 py-2.5 rounded-full text-[10px] font-body text-white/50 bg-white/5 border border-white/10">
-                  Only team captain can submit
+                  {/* Submit Project */}
+                  {event.submissionsEnabled && isCaptain && (
+                    <button
+                      onClick={() => setIsSubOpen(true)}
+                      className="px-8 py-3 rounded-full text-[11px] flex items-center gap-2 font-body font-extrabold tracking-[0.18em] uppercase transition-all duration-300 cursor-pointer hover:opacity-80"
+                      style={{ backgroundColor: 'var(--color-text-primary)', color: 'var(--color-bg)', border: 'none' }}
+                    >
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+                      </svg>
+                      Submit Project
+                    </button>
+                  )}
+                  {event.submissionsEnabled && myTeam && !isCaptain && (
+                    <div className="px-6 py-2.5 rounded-full text-[10px] font-body" style={{ color: 'var(--color-text-muted)', border: '1px solid var(--color-cream)' }}>
+                      Only team captain can submit
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
 
-            {/* Unenroll */}
-            <div className="flex items-center gap-4 mt-6" style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '1.5rem' }}>
-              <button
-                onClick={handleUnenroll}
-                disabled={unsubmitting}
-                className="flex items-center gap-2 text-[10px] font-body font-bold tracking-widest uppercase cursor-pointer transition-colors hover:text-red-400"
-                style={{
-                  backgroundColor: 'transparent',
-                  border: 'none',
-                  color: 'rgba(255,255,255,0.5)',
-                  opacity: unsubmitting ? 0.6 : 1,
-                  padding: 0
-                }}
-              >
-                {unsubmitting ? 'UNENROLLING...' : 'CANCEL REGISTRATION'}
-              </button>
-            </div>
-          </div>
-        ) : (
-          <div className="flex flex-col items-start gap-4 mt-4">
-            {user ? (
-              <button
-                onClick={() => setIsRegOpen(true)}
-                className="btn-enroll-glow rounded-full flex items-center gap-3 cursor-pointer group"
-              >
-                <span className="font-body text-[13px] font-black tracking-[0.2em] uppercase text-white">ENROLL NOW</span>
-                <span className="transition-transform duration-300 group-hover:translate-x-1.5 text-white">→</span>
-              </button>
+                {/* Unenroll */}
+                <div className="flex items-center gap-4" style={{ borderTop: '1px solid var(--color-cream)', paddingTop: '1.5rem' }}>
+                  <button
+                    onClick={handleUnenroll}
+                    disabled={unsubmitting}
+                    className="flex items-center gap-2 text-[10px] font-body font-bold tracking-widest uppercase cursor-pointer transition-colors hover:text-red-500"
+                    style={{ backgroundColor: 'transparent', border: 'none', color: 'var(--color-text-muted)', opacity: unsubmitting ? 0.6 : 1, padding: 0 }}
+                  >
+                    {unsubmitting ? 'UNENROLLING...' : 'CANCEL REGISTRATION'}
+                  </button>
+                </div>
+              </div>
             ) : (
-              <TransitionLink
-                to="/auth"
-                className="px-10 py-4 rounded-full flex items-center gap-3 font-body text-[11px] font-extrabold tracking-[0.18em] uppercase no-underline transition-all duration-300"
-                style={{ background: 'rgba(255,255,255,0.1)', color: '#fff', border: '1px solid rgba(255,255,255,0.3)', backdropFilter: 'blur(10px)' }}
-              >
-                Login to Enroll
-              </TransitionLink>
+              <div className="flex flex-col items-start gap-5">
+                {user ? (
+                  <button
+                    onClick={() => setIsRegOpen(true)}
+                    className="rounded-full flex items-center gap-3 cursor-pointer group transition-all duration-200 hover:opacity-90 active:scale-[0.98]"
+                    style={{ background: 'var(--color-text-primary)', color: 'var(--color-bg)', border: 'none', padding: '1rem 2.5rem' }}
+                  >
+                    <span className="font-body text-[13px] font-black tracking-[0.2em] uppercase">ENROLL NOW</span>
+                    <span className="transition-transform duration-300 group-hover:translate-x-1.5">→</span>
+                  </button>
+                ) : (
+                  <TransitionLink
+                    to="/auth"
+                    className="rounded-full flex items-center gap-3 font-body text-[11px] font-extrabold tracking-[0.18em] uppercase no-underline transition-all duration-200 hover:opacity-90"
+                    style={{ background: 'var(--color-text-primary)', color: 'var(--color-bg)', border: 'none', padding: '1rem 2.5rem' }}
+                  >
+                    Login to Enroll
+                  </TransitionLink>
+                )}
+              </div>
             )}
-            <TransitionLink to="/" className="text-white/50 hover:text-white transition-colors duration-300 text-[10px] font-body font-bold tracking-[0.2em] uppercase flex items-center gap-2 mt-2 ml-4">
-              ← BACK TO EVENTS
-            </TransitionLink>
           </div>
-        )}
+        </div>
 
         {/* My Team Section */}
         {myTeam && (
-          <div className="mt-16 pt-12" style={{ borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+          <div className="mt-12 pt-10" style={{ borderTop: '1px solid var(--color-cream)' }}>
             <div className="flex items-end justify-between mb-8 flex-wrap gap-4">
               <div>
-                <p className="font-body text-[10px] font-extrabold tracking-[0.2em] mb-2 uppercase" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                <p className="font-body text-[10px] font-extrabold tracking-[0.2em] mb-2 uppercase" style={{ color: 'var(--color-slate-blue)' }}>
                   {myTeam.createdBy === user?.id ? '⭐ YOUR TEAM (CAPTAIN)' : '👥 YOUR TEAM'}
                 </p>
-                <h3 className="font-display text-4xl text-white m-0">{myTeam.name}</h3>
+                <h3 className="font-display text-4xl m-0" style={{ color: 'var(--color-text-primary)' }}>{myTeam.name}</h3>
               </div>
               <TransitionLink
                 to="/teams"
-                className="font-body font-extrabold text-[10px] tracking-[0.15em] px-5 py-2.5 rounded-full no-underline flex items-center gap-2 transition-colors hover:bg-white/10"
-                style={{ border: '1px solid rgba(255,255,255,0.2)', color: '#fff', background: 'rgba(255,255,255,0.05)' }}
+                className="font-body font-extrabold text-[10px] tracking-[0.15em] px-5 py-2.5 rounded-full no-underline flex items-center gap-2 transition-opacity hover:opacity-70"
+                style={{ border: '1px solid var(--color-sand)', color: 'var(--color-text-primary)', background: 'transparent' }}
               >
                 MANAGE IN TEAMS HUB →
               </TransitionLink>
@@ -245,18 +266,18 @@ export default function EventDetailPage() {
 
             {/* Team Members */}
             <div>
-              <p className="font-body text-[10px] tracking-[0.15em] font-bold mb-4 uppercase" style={{ color: 'rgba(255,255,255,0.4)' }}>
+              <p className="font-body text-[10px] tracking-[0.15em] font-bold mb-4 uppercase" style={{ color: 'var(--color-text-muted)' }}>
                 MEMBERS ({myTeamMembers.length} / {event.maxTeamSize ?? 4})
               </p>
               <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
                 {myTeamMembers.map(m => (
-                  <div key={m.id} className="flex items-center gap-4 px-4 py-3 rounded-xl backdrop-blur-sm transition-colors hover:bg-white/10" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                    <div className="w-10 h-10 rounded-full flex items-center justify-center font-display text-sm font-bold text-white flex-shrink-0" style={{ background: 'rgba(255,255,255,0.1)' }}>
+                  <div key={m.id} className="flex items-center gap-4 px-4 py-3 rounded-xl transition-colors" style={{ background: 'var(--color-ivory)', border: '1px solid var(--color-cream)' }}>
+                    <div className="w-10 h-10 rounded-full flex items-center justify-center font-display text-sm font-bold flex-shrink-0" style={{ background: 'var(--color-slate-blue)', color: '#fff' }}>
                       {(m.userName?.charAt(0) || '?').toUpperCase()}
                     </div>
                     <div className="min-w-0">
-                      <p className="font-body font-bold text-sm text-white truncate m-0 mb-0.5">{m.userName}</p>
-                      <p className="font-body text-[11px] truncate text-white/50 m-0">
+                      <p className="font-body font-bold text-sm truncate m-0 mb-0.5" style={{ color: 'var(--color-text-primary)' }}>{m.userName}</p>
+                      <p className="font-body text-[11px] truncate m-0" style={{ color: 'var(--color-text-muted)' }}>
                         {[m.userBranch, m.userYear, m.userDivision && `Div ${m.userDivision}`].filter(Boolean).join(' · ')}
                         {m.userPnr && ` · ${m.userPnr}`}
                       </p>
@@ -266,10 +287,7 @@ export default function EventDetailPage() {
               </div>
             </div>
           </div>
-
         )}
-      </div>
-      </div>
       </div>
 
       <EventInfoSection

@@ -290,17 +290,41 @@ export default function NavMenu() {
           )}
         </div>
 
-        {/* Mobile Hamburger */}
-        <button
-          onClick={toggleMenu}
-          className="md:hidden flex flex-col gap-1.5 p-2 z-[60]"
-          aria-label="Toggle menu"
-          style={{ background: 'none', border: 'none', cursor: 'pointer' }}
-        >
-          <span className={`block w-7 h-[1px] bg-black transition-all duration-300 ${menuOpen ? 'rotate-45 translate-y-[7px]' : ''}`} />
-          <span className={`block w-7 h-[1px] bg-black transition-all duration-300 ${menuOpen ? 'opacity-0' : ''}`} />
-          <span className={`block w-7 h-[1px] bg-black transition-all duration-300 ${menuOpen ? '-rotate-45 -translate-y-[7px]' : ''}`} />
-        </button>
+        {/* Mobile: Avatar + Hamburger */}
+        <div className="md:hidden flex items-center gap-2 z-[60]">
+          {/* Mobile avatar (tap → drawer where profile links live) */}
+          {user && (
+            <button
+              onClick={toggleMenu}
+              className="w-11 h-11 rounded-full overflow-hidden flex items-center justify-center font-display text-sm font-bold flex-shrink-0"
+              style={{
+                background: user.avatarUrl ? 'transparent' : 'var(--color-cream)',
+                color: 'var(--color-slate-blue)',
+                border: '1px solid var(--color-sand)',
+                cursor: 'pointer',
+                padding: 0,
+              }}
+              aria-label="Open menu"
+            >
+              {user.avatarUrl ? (
+                <img src={user.avatarUrl} alt={user.name} className="w-full h-full object-cover" />
+              ) : (
+                <span>{(user.name.charAt(0) || 'U').toUpperCase()}</span>
+              )}
+            </button>
+          )}
+          {/* Hamburger — 44×44 tap target */}
+          <button
+            onClick={toggleMenu}
+            className="w-11 h-11 flex flex-col items-center justify-center gap-1.5"
+            aria-label="Toggle menu"
+            style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+          >
+            <span className={`block w-6 h-[1.5px] bg-black transition-all duration-300 ${menuOpen ? 'rotate-45 translate-y-[7px]' : ''}`} />
+            <span className={`block w-6 h-[1.5px] bg-black transition-all duration-300 ${menuOpen ? 'opacity-0' : ''}`} />
+            <span className={`block w-6 h-[1.5px] bg-black transition-all duration-300 ${menuOpen ? '-rotate-45 -translate-y-[7px]' : ''}`} />
+          </button>
+        </div>
         </nav>
       </div>
 
@@ -349,13 +373,13 @@ export default function NavMenu() {
                   </div>
                 </div>
                 
-                <TransitionLink to="/profile" onClick={toggleMenu} className="font-body text-base text-[var(--color-text-primary)]">
+                <TransitionLink to="/profile" onClick={toggleMenu} className="font-body text-base text-[var(--color-text-primary)] min-h-[44px] flex items-center">
                   My Profile
                 </TransitionLink>
-                <TransitionLink to="/my-tickets" onClick={toggleMenu} className="font-body text-base text-[var(--color-text-primary)]">
+                <TransitionLink to="/my-tickets" onClick={toggleMenu} className="font-body text-base text-[var(--color-text-primary)] min-h-[44px] flex items-center">
                   My Passes
                 </TransitionLink>
-                <button onClick={handleLogout} className="text-left font-body text-base text-red-500 mt-2">
+                <button onClick={handleLogout} className="text-left font-body text-base text-red-500 mt-2 min-h-[44px] flex items-center" style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
                   Sign Out
                 </button>
               </div>

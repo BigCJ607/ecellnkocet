@@ -415,8 +415,8 @@ export default function EventEditorModal({ event, isOpen, onClose, onSave }: Eve
                     <button
                       type="button"
                       onClick={() => posterInputRef.current?.click()}
-                      className="flex items-center gap-3 px-6 py-3 cursor-pointer font-ui font-bold text-xs tracking-wider"
-                      style={{ background: 'rgba(34,211,238,0.1)', border: '1px solid rgba(34,211,238,0.3)', color: '#22d3ee' }}
+                      className="flex items-center justify-center gap-3 px-6 cursor-pointer font-ui font-bold text-xs tracking-wider"
+                      style={{ background: 'rgba(34,211,238,0.1)', border: '1px solid rgba(34,211,238,0.3)', color: '#22d3ee', minHeight: 44, width: '100%' }}
                     >
                       🖼 {posterPreviewDataUrl ? 'CHANGE POSTER IMAGE' : 'UPLOAD POSTER IMAGE'}
                     </button>
@@ -425,8 +425,8 @@ export default function EventEditorModal({ event, isOpen, onClose, onSave }: Eve
                       <button
                         type="button"
                         onClick={() => { setPosterPreviewDataUrl(''); setPosterFile(null); setPosterUrl(''); setCropOffset({ x: 0, y: 0 }); setCropScale(1) }}
-                        className="flex items-center gap-2 px-4 py-2 cursor-pointer font-ui text-xs tracking-wider"
-                        style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)', color: '#fca5a5' }}
+                        className="flex items-center justify-center gap-2 px-4 cursor-pointer font-ui text-xs tracking-wider"
+                        style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)', color: '#fca5a5', minHeight: 44, width: '100%' }}
                       >
                         ✕ REMOVE POSTER
                       </button>
@@ -440,7 +440,7 @@ export default function EventEditorModal({ event, isOpen, onClose, onSave }: Eve
                             type="range" min={1} max={2} step={0.01}
                             value={cropScale}
                             onChange={e => setCropScale(parseFloat(e.target.value))}
-                            style={{ width: '100%', accentColor: '#22d3ee' }}
+                            style={{ width: '100%', accentColor: '#22d3ee', height: 44 }}
                           />
                         </div>
                         <p style={{ color: '#64748b', fontSize: 11, fontFamily: 'var(--font-body)' }}>Drag image in preview to reposition</p>
@@ -451,7 +451,7 @@ export default function EventEditorModal({ event, isOpen, onClose, onSave }: Eve
                       <div
                         onClick={() => posterInputRef.current?.click()}
                         className="flex flex-col items-center justify-center gap-3 cursor-pointer"
-                        style={{ width: 240, aspectRatio: '3/2', border: '2px dashed rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.03)', color: '#64748b', fontSize: 12, fontFamily: 'var(--font-body)' }}
+                        style={{ width: 240, aspectRatio: '3/4', border: '2px dashed rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.03)', color: '#64748b', fontSize: 12, fontFamily: 'var(--font-body)' }}
                       >
                         <span style={{ fontSize: 36 }}>📷</span>
                         <span style={{ textAlign: 'center', lineHeight: 1.4 }}>Click to upload<br />poster image</span>
@@ -461,15 +461,19 @@ export default function EventEditorModal({ event, isOpen, onClose, onSave }: Eve
 
                   {/* Live card preview */}
                   {posterPreviewDataUrl && (
-                    <div className="flex-1 w-full max-w-[360px]">
-                      <p style={{ ...labelStyle, marginBottom: 10 }}>LIVE CARD PREVIEW</p>
+                    <div className="flex-1 w-full max-w-[320px]">
+                      <div className="flex items-center justify-between mb-2">
+                        <p style={{ ...labelStyle, marginBottom: 0 }}>LIVE CARD PREVIEW</p>
+                        <span className="font-ui text-[10px] text-gray-500 tracking-widest border border-gray-700 px-2 py-0.5 rounded">MOBILE WIDTH</span>
+                      </div>
                       <div
                         style={{
                           width: '100%',
-                          aspectRatio: '3/2',
+                          aspectRatio: '3/4',
                           borderRadius: 12,
                           overflow: 'hidden',
                           position: 'relative',
+                          isolation: 'isolate',
                           boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
                           cursor: isDragging ? 'grabbing' : 'grab',
                           userSelect: 'none',
@@ -504,22 +508,22 @@ export default function EventEditorModal({ event, isOpen, onClose, onSave }: Eve
                         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 56, background: 'linear-gradient(to bottom, rgba(0,0,0,0.65) 0%, transparent 100%)', zIndex: 2 }} />
                         {/* bottom gradient */}
                         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.5) 40%, transparent 70%)', zIndex: 2 }} />
-                        {/* badge row */}
-                        <div style={{ position: 'absolute', top: 12, left: 12, right: 12, display: 'flex', alignItems: 'center', justifyContent: 'space-between', zIndex: 3 }}>
-                          <span style={{ fontSize: 8, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#fff', padding: '3px 10px', borderRadius: 9999, backgroundColor: 'rgba(0,0,0,0.45)', border: '1px solid rgba(255,255,255,0.2)' }}>
-                            {(isCustomCategory ? customCategoryInput : category) || 'Category'}
-                          </span>
-                          <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.7)', fontWeight: 500 }}>2026</span>
-                        </div>
-                        {/* text */}
-                        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '0 14px 14px', zIndex: 3 }}>
-                          <p style={{ fontFamily: 'var(--font-display)', fontSize: 18, fontWeight: 600, color: '#fff', margin: '0 0 4px', lineHeight: 1.1 }}>
+                        {/* Bottom content stacked */}
+                        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '24px', paddingLeft: '32px', display: 'flex', flexDirection: 'column', gap: '8px', zIndex: 3 }}>
+                          {/* Badge */}
+                          <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <span style={{ fontSize: 8, fontWeight: 700, letterSpacing: '0.25em', textTransform: 'uppercase', color: '#fff', padding: '3px 10px', borderRadius: 9999, backgroundColor: 'rgba(0,0,0,0.45)', border: '1px solid rgba(255,255,255,0.2)' }}>
+                              {((isCustomCategory ? customCategoryInput : category) || 'Category').replace(/s$/i, '')}
+                            </span>
+                          </div>
+                          {/* Title */}
+                          <p style={{ fontFamily: 'var(--font-body)', fontSize: 'clamp(1.2rem, 3vw, 1.5rem)', fontWeight: 800, color: '#fff', margin: 0, lineHeight: 1.1, letterSpacing: '0.02em', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                             {title || 'Event Title'}
                           </p>
-                          <p style={{ fontFamily: 'var(--font-body)', fontSize: 10, color: 'rgba(255,255,255,0.55)', margin: '0 0 8px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                            {shortDescription || 'Short event description...'}
-                          </p>
-                          <span style={{ fontFamily: 'var(--font-body)', fontSize: 9, fontWeight: 800, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#fff' }}>ENROLL NOW →</span>
+                          {/* Button */}
+                          <div style={{ marginTop: 4 }}>
+                            <span style={{ fontFamily: 'var(--font-body)', fontSize: 9, fontWeight: 800, letterSpacing: '0.25em', textTransform: 'uppercase', color: '#fff' }}>ENROLL NOW →</span>
+                          </div>
                         </div>
                       </div>
                       <p style={{ color: '#64748b', fontSize: 10, fontFamily: 'var(--font-body)', marginTop: 8 }}>← Drag to reposition · Use zoom slider to scale</p>

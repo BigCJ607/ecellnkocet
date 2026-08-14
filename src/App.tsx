@@ -11,7 +11,7 @@ import ProfilePage from './pages/ProfilePage'
 import AdminPage from './pages/AdminPage'
 import AdminEventTeamsPage from './pages/AdminEventTeamsPage'
 import TeamsPage from './pages/TeamsPage'
-import GlobalTransition from './components/ui/GlobalTransition'
+
 import { AppProvider } from './context/AppContext'
 import { useApp } from './context/AppContext'
 import { useSessionTracker } from './hooks/useSessionTracker'
@@ -24,7 +24,6 @@ function AppShell() {
 
   return (
     <div id="app-root" className="relative flex flex-col min-h-screen overflow-hidden">
-      <GlobalTransition />
 
       <div id="page-wrapper" className="flex flex-col min-h-screen w-full relative z-0">
         <NavMenu />
