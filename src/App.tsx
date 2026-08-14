@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { useEffect } from 'react'
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import './styles/index.css'
 import NavMenu from './components/ui/NavMenu'
 import EventsListingPage from './pages/EventsListingPage'
@@ -15,12 +16,22 @@ import TeamsPage from './pages/TeamsPage'
 import { AppProvider } from './context/AppContext'
 import { useApp } from './context/AppContext'
 import { useSessionTracker } from './hooks/useSessionTracker'
+import gsap from 'gsap'
 
 
 // Inner shell — needs to be inside both AppProvider and BrowserRouter to access useLocation
 function AppShell() {
   const { user } = useApp()
+  const location = useLocation()
   useSessionTracker(user?.id)
+
+  useEffect(() => {
+    gsap.fromTo(
+      '#main-content',
+      { opacity: 0, y: 15 },
+      { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }
+    )
+  }, [location.pathname])
 
   return (
     <div id="app-root" className="relative flex flex-col min-h-screen overflow-hidden">
@@ -64,7 +75,7 @@ function AppShell() {
               className="font-ui text-xs tracking-widest text-center"
               style={{ color: 'var(--color-text-muted)', letterSpacing: '0.1em' }}
             >
-              © 2025 Ecell NKOCET. ALL RIGHTS RESERVED.
+              © 2025 Ecell. ALL RIGHTS RESERVED.
             </p>
             <div className="flex gap-6">
               {['Privacy', 'Terms', 'Contact'].map((link) => (

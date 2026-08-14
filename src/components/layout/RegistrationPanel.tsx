@@ -96,161 +96,174 @@ export default function RegistrationPanel({ event }: RegistrationPanelProps) {
         id="register"
         direction="ltr"
         numSelector=".reg-section-num"
+        style={{ padding: '4rem 0' }}
+      >
+      <div
+        className="w-full max-w-5xl mx-auto p-8 md:p-12 animate-slide-up-fade"
         style={{
           background: 'var(--color-surface)',
-          padding: '6rem 0 8rem',
-          position: 'relative',
+          borderRadius: '24px',
+          border: '1px solid var(--color-cream)',
+          boxShadow: '0 10px 40px rgba(0,0,0,0.05)',
         }}
       >
-        <span className="section-num reg-section-num" aria-hidden="true">03</span>
-
-        <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 xl:px-32">
-          <div className="mb-12 content-backdrop max-w-3xl">
-            <p className="font-ui font-semibold tracking-widest text-xs mb-3" style={{ color: 'var(--color-primary)', letterSpacing: '0.25em' }} data-reveal>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
+          {/* Left Column: Headline */}
+          <div>
+            <p className="font-ui font-semibold tracking-widest text-xs mb-4" style={{ color: 'var(--color-slate-blue)', letterSpacing: '0.25em' }}>
               JOIN US
             </p>
-            <h2 className="font-display leading-none" style={{ fontSize: 'clamp(3rem, 8vw, 6rem)', color: 'var(--color-text)' }} data-reveal>
-              SECURE YOUR <br /><span className="text-gradient-primary">SEAT</span>
+            <h2 className="font-display leading-[1.1] mb-6" style={{ fontSize: 'clamp(3rem, 6vw, 4.5rem)', color: 'var(--color-text-primary)' }}>
+              SECURE<br />YOUR <span className="text-gradient-primary" style={{ color: 'var(--color-slate-blue)' }}>SEAT</span>
             </h2>
           </div>
 
-          <div className="max-w-3xl">
-            <div ref={panelRef} className="card-glass p-8" style={{ visibility: shatterState === 'shattering' ? 'hidden' : 'visible' }}>
+          {/* Right Column: Actions / Status */}
+          <div ref={panelRef} style={{ visibility: shatterState === 'shattering' ? 'hidden' : 'visible' }}>
 
-              {/* ── Loading profile ── */}
-              {profileLoading && (
-                <div className="flex items-center gap-3 py-8">
-                  <div className="w-5 h-5 border-2 rounded-full" style={{ borderColor: 'var(--color-primary)', borderTopColor: 'transparent', animation: 'spin 0.8s linear infinite' }} />
-                  <span className="font-ui text-sm tracking-widest" style={{ color: 'var(--color-text-muted)' }}>LOADING YOUR PROFILE...</span>
-                </div>
-              )}
+            {/* ── Loading profile ── */}
+            {profileLoading && (
+              <div className="flex items-center justify-center gap-3 py-12">
+                <div className="w-5 h-5 border-2 rounded-full" style={{ borderColor: 'var(--color-slate-blue)', borderTopColor: 'transparent', animation: 'spin 0.8s linear infinite' }} />
+                <span className="font-ui text-sm tracking-widest" style={{ color: 'var(--color-text-secondary)' }}>LOADING PROFILE...</span>
+              </div>
+            )}
 
-              {/* ── Missing required fields — prompt to complete profile ── */}
-              {!profileLoading && missingFields.length > 0 && (
-                <div className="space-y-6">
-                  <div className="flex items-start gap-3 p-4" style={{ background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.25)' }}>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ color: '#ef4444', flexShrink: 0, marginTop: 2 }}>
+            {/* ── Missing required fields — prompt to complete profile ── */}
+            {!profileLoading && missingFields.length > 0 && (
+              <div className="space-y-6">
+                <div className="p-6 rounded-xl" style={{ background: 'var(--color-ivory)', border: '1px solid var(--color-cream)', borderLeft: '4px solid #f59e0b' }}>
+                  <div className="flex items-start gap-3">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="2.5" className="mt-0.5 flex-shrink-0">
                       <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
                     </svg>
                     <div>
-                      <p className="font-ui font-semibold text-xs tracking-widest mb-2" style={{ color: '#ef4444', letterSpacing: '0.15em' }}>PROFILE INCOMPLETE</p>
-                      <p className="font-ui text-sm mb-3" style={{ color: 'var(--color-text-muted)', lineHeight: 1.7 }}>
-                        To enroll, your profile must have all required details filled in. The following fields are missing:
+                      <p className="font-ui font-bold text-xs tracking-widest mb-2 uppercase" style={{ color: '#d97706', letterSpacing: '0.15em' }}>
+                        PROFILE INCOMPLETE
                       </p>
-                      <ul className="space-y-1">
+                      <p className="font-body text-[13px] mb-4" style={{ color: 'var(--color-text-primary)', lineHeight: 1.6 }}>
+                        To enroll, your profile must have all required details filled in. Missing fields:
+                      </p>
+                      <ul className="space-y-1.5 ml-1">
                         {missingFields.map(f => (
-                          <li key={f.key} className="font-ui text-xs flex items-center gap-2" style={{ color: '#ef4444' }}>
-                            <span className="w-1.5 h-1.5 rounded-full inline-block" style={{ background: '#ef4444' }} />
+                          <li key={f.key} className="font-body text-xs flex items-center gap-2" style={{ color: 'var(--color-text-secondary)' }}>
+                            <span className="w-1 h-1 rounded-full bg-[#f59e0b] opacity-60 flex-shrink-0" />
                             {f.label}
                           </li>
                         ))}
                       </ul>
                     </div>
                   </div>
-                  <Link
-                    to="/profile"
-                    className="btn-primary w-full py-4 text-base no-underline inline-flex items-center justify-center gap-2"
-                  >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
-                    </svg>
-                    COMPLETE MY PROFILE →
-                  </Link>
                 </div>
-              )}
+                <Link
+                  to="/profile"
+                  className="w-full py-4 px-6 rounded-full text-sm flex items-center justify-center gap-2 font-body font-bold tracking-widest uppercase no-underline transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
+                  style={{ backgroundColor: 'var(--color-slate-blue)', color: 'var(--color-white)', border: 'none' }}
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                  </svg>
+                  COMPLETE MY PROFILE →
+                </Link>
+              </div>
+            )}
 
-              {/* ── Ready to enroll — show enroll button (no confirm yet) ── */}
-              {!profileLoading && missingFields.length === 0 && !showConfirm && profile && (
-                <div className="space-y-6">
-                  {/* Quick profile preview */}
-                  <div className="p-5" style={{ background: 'rgba(99,102,241,0.06)', border: '1px solid rgba(99,102,241,0.2)' }}>
-                    <p className="font-ui text-xs tracking-widest mb-4" style={{ color: 'var(--color-primary)', letterSpacing: '0.15em' }}>
-                      YOUR DETAILS · AUTO-FILLED FROM PROFILE
-                    </p>
-                    <div className="grid grid-cols-2 gap-x-8 gap-y-3">
-                      {[
-                        { label: 'Name',     value: profile.name },
-                        { label: 'PNR',      value: profile.pnr },
-                        { label: 'Year',     value: profile.classYear },
-                        { label: 'Division', value: profile.division },
-                        { label: 'Branch',   value: profile.branch },
-                        { label: 'Email',    value: profile.contactEmail },
-                      ].map(({ label, value }) => (
-                        <div key={label} className="flex flex-col gap-0.5">
-                          <span className="font-ui text-xs tracking-wider" style={{ color: 'var(--color-text-muted)' }}>{label.toUpperCase()}</span>
-                          <span className="font-ui font-semibold text-sm" style={{ color: 'var(--color-text)' }}>{value || '—'}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <p className="text-xs" style={{ color: 'var(--color-text-muted)', lineHeight: 1.7 }}>
-                    Your profile details will be used for this enrollment.{' '}
-                    <Link to="/profile" className="underline" style={{ color: 'var(--color-primary)' }}>Update profile</Link> if anything is incorrect.
+            {/* ── Ready to enroll — show enroll button (no confirm yet) ── */}
+            {!profileLoading && missingFields.length === 0 && !showConfirm && profile && (
+              <div className="space-y-6">
+                {/* Quick profile preview */}
+                <div className="p-6 rounded-xl" style={{ background: 'var(--color-ivory)', border: '1px solid var(--color-cream)' }}>
+                  <p className="font-ui font-bold text-[10px] tracking-widest mb-5 uppercase" style={{ color: 'var(--color-slate-blue)', letterSpacing: '0.15em' }}>
+                    YOUR DETAILS · AUTO-FILLED
                   </p>
-
-                  <button
-                    type="button"
-                    onClick={handleEnrollClick}
-                    className="btn-primary w-full py-4 text-base flex items-center justify-center gap-2"
-                  >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                      <polyline points="20 6 9 17 4 12"/>
-                    </svg>
-                    ENROLL NOW →
-                  </button>
-                </div>
-              )}
-
-              {/* ── Confirm step ── */}
-              {!profileLoading && showConfirm && profile && (
-                <div className="space-y-6">
-                  <div className="p-5" style={{ background: 'rgba(99,102,241,0.06)', border: '1px solid rgba(99,102,241,0.2)' }}>
-                    <p className="font-ui text-xs tracking-widest mb-4" style={{ color: 'var(--color-primary)', letterSpacing: '0.15em' }}>
-                      ENROLLMENT SUMMARY
-                    </p>
-                    {summaryRows.map(({ label, value }) => (
-                      <div key={label} className="flex justify-between py-2 border-b last:border-0" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
-                        <span className="font-ui text-xs tracking-wider" style={{ color: 'var(--color-text-muted)' }}>{label.toUpperCase()}</span>
-                        <span className="font-ui font-semibold text-sm" style={{ color: 'var(--color-text)' }}>{value}</span>
+                  <div className="grid grid-cols-2 gap-x-6 gap-y-4">
+                    {[
+                      { label: 'Name',     value: profile.name },
+                      { label: 'PNR',      value: profile.pnr },
+                      { label: 'Year',     value: profile.classYear },
+                      { label: 'Division', value: profile.division },
+                      { label: 'Branch',   value: profile.branch },
+                      { label: 'Email',    value: profile.contactEmail },
+                    ].map(({ label, value }) => (
+                      <div key={label} className="flex flex-col gap-1">
+                        <span className="font-ui font-bold text-[10px] tracking-wider uppercase" style={{ color: 'var(--color-text-secondary)' }}>{label}</span>
+                        <span className="font-body font-semibold text-sm truncate" title={value} style={{ color: 'var(--color-text-primary)' }}>{value || '—'}</span>
                       </div>
                     ))}
                   </div>
+                </div>
 
-                  {error && (
-                    <p className="text-xs px-4 py-2" style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)', color: '#ef4444' }}>
-                      {error}
-                    </p>
-                  )}
+                <p className="font-body text-xs text-center" style={{ color: 'var(--color-text-secondary)', lineHeight: 1.6 }}>
+                  Your profile details will be used for this enrollment.{' '}
+                  <Link to="/profile" className="font-semibold underline transition-colors hover:text-opacity-80" style={{ color: 'var(--color-slate-blue)' }}>Update profile</Link> if anything is incorrect.
+                </p>
 
-                  <p className="text-xs" style={{ color: 'var(--color-text-muted)', lineHeight: 1.7 }}>
-                    By confirming, you agree to the university's event code of conduct. Your registration pass will be issued immediately.
+                <button
+                  type="button"
+                  onClick={handleEnrollClick}
+                  className="w-full py-4 px-6 rounded-full text-sm flex items-center justify-center gap-2 font-body font-bold tracking-widest uppercase transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 cursor-pointer"
+                  style={{ backgroundColor: 'var(--color-slate-blue)', color: 'var(--color-white)', border: 'none' }}
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                  ENROLL NOW →
+                </button>
+              </div>
+            )}
+
+            {/* ── Confirming state ── */}
+            {showConfirm && (
+              <div className="space-y-6">
+                <div className="p-6 rounded-xl" style={{ background: 'var(--color-ivory)', border: '1px solid var(--color-cream)' }}>
+                  <p className="font-ui font-bold text-[10px] tracking-widest mb-5 uppercase" style={{ color: 'var(--color-slate-blue)', letterSpacing: '0.15em' }}>
+                    ENROLLMENT SUMMARY
                   </p>
-
-                  <div className="flex gap-3">
-                    <button
-                      type="button"
-                      onClick={() => setShowConfirm(false)}
-                      className="font-ui font-semibold text-sm tracking-widest px-6 py-3"
-                      style={{ border: '1px solid rgba(255,255,255,0.1)', color: 'var(--color-text-muted)', background: 'transparent', cursor: 'pointer', letterSpacing: '0.12em' }}
-                      disabled={isSubmitting}
-                    >
-                      ← BACK
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleConfirm}
-                      className="btn-primary flex-1 py-3 text-base"
-                      disabled={isSubmitting}
-                    >
-                      {isSubmitting ? 'ENROLLING...' : '✦ CONFIRM ENROLLMENT'}
-                    </button>
+                  <div className="space-y-4">
+                    {summaryRows.map(({ label, value }) => (
+                      <div key={label} className="flex justify-between items-center pb-4 border-b last:border-0" style={{ borderColor: 'var(--color-sand)' }}>
+                        <span className="font-ui font-bold text-[10px] tracking-wider uppercase" style={{ color: 'var(--color-text-secondary)' }}>{label}</span>
+                        <span className="font-body font-semibold text-sm truncate" style={{ color: 'var(--color-text-primary)' }}>{value || '—'}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
-              )}
-            </div>
+
+                {error && (
+                  <p className="text-xs px-4 py-3 rounded-lg" style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)', color: '#ef4444', fontFamily: 'var(--font-body)' }}>
+                    {error}
+                  </p>
+                )}
+
+                <p className="font-body text-xs text-center" style={{ color: 'var(--color-text-secondary)', lineHeight: 1.6 }}>
+                  By confirming, you agree to the university's event code of conduct. Your registration pass will be issued immediately.
+                </p>
+
+                <div className="flex gap-4">
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirm(false)}
+                    className="flex-1 py-4 px-6 rounded-full text-sm flex items-center justify-center font-body font-bold tracking-widest uppercase cursor-pointer transition-all duration-200 hover:bg-[rgba(62,88,104,0.05)]"
+                    style={{ border: '1px solid var(--color-sand)', color: 'var(--color-text-primary)', background: 'transparent' }}
+                    disabled={isSubmitting}
+                  >
+                    ← BACK
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleConfirm}
+                    className="flex-1 py-4 px-6 rounded-full text-sm flex items-center justify-center gap-2 font-body font-bold tracking-widest uppercase transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 cursor-pointer"
+                    style={{ backgroundColor: 'var(--color-slate-blue)', color: 'var(--color-white)', border: 'none' }}
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? 'ENROLLING...' : '✦ CONFIRM'}
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
+      </div>
       </SectionTransition>
 
       {shatterState === 'done' && profile && (

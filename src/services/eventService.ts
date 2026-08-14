@@ -101,6 +101,7 @@ const mapDbEvent = (row: any): EventData => {
     maxTeamSize: row.max_team_size ?? 4,
     time: row.time || '',
     submissionsEnabled: !!row.submissions_enabled,
+    teamFormationLive: !!row.team_formation_live,
     winners,
     posterUrl: row.poster_url || '',
   };
@@ -252,6 +253,7 @@ export const eventService = {
       max_team_size: event.maxTeamSize ?? 4,
       time: event.time || '',
       submissions_enabled: !!event.submissionsEnabled,
+      team_formation_live: !!event.teamFormationLive,
       poster_url: event.posterUrl || '',
     };
 
@@ -291,6 +293,7 @@ export const eventService = {
     if (updates.maxTeamSize !== undefined) dbPayload.max_team_size = updates.maxTeamSize;
     if (updates.time !== undefined) dbPayload.time = updates.time;
     if (updates.submissionsEnabled !== undefined) dbPayload.submissions_enabled = !!updates.submissionsEnabled;
+    if (updates.teamFormationLive !== undefined) dbPayload.team_formation_live = !!updates.teamFormationLive;
     if (updates.posterUrl !== undefined) dbPayload.poster_url = updates.posterUrl;
 
     const { data, error } = await supabase

@@ -5,13 +5,14 @@ import { useApp } from '../../context/AppContext'
 import { teamService } from '../../services/teamService'
 import { teamChatService } from '../../services/teamChatService'
 import { isOriginalAdminEmail } from '../../services/authService'
+import gsap from 'gsap'
 
 const BASE_NAV_ITEMS = [
-  { label: 'Home', href: '/' },
-  { label: 'Events', href: '/events' },
-  { label: 'Past Events', href: '/past-events' },
-  { label: 'Teams', href: '/teams' },
-  { label: 'About', href: '/about' },
+  { label: 'Home', href: '/', icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> },
+  { label: 'Events', href: '/events', icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg> },
+  { label: 'Past Events', href: '/past-events', icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> },
+  { label: 'Teams', href: '/teams', icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> },
+  { label: 'About', href: '/about', icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="16" y2="12"/><line x1="12" x2="12.01" y1="8" y2="8"/></svg> },
 ]
 
 export default function NavMenu() {
@@ -21,6 +22,7 @@ export default function NavMenu() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
   const profileDropdownRef = useRef<HTMLDivElement>(null)
+  const mobileMenuRef = useRef<HTMLUListElement>(null)
   const location = useLocation()
   const { user, logout } = useApp()
   const [unreadChatCount, setUnreadChatCount] = useState(0)
@@ -29,7 +31,7 @@ export default function NavMenu() {
   const isAdmin = user?.role === 'admin' || isOriginalAdminEmail(user?.email)
 
   const navItems = isAdmin
-    ? [...BASE_NAV_ITEMS, { label: 'Admin', href: '/admin' }]
+    ? [...BASE_NAV_ITEMS, { label: 'Admin', href: '/admin', icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> }]
     : BASE_NAV_ITEMS
 
   useEffect(() => {
@@ -111,6 +113,15 @@ export default function NavMenu() {
     }
   }, [location.pathname])
 
+  useEffect(() => {
+    if (menuOpen && mobileMenuRef.current) {
+      gsap.fromTo(mobileMenuRef.current.children, 
+        { x: -30, opacity: 0 }, 
+        { x: 0, opacity: 1, duration: 0.4, stagger: 0.05, ease: 'power3.out' }
+      )
+    }
+  }, [menuOpen])
+
   const toggleMenu = () => {
     setMenuOpen(!menuOpen)
     document.body.style.overflow = !menuOpen ? 'hidden' : 'auto'
@@ -131,9 +142,11 @@ export default function NavMenu() {
     if (forceToggle) setForceToggle(null);
   }, [scrollDirection]);
 
-  let navHidden = false;
+  let navHidden = true;
   if (scrollY > 10) {
-    navHidden = scrollDirection === 'down' && !hovered && !menuOpen && !profileOpen;
+    navHidden = scrollDirection === 'down' && !menuOpen && !profileOpen;
+  } else {
+    navHidden = !menuOpen && !profileOpen;
   }
   if (forceToggle === 'show') navHidden = false;
   if (forceToggle === 'hide') navHidden = true;
@@ -151,19 +164,17 @@ export default function NavMenu() {
         <nav
           className="pointer-events-auto flex items-center justify-between px-6 md:px-12 transition-all duration-500 w-full h-full relative"
           style={{
-            transform: navHidden ? 'translateY(-100%)' : 'translateY(0)',
-            background: isActiveBg ? 'rgba(251, 249, 244, 0.98)' : 'transparent',
-            backdropFilter: isActiveBg ? 'blur(12px)' : 'none',
+            transform: navHidden ? 'translateY(calc(-100% + 20px))' : 'translateY(0)',
+            background: isActiveBg ? 'rgba(251, 249, 244, 0.45)' : 'transparent',
+            backdropFilter: isActiveBg ? 'blur(16px) saturate(180%)' : 'none',
             borderBottom: isActiveBg ? '1px solid var(--color-cream)' : '1px solid transparent',
           }}
         >
           {/* Logo */}
-          <TransitionLink to="/" className="flex items-center no-underline text-2xl" aria-label="Ecell NKOCET Home">
+          <TransitionLink to="/" className="flex items-center no-underline text-2xl" aria-label="Ecell Home">
             <span 
-              className="font-display font-black tracking-widest text-transparent bg-clip-text"
-              style={{
-                backgroundImage: 'linear-gradient(to right, #8b5cf6, #22d3ee)',
-              }}
+              className="font-display font-black tracking-widest transition-colors duration-300"
+              style={{ color: (isActiveBg || !(location.pathname === '/' || /^\/events\/[^/]+$/.test(location.pathname))) ? '#6B705C' : '#FFFFFF' }}
             >
               ECELL
             </span>
@@ -173,7 +184,7 @@ export default function NavMenu() {
           <button 
             onClick={() => setForceToggle(navHidden ? 'show' : 'hide')}
             className="absolute left-1/2 -translate-x-1/2 z-[60] flex items-center justify-center bg-[var(--color-surface)] shadow-sm border border-[var(--color-cream)] cursor-pointer transition-all duration-300"
-            style={{ 
+            style={{  
               bottom: '-20px', 
               width: '44px', 
               height: '20px', 
@@ -331,9 +342,9 @@ export default function NavMenu() {
             aria-label="Toggle menu"
             style={{ background: 'none', border: 'none', cursor: 'pointer' }}
           >
-            <span className={`block w-6 h-[1.5px] bg-black transition-all duration-300 ${menuOpen ? 'rotate-45 translate-y-[7px]' : ''}`} />
-            <span className={`block w-6 h-[1.5px] bg-black transition-all duration-300 ${menuOpen ? 'opacity-0' : ''}`} />
-            <span className={`block w-6 h-[1.5px] bg-black transition-all duration-300 ${menuOpen ? '-rotate-45 -translate-y-[7px]' : ''}`} />
+            <span className={`block w-6 h-[1.5px] transition-all duration-300 ${menuOpen ? 'rotate-45 translate-y-[7px]' : ''}`} style={{ backgroundColor: (isActiveBg || !(location.pathname === '/' || /^\/events\/[^/]+$/.test(location.pathname))) ? '#0f172a' : '#FFFFFF' }} />
+            <span className={`block w-6 h-[1.5px] transition-all duration-300 ${menuOpen ? 'opacity-0' : ''}`} style={{ backgroundColor: (isActiveBg || !(location.pathname === '/' || /^\/events\/[^/]+$/.test(location.pathname))) ? '#0f172a' : '#FFFFFF' }} />
+            <span className={`block w-6 h-[1.5px] transition-all duration-300 ${menuOpen ? '-rotate-45 -translate-y-[7px]' : ''}`} style={{ backgroundColor: (isActiveBg || !(location.pathname === '/' || /^\/events\/[^/]+$/.test(location.pathname))) ? '#0f172a' : '#FFFFFF' }} />
           </button>
         </div>
         </nav>
@@ -347,31 +358,48 @@ export default function NavMenu() {
 
       {/* Mobile Fullscreen Drawer */}
       <div
-        className={`fixed top-0 right-0 bottom-0 w-[85%] max-w-sm z-[55] bg-[var(--color-white)] border-l border-[var(--color-cream)] shadow-2xl flex flex-col md:hidden transition-transform duration-500 ease-out ${menuOpen ? 'translate-x-0' : 'translate-x-full'}`}
+        className={`fixed top-0 right-0 bottom-0 w-[85%] max-w-sm z-[55] shadow-2xl flex flex-col md:hidden transition-transform duration-500 ease-out ${menuOpen ? 'translate-x-0' : 'translate-x-full'}`}
+        style={{ background: '#0b1120', borderLeft: '1px solid rgba(255,255,255,0.1)' }}
       >
-        <div className="flex flex-col h-full pt-28 px-8 pb-10 overflow-y-auto">
-          <ul className="flex flex-col gap-8 list-none p-0 m-0 flex-grow">
-            {navItems.map((item) => (
-              <li key={item.href}>
-                <TransitionLink
-                  to={item.href}
-                  onClick={toggleMenu}
-                  className="font-display text-3xl font-medium text-[var(--color-text-primary)]"
-                >
-                  {item.label}
-                  {item.href === '/teams' && (unreadChatCount > 0 || pendingInviteCount > 0) && (
-                    <span className="ml-3 inline-block w-2 h-2 rounded-full bg-[var(--color-dusty-blue)] align-middle" />
-                  )}
-                </TransitionLink>
-              </li>
-            ))}
+        <div className="flex flex-col h-full pt-20 px-6 pb-10 overflow-y-auto">
+          {/* Top Logo / Title in Drawer */}
+          <div className="mb-10 pl-2">
+            <span className="font-display font-black tracking-widest text-2xl" style={{ color: '#fff' }}>
+              ECELL
+            </span>
+          </div>
+
+          <ul ref={mobileMenuRef} className="flex flex-col gap-2 list-none p-0 m-0 flex-grow">
+            {navItems.map((item) => {
+              const isActive = location.pathname === item.href || (item.href !== '/' && location.pathname.startsWith(item.href))
+              return (
+                <li key={item.href}>
+                  <TransitionLink
+                    to={item.href}
+                    onClick={toggleMenu}
+                    className={`flex items-center gap-4 p-4 rounded-xl transition-all duration-300 ${isActive ? 'bg-blue-600' : 'hover:bg-white/5'}`}
+                    style={{ color: isActive ? '#fff' : '#94a3b8' }}
+                  >
+                    <span className="opacity-80">
+                      {item.icon}
+                    </span>
+                    <span className={`font-body text-base font-medium tracking-wide ${isActive ? 'text-white' : ''}`}>
+                      {item.label}
+                    </span>
+                    {item.href === '/teams' && (unreadChatCount > 0 || pendingInviteCount > 0) && (
+                      <span className="ml-auto inline-block w-2 h-2 rounded-full bg-blue-400 align-middle shadow-[0_0_8px_rgba(96,165,250,0.8)]" />
+                    )}
+                  </TransitionLink>
+                </li>
+              )
+            })}
           </ul>
 
-          <div className="pt-8 mt-8 border-t border-[var(--color-cream)]">
+          <div className="pt-6 mt-6 border-t border-white/10">
             {user ? (
-              <div className="flex flex-col gap-6">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center bg-[var(--color-cream)] text-[var(--color-slate-blue)] font-display text-lg border border-[var(--color-sand)]">
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center gap-4 p-2 mb-4">
+                  <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center bg-white/10 text-white font-display text-base">
                     {user.avatarUrl ? (
                       <img src={user.avatarUrl} alt={user.name} className="w-full h-full object-cover" />
                     ) : (
@@ -379,26 +407,31 @@ export default function NavMenu() {
                     )}
                   </div>
                   <div>
-                    <p className="font-display font-medium text-lg text-[var(--color-text-primary)] leading-none">{user.name}</p>
-                    <p className="font-body text-sm text-[var(--color-text-secondary)] mt-1">{user.email}</p>
+                    <p className="font-display font-medium text-base text-white leading-none truncate">{user.name.split(' ')[0]}</p>
+                    <p className="font-body text-xs text-slate-400 mt-1 truncate">{user.email}</p>
                   </div>
                 </div>
                 
-                <TransitionLink to="/profile" onClick={toggleMenu} className="font-body text-base text-[var(--color-text-primary)] min-h-[44px] flex items-center">
-                  My Profile
-                </TransitionLink>
-                <TransitionLink to="/my-tickets" onClick={toggleMenu} className="font-body text-base text-[var(--color-text-primary)] min-h-[44px] flex items-center">
-                  My Passes
-                </TransitionLink>
-                <button onClick={handleLogout} className="text-left font-body text-base text-red-500 mt-2 min-h-[44px] flex items-center" style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
-                  Sign Out
-                </button>
+                <div className="flex flex-col gap-1">
+                  <TransitionLink to="/profile" onClick={toggleMenu} className="flex items-center gap-4 p-4 rounded-xl hover:bg-white/5 transition-all duration-300 font-body text-sm text-slate-300">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-70"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    My Profile
+                  </TransitionLink>
+                  <TransitionLink to="/my-tickets" onClick={toggleMenu} className="flex items-center gap-4 p-4 rounded-xl hover:bg-white/5 transition-all duration-300 font-body text-sm text-slate-300">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-70"><rect width="20" height="14" x="2" y="5" rx="2"/><path d="M2 10h20"/></svg>
+                    My Passes
+                  </TransitionLink>
+                  <button onClick={handleLogout} className="flex items-center gap-4 p-4 rounded-xl hover:bg-red-500/10 transition-all duration-300 font-body text-sm text-red-400 cursor-pointer text-left w-full" style={{ border: 'none', background: 'transparent' }}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-70"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                    Sign Out
+                  </button>
+                </div>
               </div>
             ) : (
               <TransitionLink
                 to="/auth"
                 onClick={toggleMenu}
-                className="btn-primary w-full"
+                className="btn-primary w-full text-center"
               >
                 Sign In
               </TransitionLink>

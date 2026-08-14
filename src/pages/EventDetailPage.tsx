@@ -103,7 +103,6 @@ export default function EventDetailPage() {
         style={{
           height: 'clamp(180px, 28vh, 520px)',
           backgroundImage: `url(${event.posterUrl || '/background/eureka.jpg'})`,
-          marginTop: 'var(--nav-h)',
         }}
       >
         {/* Subtle bottom fade so the banner blends into the page */}
@@ -111,8 +110,8 @@ export default function EventDetailPage() {
         {/* Back link — top-left of banner */}
         <TransitionLink
           to="/events"
-          className="absolute top-6 left-6 font-body text-xs tracking-[0.2em] text-white/70 hover:text-white inline-flex items-center gap-2 no-underline group z-10 animate-slide-left-fade"
-          style={{ textShadow: '0 1px 4px rgba(0,0,0,0.6)' }}
+          className="absolute left-6 font-body text-xs tracking-[0.2em] text-white/70 hover:text-white inline-flex items-center gap-2 no-underline group z-10 animate-slide-left-fade"
+          style={{ top: 'calc(var(--nav-h) + 1.5rem)', textShadow: '0 1px 4px rgba(0,0,0,0.6)' }}
         >
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="transition-transform duration-300 group-hover:-translate-x-1">
             <path d="M19 12H5M12 5l-7 7 7 7"/>
@@ -347,17 +346,21 @@ export default function EventDetailPage() {
 
       {/* Registration Modal — only shown when not yet registered */}
       {isRegOpen && !isRegistered && (
-        <div className="fixed inset-0 z-50 overflow-y-auto" style={{ background: 'rgba(10,10,15,0.95)', backdropFilter: 'blur(16px)' }}>
-          <div className="min-h-screen relative flex flex-col justify-center py-12">
+        <div className="fixed inset-0 z-50 overflow-y-auto" style={{ background: 'var(--color-bg)', backdropFilter: 'blur(8px)' }}>
+          <div className="min-h-screen flex items-center justify-center py-12 px-4">
             <button
               onClick={() => setIsRegOpen(false)}
-              className="absolute top-8 right-8 z-[60] w-12 h-12 flex flex-col items-center justify-center gap-1.5 cursor-pointer"
-              style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '50%' }}
+              className="absolute top-6 right-6 md:top-10 md:right-10 z-[60] w-12 h-12 flex items-center justify-center cursor-pointer rounded-full transition-all duration-300 hover:bg-[rgba(62,88,104,0.06)]"
+              style={{ background: 'var(--color-ivory)', border: '1px solid var(--color-cream)' }}
             >
-              <span className="block w-5 h-px bg-white transform rotate-45 translate-y-1" />
-              <span className="block w-5 h-px bg-white transform -rotate-45 -translate-y-1" />
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-slate-blue)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
             </button>
-            <RegistrationPanel event={event} />
+            <div className="w-full relative z-50">
+              <RegistrationPanel event={event} />
+            </div>
           </div>
         </div>
       )}

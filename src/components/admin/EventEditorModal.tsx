@@ -91,6 +91,7 @@ export default function EventEditorModal({ event, isOpen, onClose, onSave }: Eve
   const [maxTeamSize, setMaxTeamSize] = useState(4)
   const [time, setTime] = useState('')
   const [submissionsEnabled, setSubmissionsEnabled] = useState(false)
+  const [teamFormationLive, setTeamFormationLive] = useState(false)
   const [speakers, setSpeakers] = useState<Speaker[]>([])
   const [schedule, setSchedule] = useState<ScheduleDay[]>([])
 
@@ -119,6 +120,7 @@ export default function EventEditorModal({ event, isOpen, onClose, onSave }: Eve
       setMaxTeamSize(event.maxTeamSize ?? 4)
       setTime(event.time || '')
       setSubmissionsEnabled(!!event.submissionsEnabled)
+      setTeamFormationLive(!!event.teamFormationLive)
       setSpeakers(event.speakers ? JSON.parse(JSON.stringify(event.speakers)) : [])
       setSchedule(event.schedule ? JSON.parse(JSON.stringify(event.schedule)) : [])
       setDateMode('custom') // If editing existing string, default to text or allow calendar
@@ -147,6 +149,7 @@ export default function EventEditorModal({ event, isOpen, onClose, onSave }: Eve
       setMaxTeamSize(4)
       setTime('')
       setSubmissionsEnabled(false)
+      setTeamFormationLive(false)
       setSpeakers([])
       setSchedule([])
       // Poster
@@ -281,6 +284,7 @@ export default function EventEditorModal({ event, isOpen, onClose, onSave }: Eve
         maxTeamSize,
         time: time.trim(),
         submissionsEnabled,
+      teamFormationLive,
         posterUrl: posterPreviewDataUrl || posterUrl || '',
       }
       await onSave(payload)
@@ -815,6 +819,26 @@ export default function EventEditorModal({ event, isOpen, onClose, onSave }: Eve
                   }}
                 >
                   {submissionsEnabled ? '✓ SUBMISSIONS OPEN' : '🔒 SUBMISSIONS CLOSED'}
+                </button>
+              </div>
+
+              {/* Team Formation Control */}
+              <div className="p-4 border flex items-center justify-between" style={{ background: 'rgba(34,211,238,0.05)', borderColor: 'rgba(34,211,238,0.25)' }}>
+                <div>
+                  <p className="font-ui font-semibold text-xs tracking-wider text-white">TEAM FORMATION CONTROL</p>
+                  <p className="font-ui text-xs text-gray-400">Allow users to form or join teams for this event.</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setTeamFormationLive(!teamFormationLive)}
+                  className="px-4 py-2 font-ui font-bold text-xs tracking-widest cursor-pointer transition-all"
+                  style={{
+                    background: teamFormationLive ? 'rgba(34,211,238,0.2)' : 'rgba(255,255,255,0.05)',
+                    border: `1px solid ${teamFormationLive ? 'var(--color-accent)' : 'rgba(255,255,255,0.2)'}`,
+                    color: teamFormationLive ? 'var(--color-accent)' : '#94a3b8',
+                  }}
+                >
+                  {teamFormationLive ? '✓ TEAM FORMATION LIVE' : '🔒 FORMATION PAUSED'}
                 </button>
               </div>
             </div>

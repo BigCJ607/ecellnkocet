@@ -60,7 +60,7 @@ export default function EventsListingPage() {
 
         <div className="relative z-10 text-center px-6 mt-12 md:mt-16 animate-slide-down-fade">
           <h1 className="font-display text-4xl md:text-7xl lg:text-8xl mb-4 md:mb-6 tracking-tight text-white drop-shadow-md">
-            {isLanding ? 'Ecell NKOCET' : 'EXPERIENCES'}
+            {isLanding ? 'Ecell' : 'EXPERIENCES'}
           </h1>
           <p className="font-body text-sm md:text-xl font-light tracking-wide max-w-2xl mx-auto text-white drop-shadow">
             {isLanding ? 'Discover events, teams and opportunities.' : 'Browse our curated collection of upcoming summits, workshops, and immersive events.'}
@@ -144,11 +144,8 @@ export default function EventsListingPage() {
             <div className="col-span-full text-center py-24 font-body text-editorial opacity-60">Loading curated experiences...</div>
           ) : filteredEvents.length === 0 ? (
             <div className="col-span-full card-editorial text-center py-24">
-              <h3 className="font-display text-3xl mb-4">No experiences found</h3>
-              <p className="font-body opacity-80 mb-8 max-w-md mx-auto">We couldn't find any events matching your criteria. Please try adjusting your filters or search term.</p>
-              <TransitionLink to="/admin" className="btn-secondary">
-                Open Admin Console
-              </TransitionLink>
+              <h3 className="font-display text-3xl mb-4">No current ongoing events</h3>
+              <p className="font-body opacity-80 mb-8 max-w-md mx-auto">Please check back later for upcoming experiences and opportunities.</p>
             </div>
           ) : (
             filteredEvents.map((evt, idx) => {

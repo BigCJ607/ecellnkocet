@@ -69,7 +69,7 @@ function CapacityRing({ current, max }: { current: number; max: number }) {
         <text x={20} y={20} textAnchor="middle" dominantBaseline="central" style={{ fill: 'white', fontSize: 9, fontWeight: 700, transform: 'rotate(90deg)', transformOrigin: '20px 20px' }}>{current}/{max}</text>
       </svg>
       <div>
-        <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.35)', fontFamily: 'var(--font-body)', letterSpacing: '0.08em', marginBottom: 2 }}>ROSTER</div>
+        <div style={{ fontSize: 9, color: 'var(--color-text-secondary)', fontFamily: 'var(--font-body)', letterSpacing: '0.08em', marginBottom: 2 }}>ROSTER</div>
         <div style={{ fontSize: 12, color, fontWeight: 600, fontFamily: 'var(--font-body)' }}>{current >= max ? 'Full' : `${max - current} open`}</div>
       </div>
     </div>
@@ -132,7 +132,7 @@ function RequestsPanel({ requests, onAccept, onReject, loading }: {
                   </div>
                 )}
                 {req.userSkills && (
-                  <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.7)', fontFamily: 'var(--font-body)' }}>
+                  <div style={{ fontSize: 11, color: 'var(--color-text-primary)', fontFamily: 'var(--font-body)' }}>
                     <strong>Applicant Skills:</strong> {req.userSkills}
                   </div>
                 )}
@@ -305,7 +305,7 @@ function TeamCard({
 
     if (userAlreadyHasTeam) {
       return (
-        <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)', fontFamily: 'var(--font-body)', fontWeight: 600 }}>
+        <span style={{ fontSize: 10, color: 'var(--color-text-secondary)', fontFamily: 'var(--font-body)', fontWeight: 600 }}>
           In Another Team
         </span>
       )
@@ -318,7 +318,7 @@ function TeamCard({
             Request Pending
           </span>
           {myRequestId && (
-            <button onClick={e => { e.stopPropagation(); onCancelRequest(myRequestId, team.id) }} style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)', backgroundColor: 'transparent', border: 'none', cursor: 'pointer', textDecoration: 'underline', fontFamily: 'var(--font-body)' }}>
+            <button onClick={e => { e.stopPropagation(); onCancelRequest(myRequestId, team.id) }} style={{ fontSize: 10, color: 'var(--color-text-secondary)', backgroundColor: 'transparent', border: 'none', cursor: 'pointer', textDecoration: 'underline', fontFamily: 'var(--font-body)' }}>
               Cancel
             </button>
           )}
@@ -460,7 +460,7 @@ function TeamCard({
                 +{members.length - 5}
               </div>
             )}
-            {members.length === 0 && <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.2)', fontFamily: 'var(--font-body)' }}>No members yet</span>}
+            {members.length === 0 && <span style={{ fontSize: 11, color: 'var(--color-text-muted)', fontFamily: 'var(--font-body)' }}>No members yet</span>}
           </div>
           <CapacityRing current={team.memberCount} max={maxSize} />
         </div>
@@ -479,12 +479,12 @@ function TeamCard({
             {members.map((m, i) => {
               const isMemberCaptain = m.userId === team.createdBy
               return (
-                <div key={m.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 12px', borderRadius: 8, background: 'rgba(255,255,255,0.025)', border: '1px solid rgba(255,255,255,0.05)', animation: `cardIn 0.2s ease ${i * 40}ms both` }}>
+                <div key={m.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 12px', borderRadius: 8, background: 'rgba(255,255,255,0.025)', border: '1px solid var(--color-cream)', animation: `cardIn 0.2s ease ${i * 40}ms both` }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                     <MemberAvatar name={m.userName || '?'} isCaptain={isMemberCaptain} size={28} idx={i} />
                     <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--color-text-primary)', fontFamily: 'var(--font-body)' }}>{m.userName}</span>
                   </div>
-                  <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', fontFamily: 'var(--font-body)' }}>
+                  <span style={{ fontSize: 11, color: 'var(--color-text-secondary)', fontFamily: 'var(--font-body)' }}>
                     {[m.userBranch, m.userYear, m.userDivision && `Div ${m.userDivision}`].filter(Boolean).join(' · ')}
                   </span>
                 </div>
@@ -583,7 +583,7 @@ function JoinRequestModal({
           </div>
 
           <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end', marginTop: 10 }}>
-            <button type="button" onClick={onClose} style={{ padding: '9px 18px', fontSize: 12, borderRadius: 8, backgroundColor: 'transparent', border: '1px solid rgba(255,255,255,0.1)', color: 'var(--color-text-secondary)', cursor: 'pointer' }}>
+            <button type="button" onClick={onClose} style={{ padding: '9px 18px', fontSize: 12, borderRadius: 8, backgroundColor: 'transparent', border: '1px solid var(--color-sand)', color: 'var(--color-text-secondary)', cursor: 'pointer' }}>
               Cancel
             </button>
             <button type="submit" disabled={submitting} style={{ padding: '9px 22px', fontSize: 12, fontWeight: 700, borderRadius: 8, background: 'rgba(34,211,238,0.15)', border: '1px solid rgba(62,88,104,0.4)', color: 'var(--color-slate-blue)', cursor: 'pointer' }}>
@@ -649,7 +649,7 @@ function TransferCaptainModal({
               style={{
                 padding: '10px 14px', borderRadius: 8, cursor: 'pointer',
                 background: selectedId === m.userId ? 'rgba(34,211,238,0.12)' : 'rgba(255,255,255,0.03)',
-                border: `1px solid ${selectedId === m.userId ? 'rgba(34,211,238,0.4)' : 'rgba(255,255,255,0.08)'}`,
+                border: `1px solid ${selectedId === m.userId ? 'rgba(34,211,238,0.4)' : 'var(--color-cream)'}`,
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between',
               }}
             >
@@ -660,7 +660,7 @@ function TransferCaptainModal({
         </div>
 
         <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
-          <button onClick={onClose} style={{ padding: '8px 16px', fontSize: 12, borderRadius: 8, backgroundColor: 'transparent', border: '1px solid rgba(255,255,255,0.1)', color: 'var(--color-text-secondary)', cursor: 'pointer' }}>
+          <button onClick={onClose} style={{ padding: '8px 16px', fontSize: 12, borderRadius: 8, backgroundColor: 'transparent', border: '1px solid var(--color-sand)', color: 'var(--color-text-secondary)', cursor: 'pointer' }}>
             Cancel
           </button>
           <button onClick={handleTransfer} disabled={!selectedId || loading} style={{ padding: '8px 20px', fontSize: 12, fontWeight: 700, borderRadius: 8, background: 'rgba(99,102,241,0.18)', border: '1px solid rgba(99,102,241,0.4)', color: '#a5b4fc', cursor: selectedId ? 'pointer' : 'not-allowed' }}>
@@ -951,7 +951,7 @@ export default function TeamsPage() {
 
   if (!user) return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'var(--color-bg)', gap: 16 }}>
-      <p style={{ fontFamily: 'var(--font-body)', fontSize: 11, letterSpacing: '0.2em', color: 'rgba(255,255,255,0.25)' }}>ACCESS RESTRICTED</p>
+      <p style={{ fontFamily: 'var(--font-body)', fontSize: 11, letterSpacing: '0.2em', color: 'var(--color-text-muted)' }}>ACCESS RESTRICTED</p>
       <Link to="/auth" className="btn-primary" style={{ padding: '12px 32px', textDecoration: 'none', borderRadius: 10 }}>Sign In</Link>
     </div>
   )
@@ -977,22 +977,13 @@ export default function TeamsPage() {
 
       <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px 80px' }}>
         {/* Header */}
-        <div style={{ padding: '28px 0 24px', borderBottom: '1px solid rgba(255,255,255,0.07)', marginBottom: 28, display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
+        <div style={{ padding: '28px 0 24px', borderBottom: '1px solid var(--color-cream)', marginBottom: 28, display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
           <div>
             <p style={{ fontFamily: 'var(--font-body)', fontSize: 10, letterSpacing: '0.2em', color: 'var(--color-slate-blue)', fontWeight: 700, margin: '0 0 4px' }}>COLLABORATION HUB</p>
             <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 36, color: 'var(--color-text-primary)', lineHeight: 1, margin: 0 }}>Teams & Rosters</h1>
           </div>
 
-          {selectedEvent && !teamsLoading && (
-            <div style={{ display: 'flex', gap: 28 }}>
-              {[{ label: 'TEAMS', value: teams.length, color: '#818cf8' }, { label: 'OPEN', value: openCount, color: '#34d399' }, { label: 'MAX/TEAM', value: selectedEvent.maxTeamSize ?? 4, color: 'var(--color-slate-blue)' }].map(s => (
-                <div key={s.label} style={{ textAlign: 'right' }}>
-                  <div style={{ fontFamily: 'var(--font-display)', fontSize: 30, lineHeight: 1 }}><AnimatedCount value={s.value} color={s.color} /></div>
-                  <div style={{ fontFamily: 'var(--font-body)', fontSize: 9, letterSpacing: '0.14em', color: 'rgba(255,255,255,0.25)', marginTop: 3 }}>{s.label}</div>
-                </div>
-              ))}
-            </div>
-          )}
+          {/* Stats removed */}
         </div>
 
         {/* Layout Grid */}
@@ -1000,23 +991,23 @@ export default function TeamsPage() {
 
           {/* Sidebar Event Selector */}
           <div style={{ position: 'sticky', top: 'calc(var(--nav-h) + 16px)' }}>
-            <p style={{ fontFamily: 'var(--font-body)', fontSize: 9, letterSpacing: '0.18em', color: 'rgba(255,255,255,0.25)', fontWeight: 700, marginBottom: 10 }}>SELECT EVENT</p>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: 9, letterSpacing: '0.18em', color: 'var(--color-text-muted)', fontWeight: 700, marginBottom: 10 }}>SELECT EVENT</p>
             {loading ? (
               <div style={{ display: 'flex', gap: 8, alignItems: 'center', padding: 16 }}>
                 <div style={{ width: 14, height: 14, borderRadius: '50%', border: '2px solid #22d3ee', borderTopColor: 'transparent', animation: 'spin 0.7s linear infinite' }} />
-                <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', fontFamily: 'var(--font-body)' }}>Loading…</span>
+                <span style={{ fontSize: 12, color: 'var(--color-text-secondary)', fontFamily: 'var(--font-body)' }}>Loading…</span>
               </div>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                 {events.map(ev => {
                   const enrolled = isEnrolled(ev.id), active = selectedEvent?.id === ev.id
                   return (
-                    <button key={ev.id} className="ev-btn" onClick={() => { setSelectedEvent(ev); setSearchQuery(''); setFilterMode('all') }} style={{ width: '100%', textAlign: 'left', padding: '12px 14px', borderRadius: 10, cursor: 'pointer', background: active ? 'rgba(34,211,238,0.07)' : 'rgba(255,255,255,0.02)', border: active ? '1px solid rgba(34,211,238,0.4)' : '1px solid rgba(255,255,255,0.05)', borderLeft: active ? '3px solid #22d3ee' : undefined, transition: 'all 0.2s' }}>
+                    <button key={ev.id} className="ev-btn" onClick={() => { setSelectedEvent(ev); setSearchQuery(''); setFilterMode('all') }} style={{ width: '100%', textAlign: 'left', padding: '12px 14px', borderRadius: 10, cursor: 'pointer', background: active ? 'rgba(34,211,238,0.07)' : 'var(--color-ivory)', border: active ? '1px solid rgba(34,211,238,0.4)' : '1px solid rgba(255,255,255,0.05)', borderLeft: active ? '3px solid #22d3ee' : undefined, transition: 'all 0.2s' }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 6, marginBottom: 4 }}>
                         <span style={{ fontFamily: 'var(--font-display)', fontSize: 14, color: active ? '#22d3ee' : '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{ev.title}</span>
-                        <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 4, flexShrink: 0, background: enrolled ? 'rgba(34,211,238,0.12)' : 'rgba(255,255,255,0.05)', color: enrolled ? '#22d3ee' : 'rgba(255,255,255,0.3)', border: enrolled ? '1px solid rgba(34,211,238,0.25)' : '1px solid rgba(255,255,255,0.08)', fontFamily: 'var(--font-body)', letterSpacing: '0.08em' }}>{enrolled ? 'IN' : 'GUEST'}</span>
+                        <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 4, flexShrink: 0, background: enrolled ? 'rgba(34,211,238,0.12)' : 'var(--color-ivory)', color: enrolled ? '#22d3ee' : 'rgba(255,255,255,0.3)', border: enrolled ? '1px solid rgba(34,211,238,0.25)' : '1px solid rgba(255,255,255,0.08)', fontFamily: 'var(--font-body)', letterSpacing: '0.08em' }}>{enrolled ? 'IN' : 'GUEST'}</span>
                       </div>
-                      <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)', fontFamily: 'var(--font-body)' }}>{ev.date} · {ev.maxTeamSize ?? 4} max</div>
+                      <div style={{ fontSize: 10, color: 'var(--color-text-secondary)', fontFamily: 'var(--font-body)' }}>{ev.date} · {ev.maxTeamSize ?? 4} max</div>
                     </button>
                   )
                 })}
@@ -1028,7 +1019,7 @@ export default function TeamsPage() {
           <div>
             {!selectedEvent ? (
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 300 }}>
-                <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'rgba(255,255,255,0.2)' }}>Select an event</p>
+                <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--color-text-muted)' }}>Select an event</p>
               </div>
             ) : (
               <>
@@ -1074,7 +1065,7 @@ export default function TeamsPage() {
                       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#22d3ee" strokeWidth="2"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
                       <div>
                         <p style={{ fontFamily: 'var(--font-body)', fontSize: 12, fontWeight: 600, color: 'var(--color-text-primary)', margin: 0 }}>Viewing as guest — {selectedEvent.title}</p>
-                        <p style={{ fontFamily: 'var(--font-body)', fontSize: 11, color: 'rgba(255,255,255,0.35)', margin: 0 }}>Enroll to create or join a team</p>
+                        <p style={{ fontFamily: 'var(--font-body)', fontSize: 11, color: 'var(--color-text-secondary)', margin: 0 }}>Enroll to create or join a team</p>
                       </div>
                     </div>
                     <Link to={`/events/${selectedEvent.id}`} style={{ padding: '7px 16px', fontSize: 11, fontWeight: 600, borderRadius: 7, background: 'rgba(34,211,238,0.1)', border: '1px solid var(--color-sand)', color: 'var(--color-slate-blue)', textDecoration: 'none', fontFamily: 'var(--font-body)' }}>Enroll →</Link>
@@ -1084,7 +1075,7 @@ export default function TeamsPage() {
                 {/* Event Workspace Top Bar */}
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 18, flexWrap: 'wrap' }}>
                   <div>
-                    <p style={{ fontFamily: 'var(--font-body)', fontSize: 9, letterSpacing: '0.18em', color: 'rgba(255,255,255,0.25)', margin: '0 0 3px' }}>EVENT</p>
+                    <p style={{ fontFamily: 'var(--font-body)', fontSize: 9, letterSpacing: '0.18em', color: 'var(--color-text-muted)', margin: '0 0 3px' }}>EVENT</p>
                     <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 22, color: 'var(--color-text-primary)', margin: 0 }}>{selectedEvent.title}</h2>
                   </div>
 
@@ -1119,7 +1110,7 @@ export default function TeamsPage() {
                       </div>
                     ) : (
                       isEnrolled(selectedEvent.id) && (
-                        <button onClick={() => setShowCreate(v => !v)} style={{ padding: '9px 20px', fontSize: 12, fontWeight: 700, borderRadius: 8, cursor: 'pointer', background: showCreate ? 'rgba(255,255,255,0.05)' : 'rgba(34,211,238,0.12)', border: `1px solid ${showCreate ? 'rgba(255,255,255,0.12)' : 'rgba(34,211,238,0.4)'}`, color: showCreate ? 'rgba(255,255,255,0.5)' : '#22d3ee', fontFamily: 'var(--font-body)', letterSpacing: '0.06em', transition: 'all 0.2s' }}>
+                        <button onClick={() => setShowCreate(v => !v)} style={{ padding: '9px 20px', fontSize: 12, fontWeight: 700, borderRadius: 8, cursor: 'pointer', background: showCreate ? 'var(--color-ivory)' : 'rgba(34,211,238,0.12)', border: `1px solid ${showCreate ? 'var(--color-cream)' : 'rgba(34,211,238,0.4)'}`, color: showCreate ? 'var(--color-text-secondary)' : '#22d3ee', fontFamily: 'var(--font-body)', letterSpacing: '0.06em', transition: 'all 0.2s' }}>
                           {showCreate ? '✕ Cancel' : '+ Create Team'}
                         </button>
                       )
@@ -1128,10 +1119,10 @@ export default function TeamsPage() {
                 </div>
 
                 {!selectedEvent.teamFormationLive && !isAdmin ? (
-                  <div style={{ minHeight: 200, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 10, borderRadius: 14, border: '1px dashed rgba(255,255,255,0.07)', padding: 40, marginTop: 20 }}>
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="1.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                    <p style={{ fontFamily: 'var(--font-display)', fontSize: 18, color: 'rgba(255,255,255,0.4)', margin: 0 }}>Team Formation Not Live</p>
-                    <p style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: 'rgba(255,255,255,0.2)', margin: 0, textAlign: 'center' }}>Team formation for this event has not started yet.<br/>Check back closer to the event date.</p>
+                  <div style={{ minHeight: 200, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 10, borderRadius: 14, border: '1px dashed var(--color-sand)', padding: 40, marginTop: 20 }}>
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--color-slate-blue)" strokeWidth="1.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                    <p style={{ fontFamily: 'var(--font-display)', fontSize: 18, color: 'var(--color-text-primary)', margin: 0 }}>Team Formation Not Live</p>
+                    <p style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: 'var(--color-text-secondary)', margin: 0, textAlign: 'center' }}>Team formation for this event has not started yet.<br/>Check back closer to the event date.</p>
                   </div>
                 ) : (
                   <>
@@ -1147,7 +1138,7 @@ export default function TeamsPage() {
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                       <div>
-                        <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.7)', fontFamily: 'var(--font-body)', marginBottom: 4 }}>
+                        <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: 'var(--color-text-primary)', fontFamily: 'var(--font-body)', marginBottom: 4 }}>
                           TEAM NAME *
                         </label>
                         <input className="focus-cyan" type="text" value={newTeamName} onChange={e => setNewTeamName(e.target.value)} placeholder="Enter team name…" maxLength={40} autoFocus style={{ width: '100%', padding: '10px 14px', fontSize: 13, borderRadius: 8, backgroundColor: 'var(--color-white)', border: '1px solid var(--color-cream)', color: 'var(--color-text-primary)', fontFamily: 'var(--font-body)', boxSizing: 'border-box' }} />
@@ -1158,14 +1149,14 @@ export default function TeamsPage() {
                           <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: 'var(--color-text-secondary)', fontFamily: 'var(--font-body)', marginBottom: 4 }}>
                             CAPTAIN/TEAM SKILLS (OPTIONAL)
                           </label>
-                          <input className="focus-cyan" type="text" value={newTeamSkills} onChange={e => setNewTeamSkills(e.target.value)} placeholder="e.g. React, Python, Figma..." style={{ width: '100%', padding: '9px 12px', fontSize: 12, borderRadius: 8, backgroundColor: 'var(--color-white)', border: '1px solid rgba(255,255,255,0.1)', color: 'var(--color-text-primary)', fontFamily: 'var(--font-body)', boxSizing: 'border-box' }} />
+                          <input className="focus-cyan" type="text" value={newTeamSkills} onChange={e => setNewTeamSkills(e.target.value)} placeholder="e.g. React, Python, Figma..." style={{ width: '100%', padding: '9px 12px', fontSize: 12, borderRadius: 8, backgroundColor: 'var(--color-white)', border: '1px solid var(--color-sand)', color: 'var(--color-text-primary)', fontFamily: 'var(--font-body)', boxSizing: 'border-box' }} />
                         </div>
 
                         <div>
                           <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: 'var(--color-text-secondary)', fontFamily: 'var(--font-body)', marginBottom: 4 }}>
                             ACHIEVEMENTS (OPTIONAL)
                           </label>
-                          <input className="focus-cyan" type="text" value={newTeamAchievements} onChange={e => setNewTeamAchievements(e.target.value)} placeholder="e.g. 1st Place Hackathon 2025..." style={{ width: '100%', padding: '9px 12px', fontSize: 12, borderRadius: 8, backgroundColor: 'var(--color-white)', border: '1px solid rgba(255,255,255,0.1)', color: 'var(--color-text-primary)', fontFamily: 'var(--font-body)', boxSizing: 'border-box' }} />
+                          <input className="focus-cyan" type="text" value={newTeamAchievements} onChange={e => setNewTeamAchievements(e.target.value)} placeholder="e.g. 1st Place Hackathon 2025..." style={{ width: '100%', padding: '9px 12px', fontSize: 12, borderRadius: 8, backgroundColor: 'var(--color-white)', border: '1px solid var(--color-sand)', color: 'var(--color-text-primary)', fontFamily: 'var(--font-body)', boxSizing: 'border-box' }} />
                         </div>
                       </div>
 
@@ -1173,13 +1164,13 @@ export default function TeamsPage() {
                         <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: 'var(--color-text-secondary)', fontFamily: 'var(--font-body)', marginBottom: 4 }}>
                           OPEN ROLES IN TEAM (OPTIONAL, COMMA-SEPARATED)
                         </label>
-                        <input className="focus-cyan" type="text" value={newTeamOpenRoles} onChange={e => setNewTeamOpenRoles(e.target.value)} placeholder="e.g. Frontend Developer, UI Designer, Backend Dev" style={{ width: '100%', padding: '9px 12px', fontSize: 12, borderRadius: 8, backgroundColor: 'var(--color-white)', border: '1px solid rgba(255,255,255,0.1)', color: 'var(--color-text-primary)', fontFamily: 'var(--font-body)', boxSizing: 'border-box' }} />
+                        <input className="focus-cyan" type="text" value={newTeamOpenRoles} onChange={e => setNewTeamOpenRoles(e.target.value)} placeholder="e.g. Frontend Developer, UI Designer, Backend Dev" style={{ width: '100%', padding: '9px 12px', fontSize: 12, borderRadius: 8, backgroundColor: 'var(--color-white)', border: '1px solid var(--color-sand)', color: 'var(--color-text-primary)', fontFamily: 'var(--font-body)', boxSizing: 'border-box' }} />
                       </div>
 
                       {createError && <p style={{ fontSize: 11, color: 'var(--color-text-secondary)', margin: 0, fontFamily: 'var(--font-body)' }}>{createError}</p>}
 
                       <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end', marginTop: 6 }}>
-                        <button type="button" onClick={() => setShowCreate(false)} style={{ padding: '9px 18px', fontSize: 12, borderRadius: 8, backgroundColor: 'transparent', border: '1px solid rgba(255,255,255,0.1)', color: 'var(--color-text-secondary)', cursor: 'pointer' }}>Cancel</button>
+                        <button type="button" onClick={() => setShowCreate(false)} style={{ padding: '9px 18px', fontSize: 12, borderRadius: 8, backgroundColor: 'transparent', border: '1px solid var(--color-sand)', color: 'var(--color-text-secondary)', cursor: 'pointer' }}>Cancel</button>
                         <button type="submit" disabled={creating} style={{ padding: '9px 24px', fontSize: 12, fontWeight: 700, borderRadius: 8, background: 'rgba(34,211,238,0.15)', border: '1px solid rgba(62,88,104,0.4)', color: 'var(--color-slate-blue)', cursor: 'pointer' }}>
                           {creating ? 'Creating…' : 'Create Team'}
                         </button>
@@ -1189,9 +1180,9 @@ export default function TeamsPage() {
                 )}
 
                 {/* Search & Filter Bar */}
-                <div style={{ display: 'flex', gap: 10, alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', padding: '10px 14px', borderRadius: 10, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.07)' }}>
+                <div style={{ display: 'flex', gap: 10, alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', padding: '10px 14px', borderRadius: 10, background: 'var(--color-ivory)', border: '1px solid var(--color-cream)' }}>
                   <div style={{ position: 'relative', flex: 1, minWidth: 180 }}>
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.25)" strokeWidth="2" style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)' }}><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--color-slate-blue)" strokeWidth="2" style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)' }}><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
                     <input className="focus-cyan" type="text" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="Search teams, members, or open roles…" style={{ width: '100%', paddingLeft: 30, paddingRight: 10, paddingTop: 7, paddingBottom: 7, fontSize: 12, borderRadius: 7, background: 'rgba(0,0,0,0.3)', border: '1px solid var(--color-cream)', color: 'var(--color-text-primary)', fontFamily: 'var(--font-body)', boxSizing: 'border-box', transition: 'border-color 0.2s' }} />
                   </div>
                   <div style={{ display: 'flex', gap: 4 }}>
@@ -1207,13 +1198,13 @@ export default function TeamsPage() {
                 {teamsLoading ? (
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, minHeight: 240 }}>
                     <div style={{ width: 20, height: 20, borderRadius: '50%', border: '2px solid #22d3ee', borderTopColor: 'transparent', animation: 'spin 0.7s linear infinite' }} />
-                    <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.3)', fontFamily: 'var(--font-body)' }}>Loading teams…</span>
+                    <span style={{ fontSize: 13, color: 'var(--color-text-secondary)', fontFamily: 'var(--font-body)' }}>Loading teams…</span>
                   </div>
                 ) : filtered.length === 0 ? (
-                  <div style={{ minHeight: 200, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 10, borderRadius: 14, border: '1px dashed rgba(255,255,255,0.07)', padding: 40 }}>
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
-                    <p style={{ fontFamily: 'var(--font-display)', fontSize: 18, color: 'rgba(255,255,255,0.2)', margin: 0 }}>No teams found</p>
-                    <p style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: 'rgba(255,255,255,0.12)', margin: 0 }}>{searchQuery ? `No results for "${searchQuery}"` : 'No teams created yet'}</p>
+                  <div style={{ minHeight: 200, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 10, borderRadius: 14, border: '1px dashed var(--color-sand)', padding: 40 }}>
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--color-slate-blue)" strokeWidth="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
+                    <p style={{ fontFamily: 'var(--font-display)', fontSize: 18, color: 'var(--color-text-muted)', margin: 0 }}>No teams found</p>
+                    <p style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: 'var(--color-text-muted)', margin: 0 }}>{searchQuery ? `No results for "${searchQuery}"` : 'No teams created yet'}</p>
                   </div>
                 ) : (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
